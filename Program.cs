@@ -6,16 +6,53 @@ namespace CellularAutomata
 	{
 		public static void Main ()
 		{
-			Population pop = new Population (165, 0);
+			Console.WriteLine ("Welcome to CellularAutomata!");
+			Console.WriteLine ("This program allows you to use any of the 256 rules.\n");
+
+			Console.WriteLine ("Please type the width and height for this session and press enter.");
+
+			Console.Write ("Width: ");
+			int width = Convert.ToInt32 (Console.ReadLine ());
+
+			Console.Write ("Height: ");
+			int height = Convert.ToInt32 (Console.ReadLine ());
+
+			Population pop = new Population (width, 0);
+
 			do {
+				Console.Write ("Rule: ");
+				string cmd = Console.ReadLine ();
+				string[] cmds = cmd.Split (new char[1] {' '});
+
 				byte rule;
-				try {
-					rule = Convert.ToByte (Console.ReadLine ());
-				} catch (System.OverflowException) {
-					continue;
-				}
-				pop = new Population (165, rule, pop.GetRoot ());
-				for (int i = 0; i < 35; i++) {
+
+				if ("new" == cmds[0].ToLower ()) {
+					try {
+						rule = Convert.ToByte (cmds[1]);
+						pop = new Population (width, rule);
+					} catch (System.NullReferenceException) {
+						Console.WriteLine ("Sorry, not valid input.  Please try again.");
+						continue;
+					} catch (System.OverflowException) {
+						Console.WriteLine ("Sorry, not valid input.  Please try again.");
+						continue;
+					}
+				} else {
+					try {
+						rule = Convert.ToByte (cmds[0]);
+						pop = new Population (width, rule, pop.GetRoot ());
+					} catch (System.OverflowException) {
+						Console.WriteLine ("Sorry, not valid input.  Please try again.");
+						continue;
+					} catch (System.FormatException) {
+						rule = pop.Rule;
+						Console.Write ("{0}", rule);
+					}
+				}  
+
+				Console.Write ("\n");
+				
+				for (int i = 0; i < height; i++) {
 					pop.PrintCells ();
 					pop.Evolve (1);
 				}
