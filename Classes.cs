@@ -1,69 +1,10 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace CellularAutomata
 {
-	class MainClass
-	{
-		public static void Main ()
-		{
-			Console.WriteLine ("Welcome to CellularAutomata!");
-			Console.WriteLine ("This program allows you to use any of the 256 rules.\n");
-
-			Console.WriteLine ("Please type the width and height for this session and press enter.");
-
-			Console.Write ("Width: ");
-			int width = Convert.ToInt32 (Console.ReadLine ());
-
-			Console.Write ("Height: ");
-			int height = Convert.ToInt32 (Console.ReadLine ());
-
-			Population pop = new Population (width, 0);
-
-			do {
-				Console.Write ("Rule: ");
-				string cmd = Console.ReadLine ();
-				string[] cmds = cmd.Split (new char[1] {' '});
-
-				byte rule;
-
-				if ("new" == cmds[0].ToLower ()) {
-					try {
-						rule = Convert.ToByte (cmds[1]);
-						pop = new Population (width, rule);
-					} catch (System.NullReferenceException) {
-						Console.WriteLine ("Sorry, not valid input.  Please try again.");
-						continue;
-					} catch (System.OverflowException) {
-						Console.WriteLine ("Sorry, not valid input.  Please try again.");
-						continue;
-					}
-				} else {
-					try {
-						rule = Convert.ToByte (cmds[0]);
-						pop = new Population (width, rule, pop.GetRoot ());
-					} catch (System.OverflowException) {
-						Console.WriteLine ("Sorry, not valid input.  Please try again.");
-						continue;
-					} catch (System.FormatException) {
-						rule = pop.Rule;
-						Console.Write ("{0}", rule);
-					}
-				}  
-
-				Console.Write ("\n");
-				
-				for (int i = 0; i < height; i++) {
-					pop.PrintCells ();
-					pop.Evolve (1);
-				}
-				if (0 == rule) {
-					break;
-				}
-			} while (true);
-		}
-	}
-
-	class CState
+	public class CState
 	{
 		private byte state;
 		public byte State {
@@ -71,7 +12,7 @@ namespace CellularAutomata
 			set { this.state = value; }
 		}
 	}
-	class CRule
+	public class CRule
 	{
 		private byte rule;
 		public byte Rule {
@@ -95,7 +36,7 @@ namespace CellularAutomata
 			}
 		}
 	}
-	class Cell : CState
+	public class Cell : CState
 	{
 		private Cell left;
 		public Cell Left {
@@ -140,7 +81,7 @@ namespace CellularAutomata
 			return neighbourhood;
 		}
 	}
-	class Population : CRule
+	public class Population : CRule
 	{
 		private Cell root;
 		private int length;
@@ -209,6 +150,21 @@ namespace CellularAutomata
 				current = current.Right;
 			}
 			Console.Write ("\n");
+		}
+		
+		public void SaveCells (Bitmap bitmap, int row)
+		{
+			Cell current = root;
+			Color on = Color.FromArgb (255, 0, 0, 0);
+			Color off = Color.FromArgb (255, 255, 255, 255);
+			for (int i = 0; i <= this.length; i++) {
+				if (0 == current.State) {
+					bitmap.SetPixel (i, row, off);
+				} else {
+					bitmap.SetPixel (i, row, on);
+				}
+				current = current.Right;
+			}
 		}
 	}
 }
