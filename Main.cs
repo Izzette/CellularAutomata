@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Drawing;
-using CellularAutomata;
+using CellularAutomata.Cells;
+using CellularAutomata.Populations;
 
 namespace CellularAutomata
 {
@@ -18,22 +18,19 @@ namespace CellularAutomata
 
 			Console.Write ("Height: ");
 			int height = Convert.ToInt32 (Console.ReadLine ());
-			
-			Bitmap bitmap = new Bitmap (width, height);
 
-			Population pop = new Population (width, 0);
+			Population population = Population.BuildECA (width);
+			Rule rule = new Rule (0, 2);
 
 			do {
 				Console.Write ("Rule: ");
-				string cmd = Console.ReadLine ();
-				string[] cmds = cmd.Split (new char[1] {' '});
-
-				byte rule;
+				string line = Console.ReadLine ();
+				string[] cmds = line.Split (' ');
 
 				if ("new" == cmds[0].ToLower ()) {
 					try {
-						rule = Convert.ToByte (cmds[1]);
-						pop = new Population (width, rule);
+						rule.number = Convert.ToInt32 (cmds[1]);
+						population = Population.BuildECA (rule, width);
 					} catch (System.NullReferenceException) {
 						Console.WriteLine ("Sorry, not valid input.  Please try again.");
 						continue;
@@ -43,28 +40,40 @@ namespace CellularAutomata
 					}
 				} else {
 					try {
-						rule = Convert.ToByte (cmds[0]);
-						pop = new Population (width, rule, pop.GetRoot ());
+						rule.number = Convert.ToInt32 (cmds[0]);
 					} catch (System.OverflowException) {
 						Console.WriteLine ("Sorry, not valid input.  Please try again.");
 						continue;
 					} catch (System.FormatException) {
-						rule = pop.Rule;
-						Console.Write ("{0}", rule);
+						Console.Write ("{0}", population.GetRule ().number);
 					}
 				}  
 
 				Console.Write ("\n");
-				
-				if (0 == rule) {
+
+				if (0 == rule.number) {
 					break;
 				}
-				
+
+				Console.Write ("\n");
+
 				for (int i = 0; i < height; i++) {
-					pop.SaveCells (bitmap, i);
-					pop.Evolve (1);
+					population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
+					foreach (ICell cell in population) {
+						int state = cell.GetState ();
+						if (0 == state) {
+							Console.BackgroundColor = ConsoleColor.White;
+							Console.ForegroundColor = ConsoleColor.Black;
+						} else {
+							Console.BackgroundColor = ConsoleColor.Black;
+							Console.ForegroundColor = ConsoleColor.White;
+						}
+						Console.Write (cell.GetNeighbourhood ());
+						Console.ResetColor ();
+					}
+					Console.Write ("\n");
 				}
-				bitmap.Save ("automaton.bmp");
+				Console.Write ("\n");
 			} while (true);
 		}
 	}
