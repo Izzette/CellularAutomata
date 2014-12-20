@@ -6,16 +6,16 @@ namespace CellularAutomata.Cells
 	public interface ICell
 	{
 		ICell GetNext ();
-		int[] GetPositions ();
-		int GetState ();
-		void SetState (int state);
-		int GetNeighbourhood ();
+		ulong[] GetPositions ();
+		ulong GetState ();
+		void SetState (ulong state);
+		ulong GetNeighbourhood ();
 	}
 	
 	public class ElementaryCell : ICell
 	{
-		private int state;
-		public int[] positions = new int[2] {0, 2};
+		private ulong state;
+		public ulong[] positions = new ulong[2] {0, 2};
 
 		private ElementaryCell zero;
 		public ElementaryCell Zero {
@@ -32,7 +32,7 @@ namespace CellularAutomata.Cells
 			set { ; }
 		}
 
-		public ElementaryCell (int state)
+		public ElementaryCell (ulong state)
 		{
 			this.state = state;
 			this.zero = this;
@@ -44,33 +44,35 @@ namespace CellularAutomata.Cells
 			return this.Next;
 		}
 
-		public int[] GetPositions ()
+		public ulong[] GetPositions ()
 		{
 			return this.positions;
 		}
 
-		public int GetState ()
+		public ulong GetState ()
 		{
 			return this.state;
 		}
 
-		public void SetState (int state)
+		public void SetState (ulong state)
 		{
 			this.state = state;
 		}
 		
-		public int GetNeighbourhood ()
+		public ulong GetNeighbourhood ()
 		{
-			int[] neighboursState = new int[3] {
+			ulong[] neighboursState = new ulong[3] {
 				this.zero.state,
 				this.state,
 				this.two.state
 			};
 			
-			int neighbourhood = 0;
+			ulong neighbourhood = 0;
 			
 			for (int i = 0; i < 3; i++) {
-				neighbourhood += Convert.ToInt32 (neighboursState [i] * Math.Pow (2, i));
+				
+				neighbourhood += neighboursState [i] * Convert.ToUInt64 (Math.Pow (2, i));
+				
 			}
 
 			return neighbourhood;
