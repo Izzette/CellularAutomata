@@ -1,10 +1,25 @@
 ﻿using System;
 using System.Collections;
 using CellularAutomata.Cells;
-using CellularAutomata.Rules;
 
 namespace CellularAutomata.Populations
 {
+	
+	public struct Rule
+	{
+		
+		public ulong number;
+		public ulong place;
+		
+		public Rule (ulong number, ulong place)
+		{
+			
+			this.number = number;
+			this.place = place;
+			
+		}
+		
+	}
 
 	public class Population : IEnumerator,IEnumerable
 	{
