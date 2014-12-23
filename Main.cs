@@ -1,7 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Drawing;
 using CellularAutomata.Cells;
 using CellularAutomata.Populations;
+
 
 namespace CellularAutomata
 {
@@ -213,6 +215,9 @@ namespace CellularAutomata
 				Console.Write ("\n");
 				
 			} while (true);
+		
 		}
+	
 	}
+
 }

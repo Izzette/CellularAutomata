@@ -9,7 +9,7 @@ namespace CellularAutomata.Cells
 		ulong[] GetPositions ();
 		ulong GetState ();
 		void SetState (ulong state);
-		ulong GetNeighbourhood ();
+		ulong GetNeighbourhood (ulong place);
 	}
 	
 	public class ElementaryCell : ICell
@@ -59,7 +59,7 @@ namespace CellularAutomata.Cells
 			this.state = state;
 		}
 		
-		public ulong GetNeighbourhood ()
+		public ulong GetNeighbourhood (ulong place)
 		{
 			ulong[] neighboursState = new ulong[3] {
 				this.zero.state,
@@ -71,7 +71,7 @@ namespace CellularAutomata.Cells
 			
 			for (int i = 0; i < 3; i++) {
 				
-				neighbourhood += neighboursState [i] * Convert.ToUInt64 (Math.Pow (2, i));
+				neighbourhood += neighboursState [i] * Convert.ToUInt64 (Math.Pow (place, i));
 				
 			}
 

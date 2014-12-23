@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections;
 using CellularAutomata.Cells;
+using CellularAutomata.Rules;
 
 namespace CellularAutomata.Populations
 {
-	public struct Rule
-	{
-		public Rule (ulong number, ulong place)
-		{
-			this.number = number;
-			this.place = place;
-		}
-
-		public ulong number, place;
-	}
 
 	public class Population : IEnumerator,IEnumerable
 	{
@@ -21,18 +12,18 @@ namespace CellularAutomata.Populations
 		public static ulong Implement (ulong neighbourhood, Rule rule)
 		{
 			
-			ulong upper = rule.number % Convert.ToUInt64 (Math.Pow (rule.place, neighbourhood + 1));
+			double upper = rule.number % Math.Pow (rule.place, neighbourhood + 1);
 
 			if (0 == neighbourhood) {
 				
-				return upper;
+				return Convert.ToUInt64 (upper);
 				
 			} else {
 				
-				ulong lower = rule.number % Convert.ToUInt64 (Math.Pow (rule.place, neighbourhood));
-				ulong final = (upper - lower) / Convert.ToUInt64 (Math.Pow (rule.place, neighbourhood));
+				double lower = rule.number % Math.Pow (rule.place, neighbourhood);
+				double final = (upper - lower) / Math.Pow (rule.place, neighbourhood);
 				
-				return final;
+				return Convert.ToUInt64 (final);
 			}
 		}
 
@@ -41,7 +32,7 @@ namespace CellularAutomata.Populations
 			Population population = new Population (rule, current, size);
 
 			foreach (ICell cell in population) {
-				current.SetState (Population.Implement (cell.GetNeighbourhood (), rule));
+				current.SetState (Population.Implement (cell.GetNeighbourhood (rule.place), rule));
 				current = current.GetNext ();
 			}
 
