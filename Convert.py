@@ -1,11 +1,13 @@
+import math
+
 print("code:")
-code = input()
+code = int(input())
 print("number of colors:")
-k = input()
+k = int(input())
 print("number in convert:")
-o = input()
+o = int(input())
 print("number in neighbourhood:")
-n = input()
+n = int(input())
 
 rule = 0
 
@@ -25,4 +27,11 @@ for place in range(0, k ** n):
     final = (high - low) / (k ** total)
     rule += final * (k ** place)
 
-print("rule " + str(rule))
+print(rule)
+srule = ""
+
+for i in range(math.floor(math.log10(k ** (k ** n))) + 1, -1, -1):
+    final = (rule % (10 ** (i + 1))) / (10 ** i)
+    srule += str(math.floor(final))
+
+print (srule)

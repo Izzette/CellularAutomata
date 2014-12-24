@@ -1,89 +1,117 @@
 using System;
+using System.Numerics;
 
 namespace CellularAutomata.Cells
 {
 
 	public interface ICell
 	{
+		
 		ICell GetNext ();
-		ulong[] GetPositions ();
-		ulong GetState ();
-		void SetState (ulong state);
-		ulong GetNeighbourhood (ulong place);
+		int[] GetPositions ();
+		int GetState ();
+		void SetState (int state);
+		int GetNeighbourhood (BigInteger place);
+		
 	}
 	
 	public class ElementaryCell : ICell
 	{
-		private ulong state;
-		public ulong[] positions = new ulong[2] {0, 2};
+		
+		private int state;
+		public int[] positions = new int[2] {0, 2};
 
 		private ElementaryCell zero;
 		public ElementaryCell Zero {
+			
 			get { return this.zero; }
 			set { this.zero = value; }
+			
 		}
+		
 		private ElementaryCell two;
 		public ElementaryCell Two {
+			
 			get { return this.two; }
 			set { this.two = value; }
+			
 		}
+		
 		public ElementaryCell Next  {
+			
 			get { return this.two; }
 			set { ; }
+			
 		}
 
-		public ElementaryCell (ulong state)
+		public ElementaryCell (int state)
 		{
+			
 			this.state = state;
 			this.zero = this;
 			this.two = this;
+			
 		}
 
 		public ICell GetNext ()
 		{
+			
 			return this.Next;
+			
 		}
 
-		public ulong[] GetPositions ()
+		public int[] GetPositions ()
 		{
+			
 			return this.positions;
+			
 		}
 
-		public ulong GetState ()
+		public int GetState ()
 		{
+			
 			return this.state;
+			
 		}
 
-		public void SetState (ulong state)
+		public void SetState (int state)
 		{
+			
 			this.state = state;
+			
 		}
 		
-		public ulong GetNeighbourhood (ulong place)
+		public int GetNeighbourhood (BigInteger place)
 		{
-			ulong[] neighboursState = new ulong[3] {
+			
+			int[] neighboursState = new int[3] {
+				
 				this.zero.state,
 				this.state,
 				this.two.state
+				
 			};
 			
-			ulong neighbourhood = 0;
+			BigInteger neighbourhood = 0;
 			
 			for (int i = 0; i < 3; i++) {
 				
-				neighbourhood += neighboursState [i] * Convert.ToUInt64 (Math.Pow (place, i));
+				neighbourhood += neighboursState [i] * BigInteger.Pow (place, i);
 				
 			}
 
-			return neighbourhood;
+			return (int)neighbourhood;
+			
 		}
 		
 		public ElementaryCell AddNeighbour (ref ElementaryCell cell)
 		{
+			
 			this.two = cell;
 			cell.zero = this;
 			
 			return cell;
+			
 		}
 	}
 }

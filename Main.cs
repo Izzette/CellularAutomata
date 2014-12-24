@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
+using System.Numerics;
 using CellularAutomata.Cells;
 using CellularAutomata.Populations;
 
@@ -20,16 +20,16 @@ namespace CellularAutomata
 			Console.WriteLine ("Please type the width and height for this session and press enter.");
 
 			Console.Write ("Width: ");
-			ulong width = Convert.ToUInt64 (Console.ReadLine ());
+			int width = Convert.ToInt32 (Console.ReadLine ());
 
 			Console.Write ("Height: ");
-			ulong height = Convert.ToUInt64 (Console.ReadLine ());
+			int height = Convert.ToInt32 (Console.ReadLine ());
 			
 			Console.Write ("Base: ");
-			ulong space = Convert.ToUInt64 (Console.ReadLine ());
+			BigInteger place = BigInteger.Parse (Console.ReadLine ());
 
 			Population population = Population.BuildECA (width);
-			Rule rule = new Rule (0, space);
+			Rule rule = new Rule (0, place);
 
 			do {
 				
@@ -41,7 +41,7 @@ namespace CellularAutomata
 					
 					try {
 						
-						rule.number = Convert.ToUInt64 (cmds[1]);
+						rule.number = BigInteger.Parse (cmds[1]);
 						population = Population.BuildECA (rule, width);
 						
 					} catch (System.NullReferenceException) {
@@ -71,7 +71,7 @@ namespace CellularAutomata
 					
 					try {
 						
-						rule.number = Convert.ToUInt64 (cmds[0]);
+						rule.number = BigInteger.Parse (cmds[0]);
 						
 					} catch (System.OverflowException) {
 						
@@ -98,43 +98,47 @@ namespace CellularAutomata
 				
 				if ("save" == cmds[cmds.Length - 1].ToLower ()) {
 					
-					Bitmap bitmap = new Bitmap (Convert.ToInt32 (width), Convert.ToInt32 (height));
+					Bitmap bitmap = new Bitmap (width, height);
 					
-					for (int y = 0; y < Convert.ToInt32 (height); y++) {
+					for (int y = 0; y < height; y++) {
 						
 						population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
 						ICell current = population.GetRoot ();
 						
-						for (int x = 0; x < Convert.ToInt32 (width); x++) {
+						for (int x = 0; x < width; x++) {
 							
 							Color color;
 							
-							ulong state = current.GetState ();
+							int state = current.GetState ();
 							
 							switch (state) {
 								
 								case 0:
-								color = Color.Red;
+								color = Color.MediumVioletRed;
 								break;
 								
 								case 1:
-								color = Color.Yellow;
+								color = Color.LightPink;
 								break;
 								
 								case 2:
-								color = Color.Green;
+								color = Color.Orange;
 								break;
 								
 								case 3:
-								color = Color.Cyan;
+								color = Color.Lavender;
 								break;
 								
 								case 4:
-								color = Color.Blue;
+								color = Color.Yellow;
+								break;
+								
+								case 5:
+								color = Color.Green;
 								break;
 								
 								default:
-								color = Color.Magenta;
+								color = Color.Blue;
 								break;
 								
 							}
@@ -151,7 +155,7 @@ namespace CellularAutomata
 					
 				} else if ("quiet" == cmds[cmds.Length - 1].ToLower ()) {
 					
-					for (ulong i = 0; i < height; i++) {
+					for (int i = 0; i < height; i++) {
 						
 						population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
 						
@@ -159,43 +163,48 @@ namespace CellularAutomata
 					
 				} else {
 					
-					for (ulong i = 0; i < height; i++) {
+					for (int i = 0; i < height; i++) {
 						
 						population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
 						
 						foreach (ICell cell in population) {
 							
-							ulong state = cell.GetState ();
+							int state = cell.GetState ();
 							
 							switch (state) {
 								
 								case 0:
-								Console.BackgroundColor = ConsoleColor.Red;
+								Console.BackgroundColor = ConsoleColor.Magenta;
 								Console.ForegroundColor = ConsoleColor.Black;
 								break;
 								
 								case 1:
-								Console.BackgroundColor = ConsoleColor.Yellow;
+								Console.BackgroundColor = ConsoleColor.Red;
 								Console.ForegroundColor = ConsoleColor.Black;
 								break;
 								
 								case 2:
-								Console.BackgroundColor = ConsoleColor.Green;
+								Console.BackgroundColor = ConsoleColor.Yellow;
 								Console.ForegroundColor = ConsoleColor.Black;
 								break;
 								
 								case 3:
-								Console.BackgroundColor = ConsoleColor.Cyan;
+								Console.BackgroundColor = ConsoleColor.Gray;
 								Console.ForegroundColor = ConsoleColor.Black;
 								break;
 								
 								case 4:
-								Console.BackgroundColor = ConsoleColor.Blue;
+								Console.BackgroundColor = ConsoleColor.Green;
+								Console.ForegroundColor = ConsoleColor.Black;
+								break;
+								
+								case 5:
+								Console.BackgroundColor = ConsoleColor.Cyan;
 								Console.ForegroundColor = ConsoleColor.Black;
 								break;
 								
 								default:
-								Console.BackgroundColor = ConsoleColor.Magenta;
+								Console.BackgroundColor = ConsoleColor.Blue;
 								Console.ForegroundColor = ConsoleColor.Black;
 								break;
 								
