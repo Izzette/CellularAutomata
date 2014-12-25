@@ -27,11 +27,10 @@ for place in range(0, k ** n):
     final = (high - low) / (k ** total)
     rule += final * (k ** place)
 
-print(rule)
 srule = ""
 
-for i in range(math.floor(math.log10(k ** (k ** n))) + 1, -1, -1):
+for i in range(int(math.log10(k ** (k ** n))), -1, -1):
     final = (rule % (10 ** (i + 1))) / (10 ** i)
-    srule += str(math.floor(final))
+    srule += str(int(final))
 
 print (srule)
