@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Drawing;
 using System.Numerics;
 using CellularAutomata.Cells;
@@ -86,6 +87,7 @@ namespace CellularAutomata
 
 					population = new Population (rule, pop.GetRoot (), size);
 					current = population.GetRoot ();
+					string map = "";
 
 					for (int i = 0; i < (width * height); i++) {
 
@@ -157,6 +159,8 @@ namespace CellularAutomata
 						current = current.GetNext ();
 
 					}
+
+					Thread.Sleep (500);
 
 					Console.Write ("\n\n");
 
