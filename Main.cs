@@ -15,7 +15,6 @@ namespace CellularAutomata
 		{
 			
 			Console.WriteLine ("\nWelcome to CellularAutomata!");
-			Console.WriteLine ("This program allows you to use any of the 256 rules.\n");
 
 			Console.WriteLine ("Please type the width and height for this session and press enter.");
 
@@ -102,7 +101,7 @@ namespace CellularAutomata
 					
 					for (int y = 0; y < height; y++) {
 						
-						population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
+						population.Evolve (rule, height);
 						ICell current = population.GetRoot ();
 						
 						for (int x = 0; x < width; x++) {
@@ -110,7 +109,7 @@ namespace CellularAutomata
 							Color color;
 							
 							int state = current.GetState ();
-							
+
 							switch (state) {
 								
 								case 0:
@@ -157,7 +156,7 @@ namespace CellularAutomata
 					
 					for (int i = 0; i < height; i++) {
 						
-						population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
+						population.Evolve (rule, height);
 						
 					}
 					
@@ -165,12 +164,12 @@ namespace CellularAutomata
 					
 					for (int i = 0; i < height; i++) {
 						
-						population = new Population (rule, Population.Evolve(population.GetRoot (), rule, width), width);
+						population.Evolve (rule, height);
 						
 						foreach (ICell cell in population) {
 							
 							int state = cell.GetState ();
-							
+
 							switch (state) {
 								
 								case 0:

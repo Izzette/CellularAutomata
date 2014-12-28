@@ -77,6 +77,34 @@ namespace CellularAutomata.Populations
 			
 		}
 
+		public static Population BuildVNA (Rule rule, int[] size)
+		{
+
+			VNCell root = new VNCell (1);
+			VNCell current = root;
+
+			for (int i = 0; i < size[1]; i++) {
+
+				for (int ie = 0; ie < size[0] - 1; ie++) {
+
+					VNCell cell = new VNCell (0);
+					current = current.AddNeighbour (ref cell, false);
+
+				}
+
+				if (size [1] - 1 != i) {
+
+					VNCell edgeCell = new VNCell (0);
+					current = current.AddNeighbour (ref edgeCell, true);
+
+				}
+
+			}
+
+			return new Population (rule, root, size);
+
+		}
+
 		private Rule rule;
 		private ICell root;
 		private int[] size;
