@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using CellularAutomata.Cells;
+using CellularAutomata.Rules;
 using CellularAutomata.Populations;
 
 namespace CellularAutomata
@@ -29,7 +30,7 @@ namespace CellularAutomata
 			int gen = Convert.ToInt32 (Console.ReadLine ());
 
 			Console.Write ("Base: ");
-			BigInteger place = BigInteger.Parse (Console.ReadLine ());
+			int place = Convert.ToInt32 (Console.ReadLine ());
 
 			Rule rule = new Rule (0, place);
 			Population population = Population.BuildVNA (rule, size);
@@ -77,7 +78,7 @@ namespace CellularAutomata
 					for (int i = 0; i < (width * height); i++) {
 
 						int neighbourhood = current.GetNeighbourhood (rule.place);
-						newC.SetState (Population.Implement (neighbourhood, rule));
+						newC.SetState (Implement.Absolute (neighbourhood, rule));
 
 						current = current.GetNext ();
 						newC = newC.GetNext ();
