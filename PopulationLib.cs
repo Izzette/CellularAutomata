@@ -1,61 +1,28 @@
 ﻿using System;
-using System.Collections;
-using System.Numerics;
 using CellularAutomata.Cells;
+using CellularAutomata.Rules;
 
 namespace CellularAutomata.Populations
 {
-	
-	public struct Rule
+
+	public class Population
 	{
-		
-		public BigInteger number;
-		public BigInteger place;
-		
-		public Rule (BigInteger number, BigInteger place)
-		{
-			
-			this.number = number;
-			this.place = place;
-			
-		}
-		
-	}
 
-	public class Population : IEnumerator,IEnumerable
-	{
-		
-		public static int Implement (int neighbourhood, Rule rule)
-		{
-			
-			BigInteger upper = rule.number % BigInteger.Pow (rule.place, neighbourhood + 1);
-
-			BigInteger lower = rule.number % BigInteger.Pow (rule.place, neighbourhood);
-			BigInteger final = (upper - lower) / BigInteger.Pow (rule.place, neighbourhood);
-				
-			return (int)final;
-			
-		}
-
-		public static ICell Evolve (ICell current, Rule rule, params int[] size)
+		public static ICell Evolve (ICell current, Rule rule, int[] size)
 		{
 			Population population = new Population (rule, current, size);
+			ICell cell = population.GetRoot ();
+			int length = population.GetLength ();
 
-			foreach (ICell cell in population) {
+			for (int i = 0; i < length; i++) {
 				
-				current.SetState (Population.Implement (cell.GetNeighbourhood (rule.place), rule));
+				current.SetState (Implement.Absolute (cell.GetNeighbourhood (rule.place), rule));
 				current = current.GetNext ();
+				cell = cell.GetNext ();
 				
 			}
 
 			return current;
-		}
-
-		public static Population BuildECA (int length)
-		{
-			
-			return BuildECA (new Rule (0, 2), length);
-			
 		}
 
 		public static Population BuildECA (Rule rule, int length)
@@ -106,23 +73,25 @@ namespace CellularAutomata.Populations
 		}
 
 		private Rule rule;
+		
+		public Rule Rule {
+			
+			get { return this.rule; }
+			set { this.rule = value; }
+			
+		}
+		
 		private ICell root;
 		private int[] size;
-
-		// For use with IEnumerator
 		private int length;
-		private ICell current;
-		private int position;
 
 		public Population (Rule rule, ICell root, params int[] size)
 		{
 			
 			this.rule = rule;
 			this.root = root;
-			this.current = this.root;
 			this.size = size;
 			this.length = 1;
-			this.position = 0;
 			
 			foreach (int n in size) {
 				
@@ -139,17 +108,17 @@ namespace CellularAutomata.Populations
 			
 		}
 
-		public Rule GetRule ()
-		{
-			
-			return this.rule;
-			
-		}
-
 		public int[] GetSize ()
 		{
 			
 			return this.size;
+			
+		}
+		
+		public int GetLength ()
+		{
+			
+			return this.length;
 			
 		}
 
@@ -186,43 +155,6 @@ namespace CellularAutomata.Populations
 				this.Evolve (rule, generations);
 				
 			}
-			
-		}
-
-		// Required by IEnumerator
-		public object Current
-		{
-			
-			get { return this.current; }
-			
-		}
-
-		// Required by IEnumerator
-		public bool MoveNext()
-		{
-			
-			this.current = this.current.GetNext ();
-			
-			this.position++;
-			
-			return (this.position < this.length);
-			
-		}
-
-		// Required by IEnumerator
-		public void Reset()
-		
-		{
-			this.current = this.root;
-			this.position = 0;
-			
-		}
-
-		// Required by IEnumerable
-		public IEnumerator GetEnumerator()
-		{
-			
-			return (IEnumerator)this;
 			
 		}
 		
