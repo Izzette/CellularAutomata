@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Numerics;
-using CellularAutomata.Cells;
 using CellularAutomata.Rules;
 using CellularAutomata.Populations;
 
@@ -35,26 +35,7 @@ namespace CellularAutomata
 			Rule rule = new Rule (0, place);
 			Population population = Population.BuildVNA (rule, size);
 
-			
-			ICell orig = population.GetRoot ();
-
-			for (int i = 0; i < (width * height); i++) {
-
-				if (0 == i % width) {
-
-					Console.Write ("\n");
-
-				}
-
-				int state = orig.GetState ();
-
-				Console.Write (state);
-
-				orig = orig.GetNext ();
-
-			}
-
-			Console.Write ("\n\n");
+			Console.Write (population.GetStates ());
 
 			do {
 
@@ -69,170 +50,82 @@ namespace CellularAutomata
 
 				}
 
-				for (int g = 0; g < gen; g++) {
+				string states = population.Evolve (rule, gen);
 
-					ICell current = population.GetRoot ();
-					Population pop = Population.BuildVNA (rule, size);
-					ICell newC = pop.GetRoot ();
+				string[] frames = states.Split ("\\g");
 
-					for (int i = 0; i < (width * height); i++) {
+				int g = 0;
 
-						int neighbourhood = current.GetNeighbourhood (rule.place);
-						newC.SetState (Implement.Absolute (neighbourhood, rule));
+				foreach (string f in frames) {
 
-						current = current.GetNext ();
-						newC = newC.GetNext ();
-
-					}
-
-					population = new Population (rule, pop.GetRoot (), size);
-					current = population.GetRoot ();
-					
 					Bitmap bitmap = new Bitmap (width * 4, height * 4);
-					
+
+					int y = 0;
 					int x = 0;
-					int y = -1;
 
-					for (int i = 0; i < (width * height); i++) {
-						
-						x++;
+					string[] rows = f.Split ("\n");
 
-						if (0 == i % height) {
+					foreach (string r in rows) {
 
-							y++;
-							
-							x = 0;
-							
-							//Console.Write ("\n");
-						
-						}
-						
-						Color color;
-						
-						int state = current.GetState ();
+						string[] cells = r.Split ("");
 
-						switch (state) {
-							
-							case 0:
-							color = Color.MediumVioletRed;
-							break;
-							
-							case 1:
-							color = Color.LightPink;
-							break;
-							
-							case 2:
-							color = Color.Orange;
-							break;
-							
-							case 3:
-							color = Color.Lavender;
-							break;
-							
-							case 4:
-							color = Color.Yellow;
-							break;
-							
-							case 5:
-							color = Color.Green;
-							break;
-							
-							default:
-							color = Color.Blue;
-							break;
-							
-						}
-						
-						for (int ie = 0; ie < 4; ie++) {
-							
-							for (int iee = 0; iee < 4; iee++) {
-								
-								bitmap.SetPixel ((4 * x) + ie, (4 * y) + iee, color);
-								
+						foreach (string c in cells) {
+
+							Color color;
+
+							switch (state) {
+
+								case "0":
+								color = Color.MediumVioletRed;
+								break;
+
+								case "1":
+								color = Color.LightPink;
+								break;
+
+								case "2":
+								color = Color.Orange;
+								break;
+
+								case "3":
+								color = Color.Lavender;
+								break;
+
+								case "4":
+								color = Color.Yellow;
+								break;
+
+								case "5":
+								color = Color.Green;
+								break;
+
+								default:
+								color = Color.Blue;
+								break;
+
 							}
-							
+
+							for (int ie = 0; ie < 4; ie++) {
+
+								for (int iee = 0; iee < 4; iee++) {
+
+									bitmap.SetPixel ((4 * x) + ie, (4 * y) + iee, color);
+
+								}
+
+							}
+
 						}
 
-						//switch (state) {
-
-						//case 0:
-
-							//Console.BackgroundColor = ConsoleColor.Magenta;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//case 1:
-
-							//Console.BackgroundColor = ConsoleColor.Red;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//case 2:
-						
-							//Console.BackgroundColor = ConsoleColor.Yellow;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//case 3:
-						
-							//Console.BackgroundColor = ConsoleColor.Gray;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//case 4:
-						
-							//Console.BackgroundColor = ConsoleColor.Green;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//case 5:
-						
-							//Console.BackgroundColor = ConsoleColor.Cyan;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//default:
-						
-							//Console.BackgroundColor = ConsoleColor.Blue;
-							//Console.ForegroundColor = ConsoleColor.Black;
-
-							//break;
-
-						//}
-
-						//Console.Write (state);
-
-						//Console.ResetColor ();
-
-						current = current.GetNext ();
+						y++;
 
 					}
 
-					string filename = Convert.ToString (g);
-					
-					while (filename.Length < 10) {
-						
-						string temp = "0";
-						temp += filename;
-						filename = temp;
-						
-					}
-					
-					string tempg = "imgbin/g";
-					tempg += filename;
-					filename = tempg;
-					
-					filename += ".bmp";
-					
-					bitmap.Save (filename);
+					string filename = "imgbin/g" + Convert.ToString (g).PadLeft(Math.Log10 (gen)) + ".gif";
 
-					//Console.Write ("\n\n");
+					bitmap.Save (filename, ImageFormat.Gif);
+
+					g++;
 
 				}
 

@@ -8,15 +8,31 @@ namespace CellularAutomata.Populations
 	public class Population
 	{
 
-		public static ICell Evolve (ICell current, Rule rule, int[] size)
+		public static ICell Evolve (ICell current, Rule rule, int[] size, ref string states)
 		{
-			Population population = new Population (rule, current, size);
+			Population population = new Population (rule, current, size, states);
 			ICell cell = population.GetRoot ();
 			int length = population.GetLength ();
 
+			states = "";
+
 			for (int i = 0; i < length; i++) {
-				
-				current.SetState (Implement.Absolute (cell.GetNeighbourhood (rule.place), rule));
+
+				foreach (int n in size) {
+
+					if (0 == i % n) {
+
+						states += "\n";
+
+					}
+
+				}
+
+				int state = Implement.Absolute (cell.GetNeighbourhood (rule.place), rule);
+
+				current.SetState (state);
+				states += Convert.ToString (state);
+
 				current = current.GetNext ();
 				cell = cell.GetNext ();
 				
@@ -31,16 +47,22 @@ namespace CellularAutomata.Populations
 			ElementaryCell root = new ElementaryCell (1);
 			ElementaryCell current = root;
 
+			string states = "\n1";
+
 			for (int i = 0; i < length - 1; i++) {
 				
 				ElementaryCell cell = new ElementaryCell (0);
 				current = current.AddNeighbour (ref cell);
+
+				states += "0";
 				
 			}
+
+			states += "\n";
 			
 			current = current.AddNeighbour (ref root);
 			
-			return new Population (rule, current, length);
+			return new Population (rule, current, new int[1] {length}, states);
 			
 		}
 
@@ -50,12 +72,16 @@ namespace CellularAutomata.Populations
 			VNCell root = new VNCell (1);
 			VNCell current = root;
 
+			string states = "\n\n1";
+
 			for (int i = 0; i < size[1]; i++) {
 
 				for (int ie = 0; ie < size[0] - 1; ie++) {
 
 					VNCell cell = new VNCell (0);
 					current = current.AddNeighbour (ref cell, false);
+
+					states += "0";
 
 				}
 
@@ -64,11 +90,15 @@ namespace CellularAutomata.Populations
 					VNCell edgeCell = new VNCell (0);
 					current = current.AddNeighbour (ref edgeCell, true);
 
+					states += "\n0";
+
 				}
 
 			}
 
-			return new Population (rule, root, size);
+			states += "\n\n";
+
+			return new Population (rule, root, size, states);
 
 		}
 
@@ -82,14 +112,17 @@ namespace CellularAutomata.Populations
 		}
 		
 		private ICell root;
+		private string states;
 		private int[] size;
 		private int length;
 
-		public Population (Rule rule, ICell root, params int[] size)
+		public Population (Rule rule, ICell root, int[] size, string states)
 		{
 			
 			this.rule = rule;
 			this.root = root;
+			this.states = states;
+
 			this.size = size;
 			this.length = 1;
 			
@@ -122,39 +155,50 @@ namespace CellularAutomata.Populations
 			
 		}
 
-		public void Evolve ()
+		public string GetStates ()
+		{
+
+			return this.states;
+
+		}
+
+		public string Evolve ()
 		{
 			
-			this.root = Population.Evolve (this.root, this.rule, this.size);
+			return this.Evolve (this.rule);
 			
 		}
 
-		public void Evolve (int generations)
+		public string Evolve (int generations)
 		{
 			
-			this.Evolve (this.rule, generations);
+			return this.Evolve (this.rule, generations);
 			
 		}
 
-		public void Evolve (Rule rule)
+		public string Evolve (Rule rule)
 		{
 			
-			this.root = Population.Evolve (this.root, rule, this.size);
+			this.root = Population.Evolve (this.root, rule, this.size, ref this.states);
+
+			return this.states;
 			
 		}
 
-		public void Evolve (Rule rule, int generations)
+		public string Evolve (Rule rule, int generations)
 		{
-			
-			this.Evolve (rule);
-			
-			generations--;
-			
-			if (0 < generations) {
-				
-				this.Evolve (rule, generations);
-				
+
+			string states = "\n";
+
+			for (int i = 0; i < generations; i++) {
+
+				states += "\\g" + this.Evolve (rule);
+
 			}
+
+			states += "\n";
+
+			return states;
 			
 		}
 		

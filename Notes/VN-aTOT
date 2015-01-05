@@ -1,8 +1,14 @@
 2D Von Neumann Wolfram Code:
+
+
 k = 2; code 76 {
-	From a simple seed, a repeating fractal-like pattern is acheived.  The pattern symetrically fills the universe with unique and complex geometric patterns.  The patterns repeatedly die after reaching a high density leaving behind a new set of symetrical simple seeds.  As the population repeatedly "dies off", the emerging patterns seem to gradually increase in complexity.
+
+	From a simple seed, a repeating fractal-like pattern is acheived.  The pattern symetrically fills the universe with unique and complex geometric patterns.  The patterns repeatedly die after reaching a high density leaving behind a new set of symetrical simple seeds.  As the population repeatedly "dies off", the emerging patterns seem to gradually increase in complexity.  For all generations (g = 1 <- ++), periodic die outs happen for all (0 == g mod 4).  For all (1 == g mod 2), the number of '1' cells roughly quadruples.  Increasing magnitudes of die offs appear to occur as (0 == g mod (2 ^ n)), where n is the magnitude (1 >= n being the obvious exceptions).  For all (g == 2 ^ n), the number of '1' cells is 4.
+
 }
 
 k = 3; code 630 {
+
 	From a simple seed "1", a simple ordered pattern (w/o "2") is attained as a front propogates away from the initial seed.  When the fronts meet, a complex pattern emerges includeing "2".  After the complexity fills the universe, it does not seem to progress further.  However, many approximations of a circle and various other curves appear.  Amazing how this can occur in a purely perpendicular universe.
+
 }
