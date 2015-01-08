@@ -35,8 +35,6 @@ namespace CellularAutomata
 			Rule rule = new Rule (0, place);
 			Population population = Population.BuildVNA (rule, size);
 
-			Console.Write (population.GetStates ());
-
 			do {
 
 				Console.Write ("\n");
@@ -52,83 +50,87 @@ namespace CellularAutomata
 
 				string states = population.Evolve (rule, gen);
 
-				string[] frames = states.Split ("\\g");
-
+				string[] frames = states.Split (new string[1] {"\\g"}, StringSplitOptions.RemoveEmptyEntries);
+				
 				int g = 0;
 
 				foreach (string f in frames) {
+					
+					Console.Write ("\nRule: [{0}, {1}]\nGeneration: {2}\n\n", rule.number, rule.place, g);
 
-					Bitmap bitmap = new Bitmap (width * 4, height * 4);
-
-					int y = 0;
-					int x = 0;
-
-					string[] rows = f.Split ("\n");
+					string[] rows = f.Split (new string[1] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
 
 					foreach (string r in rows) {
-
-						string[] cells = r.Split ("");
-
-						foreach (string c in cells) {
-
-							Color color;
-
+						
+						string[] line = r.Split (new string[1] {"\\s"}, StringSplitOptions.RemoveEmptyEntries);
+						
+						foreach (string state in line) {
+							
+							ConsoleColor color;
+							ConsoleColor foreground = ConsoleColor.Black;
+							
 							switch (state) {
-
-								case "0":
-								color = Color.MediumVioletRed;
+								
+							case "0":
+								
+								color = ConsoleColor.White;
 								break;
-
-								case "1":
-								color = Color.LightPink;
+								
+							case "1":
+								
+								color = ConsoleColor.Red;
 								break;
-
-								case "2":
-								color = Color.Orange;
+								
+							case "2":
+							
+								color = ConsoleColor.Yellow;
 								break;
-
-								case "3":
-								color = Color.Lavender;
+								
+							case "3":
+							
+								color = ConsoleColor.Green;
 								break;
-
-								case "4":
-								color = Color.Yellow;
+								
+							case "4":
+							
+								color = ConsoleColor.Cyan;
 								break;
-
-								case "5":
-								color = Color.Green;
+								
+							case "5":
+							
+								color = ConsoleColor.Blue;
 								break;
-
-								default:
-								color = Color.Blue;
+								
+							case "6":
+							
+								color = ConsoleColor.Magenta;
 								break;
-
+								
+							default:
+							
+								color = ConsoleColor.Black;
+								foreground = ConsoleColor.White;
+								break;
+								
 							}
-
-							for (int ie = 0; ie < 4; ie++) {
-
-								for (int iee = 0; iee < 4; iee++) {
-
-									bitmap.SetPixel ((4 * x) + ie, (4 * y) + iee, color);
-
-								}
-
-							}
-
+							
+							Console.BackgroundColor = color;
+							Console.ForegroundColor = foreground;
+							
+							Console.Write (state);
+							
+							Console.ResetColor ();
+							
 						}
-
-						y++;
+						
+						Console.Write ("\n");
 
 					}
-
-					string filename = "imgbin/g" + Convert.ToString (g).PadLeft(Math.Log10 (gen)) + ".gif";
-
-					bitmap.Save (filename, ImageFormat.Gif);
-
+					
 					g++;
 
 				}
-
+ 
 				Console.Write ("\n");
 
 			} while (true);

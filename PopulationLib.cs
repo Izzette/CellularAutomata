@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using CellularAutomata.Cells;
 using CellularAutomata.Rules;
 
@@ -7,39 +9,6 @@ namespace CellularAutomata.Populations
 
 	public class Population
 	{
-
-		public static ICell Evolve (ICell current, Rule rule, int[] size, ref string states)
-		{
-			Population population = new Population (rule, current, size, states);
-			ICell cell = population.GetRoot ();
-			int length = population.GetLength ();
-
-			states = "";
-
-			for (int i = 0; i < length; i++) {
-
-				foreach (int n in size) {
-
-					if (0 == i % n) {
-
-						states += "\n";
-
-					}
-
-				}
-
-				int state = Implement.Absolute (cell.GetNeighbourhood (rule.place), rule);
-
-				current.SetState (state);
-				states += Convert.ToString (state);
-
-				current = current.GetNext ();
-				cell = cell.GetNext ();
-				
-			}
-
-			return current;
-		}
 
 		public static Population BuildECA (Rule rule, int length)
 		{
@@ -112,6 +81,7 @@ namespace CellularAutomata.Populations
 		}
 		
 		private ICell root;
+		private ICell[] items;
 		private string states;
 		private int[] size;
 		private int length;
@@ -129,6 +99,18 @@ namespace CellularAutomata.Populations
 			foreach (int n in size) {
 				
 				this.length = this.length * n;
+				
+			}
+			
+			this.items = new ICell[this.length];
+			
+			ICell current = this.root;
+			
+			for (int i = 0; i < this.length; i++) {
+				
+				this.items[i] = current;
+				
+				current = current.GetNext ();
 				
 			}
 			
@@ -179,7 +161,33 @@ namespace CellularAutomata.Populations
 		public string Evolve (Rule rule)
 		{
 			
-			this.root = Population.Evolve (this.root, rule, this.size, ref this.states);
+			int[] next = new int[this.length];
+			
+			Parallel.For(0, this.length, i => {
+				
+				next[i] = Implement.Absolute (this.items[i].GetNeighbourhood(rule.place), rule);
+            
+            });
+            
+			Parallel.For (0, this.length, i => {
+								
+				this.items[i].SetState (next[i]);
+				
+			});
+			
+			this.states = "";
+			
+			for (int i = 0; i < this.length; i++) {
+				
+				if (0 == i % this.size[0]) {
+					
+					this.states += "\n";
+					
+				}
+				
+				this.states += "\\s" + Convert.ToString (next[i]);
+				
+			}
 
 			return this.states;
 			
@@ -188,17 +196,17 @@ namespace CellularAutomata.Populations
 		public string Evolve (Rule rule, int generations)
 		{
 
-			string states = "\n";
+			string evolution = this.states + "\n";
 
 			for (int i = 0; i < generations; i++) {
 
-				states += "\\g" + this.Evolve (rule);
+				evolution += "\\g" + this.Evolve (rule);
 
 			}
 
-			states += "\n";
+			evolution += "\n";
 
-			return states;
+			return evolution;
 			
 		}
 		
