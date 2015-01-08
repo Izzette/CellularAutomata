@@ -11,12 +11,7 @@ namespace CellularAutomata.Rules
 		public static int Absolute (int neighbourhood, Rule rule)
 		{
 			
-			BigInteger upper = rule.number % BigInteger.Pow (rule.place, neighbourhood + 1);
-
-			BigInteger lower = rule.number % BigInteger.Pow (rule.place, neighbourhood);
-			BigInteger final = (upper - lower) / BigInteger.Pow (rule.place, neighbourhood);
-				
-			return (int)final;
+			return (int)((rule.number % BigInteger.Pow (rule.place, neighbourhood + 1)) / BigInteger.Pow (rule.place, neighbourhood));
 			
 		}
 	
