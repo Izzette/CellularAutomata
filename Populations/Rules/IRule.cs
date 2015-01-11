@@ -1,7 +1,8 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference ICellLib
+using CellularAutomata.Populations;
+using CellularAutomata.Populations.Cells;  // reference ICell
 
-namespace CellularAutomata.Rules  // contains rules
+namespace CellularAutomata.Populations.Rules  // contains rules
 {
 
 	public interface IRule : ICloneable  // rule interface, all base and abstract classes inherit

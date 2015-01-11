@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells; // reference ICellLib
+using CellularAutomata.Populations.Cells; // reference ICell
 
 namespace CellularAutomata.Populations.Cells  // contains Cell classes
 {

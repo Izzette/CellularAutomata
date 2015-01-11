@@ -1,0 +1,24 @@
+file: IRule: public interface IRule inherit ICloneable:
+		
+	All Rules base and abstract classes inherit this.
+	
+	void Parse (string rule):
+	
+		setter dependancy.
+		interprets rule as string and saves the string.
+		
+	int Implement (ICell cell):
+	
+		implements rule, returns new state value.
+		
+	string GetRule ():
+		
+		returns rule that it last parsed successfully.
+		
+file: Absolute: public class Absolute inherit IRule:
+
+	Parse method setter dependancy.
+
+	private Absolute (int color, BigInteger number, string rule):
+		
+		private constructor for Clone method.

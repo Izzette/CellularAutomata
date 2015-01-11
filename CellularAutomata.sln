@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Populations", "Populations\Populations.csproj", "{79776900-273C-40DE-971A-B015B4771D41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Commands\Commands.csproj", "{17AECAED-A681-464D-82CE-72C2A9ABAF5D}"
+EndProject
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Convert", "Convert\Convert.mdproj", "{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+		Default|Any CPU = Default|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17AECAED-A681-464D-82CE-72C2A9ABAF5D}.Debug|x86.ActiveCfg = Debug|x86
+		{17AECAED-A681-464D-82CE-72C2A9ABAF5D}.Debug|x86.Build.0 = Debug|x86
+		{17AECAED-A681-464D-82CE-72C2A9ABAF5D}.Default|Any CPU.ActiveCfg = Debug|x86
+		{17AECAED-A681-464D-82CE-72C2A9ABAF5D}.Default|Any CPU.Build.0 = Debug|x86
+		{17AECAED-A681-464D-82CE-72C2A9ABAF5D}.Release|x86.ActiveCfg = Release|x86
+		{17AECAED-A681-464D-82CE-72C2A9ABAF5D}.Release|x86.Build.0 = Release|x86
+		{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}.Debug|x86.ActiveCfg = Default|Any CPU
+		{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}.Debug|x86.Build.0 = Default|Any CPU
+		{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}.Default|Any CPU.ActiveCfg = Default|Any CPU
+		{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}.Default|Any CPU.Build.0 = Default|Any CPU
+		{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}.Release|x86.ActiveCfg = Default|Any CPU
+		{3E6207C5-637E-470B-A8C1-2DD9D582C3E4}.Release|x86.Build.0 = Default|Any CPU
+		{79776900-273C-40DE-971A-B015B4771D41}.Debug|x86.ActiveCfg = Debug|x86
+		{79776900-273C-40DE-971A-B015B4771D41}.Debug|x86.Build.0 = Debug|x86
+		{79776900-273C-40DE-971A-B015B4771D41}.Default|Any CPU.ActiveCfg = Debug|x86
+		{79776900-273C-40DE-971A-B015B4771D41}.Default|Any CPU.Build.0 = Debug|x86
+		{79776900-273C-40DE-971A-B015B4771D41}.Release|x86.ActiveCfg = Release|x86
+		{79776900-273C-40DE-971A-B015B4771D41}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Populations\Populations.csproj
+	EndGlobalSection
+EndGlobal

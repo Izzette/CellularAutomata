@@ -1,6 +1,6 @@
 using System;
-using CellularAutomata.Rules;  // reference IRuleLib
-using CellularAutomata.Populations;  // reference VPopulationLib
+using CellularAutomata.Populations;  // reference Variety
+using CellularAutomata.Populations.Rules;  // reference IRule
 
 namespace CellularAutomata.Populations  // contains all Cell collections and Cells namespace
 {

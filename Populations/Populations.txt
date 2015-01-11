@@ -1,0 +1,61 @@
+
+Contains Cells, Rules namespace and Cells collections.
+
+file: Variety: public enum Variety:
+
+	{ General, VonNeumann }.
+	CellType Enumerations.
+
+file: IPopulation: public IPopulation inherit System.ICloneable:
+
+	All base and abstract Populations classes inherit.
+	
+	void Evolve ():
+	
+		Evolves population according to simple rule.
+		
+	int[] GetStates (out int[] size):
+	.
+		out size for allow to interpret dimensions.
+		return states.
+		
+	void SetRule (IRule rule):
+	
+		Sets rule for population.
+		setter dependancy
+		
+	IRule GetRule ():
+	
+		return rule.
+		
+	Variety GetVariety ():
+	
+		return variety.
+		
+file: Simple: public Simple inherit IPopulation:
+
+	private Length:
+	
+		get only, returns items.Length
+		
+	private Simple (Variety variety, ICell[] items, Rule rule, int[] size, int[] states):
+	
+		private constructor for Clone () method, passes all instance variables.
+	
+	public Simple (Variety variety, int[] size):
+		
+		SetRule () initialization dependancy.
+		public constructor for simple inital conditions.
+		this.states from cell constructor out int[] states.
+	
+	public Simple (Variety variety, int[] size, int[] states):
+		
+		public constructor for manual states.
+		SetRule () initialization dependancy.
+		
+	public void Evolve () inherit ICell:  // evolves once
+		
+		Uses System.Threading.Task.Parallel.For method:
+		
+			Effectively incompatable with Mono.
+			Will compile and run with mono, using normal for loop.	

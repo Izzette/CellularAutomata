@@ -1,9 +1,10 @@
 using System;
-using System.Numerics;  // reference System.Numerics, for BigInteger class
-using CellularAutomata.Populations.Cells;  // reference ICellLib
-using CellularAutomata.Rules; // reference IRuleLib
+using System.Numerics;  // reference System.Numerics
+using CellularAutomata.Populations;
+using CellularAutomata.Populations.Cells;  // reference ICell
+using CellularAutomata.Populations.Rules;  // reference IRule
 
-namespace CellularAutomata.Rules  // contains rules
+namespace CellularAutomata.Populations.Rules  // contains rules
 {	
 	
 	public class Absolute : IRule
@@ -21,6 +22,8 @@ namespace CellularAutomata.Rules  // contains rules
 			this.rule = rule;
 
 		}
+
+		public Absolute () { ; }
 
 		// Intialization Dependancy
 		// string rule = "[color,number]"

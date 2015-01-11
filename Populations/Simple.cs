@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;  // for Parallel class
-using CellularAutomata.Rules;  // reference IRuleLib
-using CellularAutomata.Populations; // reference VPopulationLib, IPopulationLib
-using CellularAutomata.Populations.Cells;  // reference ICellLib, GCellLib, VNCellLib
+using System.Threading.Tasks;
+using CellularAutomata.Populations; // reference Variety, IPopulation
+using CellularAutomata.Populations.Cells;  // reference ICell, General, VonNeumann
+using CellularAutomata.Populations.Rules;  // reference IRule
 
-namespace CellularAutomata.Populations  // Contains cell collections and Cells namespace
+namespace CellularAutomata.Populations  // Contains cell collections, Cells namespace, Rules namespace
 {
 
 	public class Simple : IPopulation  // inherits IPopulation
@@ -59,12 +59,38 @@ namespace CellularAutomata.Populations  // Contains cell collections and Cells n
 			
 		}
 
-		public Simple (Variety variety, int[] size, int[] states)  // public constructor for custom states, initailization dependancy SetRule (IRule rule)
+		// public constructor for custom states
+		// states can be shorter than, but not longer than length
+		// initailization dependancy SetRule (IRule rule)
+		public Simple (Variety variety, int[] size, int[] states)
 		{
 
 			this.variety = variety;
 			this.size = size;
-			this.states = states;
+
+			int length = 1;
+
+			foreach (int n in size) {
+
+				length = length * n;
+
+			}
+
+			this.states = new int [length];
+
+			int index = 0;
+
+			for ( ; index < states.Length; index++) {
+
+				this.states [index] = states [index];
+
+			}
+
+			for ( ; index < this.states.Length; index++) {
+
+				this.states [index] = 0;
+
+			}
 
 			switch (variety) {
 
