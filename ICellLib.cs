@@ -1,15 +1,15 @@
 using System;
 
-namespace CellularAutomata.Cells
+namespace CellularAutomata.Populations.Cells
 {	
 	
-	public interface ICell
+	public interface ICell  // ICell interface, all Cells base classes inherite ICell
 	{
 		
-		ICell GetNext ();
-		int GetState ();
-		void SetState (int state);
-		int GetNeighbourhood (int place);
+		ICell GetNext ();  // returns next ICell in scan
+		int GetState ();  // returns state
+		void SetState (int state);  // sets state
+		int GetNeighbourhood (int color);  // returns neighbourhood, color is the number of colors
 		
 	}
 	
