@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations;  // reference Variety
+using CellularAutomata.Populations.Cells;  // reference Arangements, Variety
 using CellularAutomata.Populations.Rules;  // reference IRule
 
 namespace CellularAutomata.Populations  // contains all Cell collections and Cells namespace
@@ -9,10 +9,11 @@ namespace CellularAutomata.Populations  // contains all Cell collections and Cel
 	{
 
 		void Evolve ();  // applies simple rule to members
-		int[] GetStates (out int[] size);  // out states array, out size array
+		States GetStates ();  // returns States structure
 		void SetRule (IRule rule);  // sets rule
 		IRule GetRule ();  // gets rule
 		Variety GetVariety ();  // gets variety
+		string ToString ();  // returns type, Variety, IRule as string
 
 		new object Clone ();  // inherit from ICloneable
 

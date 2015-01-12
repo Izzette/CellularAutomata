@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference ICell
+using CellularAutomata.Populations.Cells;  // reference ICell, Arangements
 
 namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 {
@@ -7,7 +7,12 @@ namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 	public class General : ICell  // one dimensional, one neighbour, one state
 	{
 
-		public static ICell[] Build (int[] size, out int[] states) // overload, constructs simple initial condition -> out states
+		private static Arangements Arangement {
+			get { return Arangements.OneDCubic; }
+			set { ; }
+		}
+
+		public static ICell[] Build (int[] size, out int[] values) // overload, constructs simple initial condition -> out states
 		{
 
 			if (3 > size [0]) { // safing length, prevent degenerate case
@@ -20,21 +25,21 @@ namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 
 			}
 
-			states = new int [size [0]];  // initialize states
+			values = new int [size [0]];  // initialize states
 
-			states [0] = 1;  // set seed to 1
+			values [0] = 1;  // set seed to 1
 
 			for (int i = 1; i < size [0]; i++) {  // start at 1 because states
 
-				states [i] = 0;  // set all other states to 0
+				values [i] = 0;  // set all other states to 0
 
 			}
 
-			return General.Build (size, states);  // return overload. exit
+			return General.Build (size, values);  // return overload. exit
 
 		}
 
-		public static ICell[] Build (int[] size, int[] states)  // constructs network; only size [0] is used
+		public static ICell[] Build (int[] size, int[] values)  // constructs network; only size [0] is used
 		{
 			
 			if (1 != size.Length) {  // safing number of dimensions
@@ -45,18 +50,18 @@ namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 
 				throw new ArgumentException ("new int (3) is not greater than or equal to parameter (int[] size) [0] !");
 
-			} else if (size [0] != states.Length) {  // safing size and states matchup
+			} else if (size [0] != values.Length) {  // safing size and states matchup
 
 				throw new ArgumentException ("parameter (int[] size) [0] does not have the same value as parameter (int[] states).Length !");
 
 			}
 
 			General[] items = new General [size [0]];  // create current to reference cell to be processed
-			items [0] = new General (states [0]);  //  create root from specified states
+			items [0] = new General (values [0]);  //  create root from specified states
 
 			for (int i = 1; i < size [0]; i++) {  // starts at 1 because root has already been created
 
-				items [i] = items [i - 1].AddNeighbour (states [i]);  // set new neighbour at specified state, save to next value of items
+				items [i] = items [i - 1].AddNeighbour (values [i]);  // set new neighbour at specified state, save to next value of items
 
 			}
 
@@ -103,6 +108,14 @@ namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 		{
 			
 			this.state = state;  // set state
+
+		}
+
+		// return gemometric arangement
+		public Arangements GetArangement ()
+		{
+
+			return General.Arangement;
 
 		}
 		

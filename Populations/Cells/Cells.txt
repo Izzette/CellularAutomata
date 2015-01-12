@@ -1,4 +1,14 @@
 
+file: Variety: public enum Variety:
+
+	{ General, VonNeumann }.
+	CellType Enumerations.
+	
+file: Aranagements: public enum Arangements:
+
+	geometric arangement
+	{ OneDCubic, TwoDCubic }
+	
 file: ICell: public interface ICell:
 			
 	All base and abstract Cells classes inherit.
@@ -21,21 +31,25 @@ file: ICell: public interface ICell:
 
 		color is the number of colors.
 		returns neighbourhood.
+		
+	Aranagements GetArangement ():
+	
+		returns Arangements enum
 	
 All base and abstract class members contain the following static methods or constructors:
 
-	public static ICell[] Build (int[] size, out int[] states):
+	public static ICell[] Build (int[] size, int[] values):
 		
-		Creates network of cells in specified size with specified states.
+		Creates network of cells in specified size with specified values.
 		Size is safed with manual exceptions.
-		Overload for this (int[] size, int[] states).
 		return items.
 		
-	public static ICell[] Build (int[] size, int[] states):
+	public static ICell[] Build (int[] size, out int[] values):
 
-		Overload for Build (int[] size, int[] states):
-		Constructs int[] states with simple seed.
+		Constructs int[] values with simple seed.
 		size safed with manual exceptions.
+		Overload for this (int[] size, int[] values).
+		return items.
 		
 	public this (int state):
 

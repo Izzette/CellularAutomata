@@ -1,11 +1,14 @@
 
 Contains Cells, Rules namespace and Cells collections.
 
-file: Variety: public enum Variety:
+file: States: public struct States:
 
-	{ General, VonNeumann }.
-	CellType Enumerations.
-
+	int[] values.
+	int[] sizes.
+	Aranagements arangement.
+	
+	checks for sizes and values compatability.
+	
 file: IPopulation: public IPopulation inherit System.ICloneable:
 
 	All base and abstract Populations classes inherit.
@@ -14,10 +17,9 @@ file: IPopulation: public IPopulation inherit System.ICloneable:
 	
 		Evolves population according to simple rule.
 		
-	int[] GetStates (out int[] size):
-	.
-		out size for allow to interpret dimensions.
-		return states.
+	States GetStates ():
+	
+		return States structure.
 		
 	void SetRule (IRule rule):
 	
@@ -31,6 +33,11 @@ file: IPopulation: public IPopulation inherit System.ICloneable:
 	Variety GetVariety ():
 	
 		return variety.
+		
+	new string ToString ():
+	
+		return type, Variety, IRule as string.
+		format "type_Variety_IRule"
 		
 file: Simple: public Simple inherit IPopulation:
 
@@ -48,7 +55,7 @@ file: Simple: public Simple inherit IPopulation:
 		public constructor for simple inital conditions.
 		this.states from cell constructor out int[] states.
 	
-	public Simple (Variety variety, int[] size, int[] states):
+	public Simple (Variety variety, int[] size, int[] values):
 		
 		public constructor for manual states.
 		SetRule () initialization dependancy.
@@ -58,4 +65,4 @@ file: Simple: public Simple inherit IPopulation:
 		Uses System.Threading.Task.Parallel.For method:
 		
 			Effectively incompatable with Mono.
-			Will compile and run with mono, using normal for loop.	
+			Will compile and run with mono, using normal for loop.

@@ -7,9 +7,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{17AECAED-A681-464D-82CE-72C2A9ABAF5D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Commands</RootNamespace>
+    <RootNamespace>CellularAutomata.Commands</RootNamespace>
     <AssemblyName>Commands</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ReleaseVersion>va2.2</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,16 +36,25 @@
   <ItemGroup>
     <Compile Include="Interpreter.cs" />
     <Compile Include="Option.cs" />
-    <Compile Include="PopulationControl.cs" />
     <Compile Include="ApplicationCommands.cs" />
+    <Compile Include="PopulationsControl.cs" />
+    <Compile Include="OutputsControl.cs" />
+    <Compile Include="OutputFormats.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Populations\Populations.csproj">
       <Project>{79776900-273C-40DE-971A-B015B4771D41}</Project>
       <Name>Populations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Output\Outputs.csproj">
+      <Project>{B943F5B7-687A-41E1-90E5-47B3E0E643D1}</Project>
+      <Name>Outputs</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Commands.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
 </Project>

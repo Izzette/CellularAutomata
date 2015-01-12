@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells; // reference ICell
+using CellularAutomata.Populations.Cells; // reference ICell, Arangements
 
 namespace CellularAutomata.Populations.Cells  // contains Cell classes
 {
@@ -7,7 +7,12 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 	public class VonNeumann : ICell  // range 1, Von Neumann neighbourhoods, 2D
 	{
 
-		public static ICell[] Build (int[] size, out int[] states)  // overload constructs inital condition -> out states
+		private static Arangements Arangement {
+			get { return Arangements.TwoDCubic; }
+			set { ; }
+		}
+
+		public static ICell[] Build (int[] size, out int[] values)  // overload constructs inital condition -> out states
 		{
 
 			if (2 != size.Length) {  // safing number of dimensions
@@ -20,17 +25,17 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 
 			}
 
-			states = new int [size [0]];  // initialize states
+			values = new int [size [0]];  // initialize states
 
-			states [0] = 1;  // set seed to 1
+			values [0] = 1;  // set seed to 1
 
 			for (int i = 1; i < size [0]; i++) {  // start at 1 because states
 
-				states [i] = 0;  // set all other states to 0
+				values [i] = 0;  // set all other states to 0
 
 			}
 
-			return VonNeumann.Build (size, states);  // return overload. exit
+			return VonNeumann.Build (size, values);  // return overload. exit
 
 
 		}
@@ -122,6 +127,14 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 		{
 
 			this.state = state;  // set state. exit
+
+		}
+
+		// return gemometric arangement
+		public Arangements GetArangement ()
+		{
+
+			return VonNeumann.Arangement;
 
 		}
 

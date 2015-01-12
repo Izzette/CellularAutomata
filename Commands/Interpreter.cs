@@ -7,7 +7,7 @@ namespace CellularAutomata.Commands  // console UI interface
 	public class Interpreter
 	{	
 
-		private static ApplicationCommands Parse (string line) // returns master application command enum
+		public static ApplicationCommands Parse (string line) // returns master application command enum
 		{
 
 			// line format$ Command method [-options[:optionArguments]] [arguments]
@@ -77,7 +77,14 @@ namespace CellularAutomata.Commands  // console UI interface
 
 				case "new":  // create new population
 
-					PopulationControl.New (options, arguments);
+					PopulationsControl.New (options, arguments);
+
+					break;
+
+				// evolve
+				case "evolve":
+
+					PopulationsControl.Evolve (options, arguments);
 
 					break;
 

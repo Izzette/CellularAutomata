@@ -11,7 +11,7 @@ file: IRule: public interface IRule inherit ICloneable:
 	
 		implements rule, returns new state value.
 		
-	string GetRule ():
+	string ToString ():  // rename from GetRule ()
 		
 		returns rule that it last parsed successfully.
 		

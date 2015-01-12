@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CellularAutomata.Populations; // reference Variety, IPopulation
-using CellularAutomata.Populations.Cells;  // reference ICell, General, VonNeumann
+using CellularAutomata.Populations; // reference IPopulation, States
+using CellularAutomata.Populations.Cells;  // reference ICell, General, VonNeumann, Arangements, Variety
 using CellularAutomata.Populations.Rules;  // reference IRule
 
 namespace CellularAutomata.Populations  // Contains cell collections, Cells namespace, Rules namespace
@@ -20,93 +20,72 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 		private Variety variety;  // kind of network, get variety
 		private ICell[] items;  // not accessable
 
-		// no property needed because IPopulation inheritance, GetStates (out int[] states, out int[] size)
-		private int[] size;
-		private int[] states;
+		// states structure
+		private States states;
 
-		private Simple (Variety variety, ICell[] items, IRule rule, int[] size, int[] states)  // private constructor for Clone () method, passes all instance variables
+		// private constructor for Clone () method, passes all instance variables
+		private Simple (Variety variety, ICell[] items, IRule rule, States states)
 		{
 
 			this.variety = variety;
 			this.items = items;
 			this.rule = rule;
-			this.size = size;
 			this.states = states;
 
 		}
 
-		public Simple (Variety variety, int[] size)  // public constructor for simple IC, initailization dependancy SetRule (IRule rule)
+		// public constructor for simple IC, initailization dependancy SetRule (IRule rule)
+		public Simple (Variety variety, int[] sizes)
 		{
 
 			this.variety = variety;
-			this.size = size;
+			int[] tempValues = new int [0] { };
 
-			switch (variety) {
+			switch (this.variety) {
 
 			case Variety.General:  // General Cells
 
-				this.items = General.Build (size, out this.states);  // out init this.states
+				this.items = General.Build (sizes, out tempValues);  // out init this.states
 
 				break;
 
 			case Variety.VonNeumann:  // Von Neumann Cells
 
-				this.items = VonNeumann.Build (size, out this.states);    // out init this.states
+				this.items = VonNeumann.Build (sizes, out tempValues);    // out init this.states
 
 				break;
 
 			}
+
+			this.states = new States (this.items [0].GetArangement (), tempValues, sizes);
 			
 		}
 
 		// public constructor for custom states
 		// states can be shorter than, but not longer than length
 		// initailization dependancy SetRule (IRule rule)
-		public Simple (Variety variety, int[] size, int[] states)
+		public Simple (Variety variety, int[] sizes, int[] values)
 		{
 
 			this.variety = variety;
-			this.size = size;
 
-			int length = 1;
+			switch (this.variety) {
 
-			foreach (int n in size) {
+				case Variety.General:  // General Cells
 
-				length = length * n;
-
-			}
-
-			this.states = new int [length];
-
-			int index = 0;
-
-			for ( ; index < states.Length; index++) {
-
-				this.states [index] = states [index];
-
-			}
-
-			for ( ; index < this.states.Length; index++) {
-
-				this.states [index] = 0;
-
-			}
-
-			switch (variety) {
-
-			case Variety.General:  // General Cells
-
-				this.items = General.Build (size, this.states);
+				this.items = General.Build (sizes, values);  // out init this.states
 
 				break;
 
-			case Variety.VonNeumann:  // Von Neumann Cells
+				case Variety.VonNeumann:  // Von Neumann Cells
 
-				this.items = VonNeumann.Build (size, this.states);
+				this.items = VonNeumann.Build (sizes, values);    // out init this.states
 
 				break;
 
 			}
+
+			this.states = new States (this.items [0].GetArangement (), values, sizes);
 
 		}
 
@@ -115,22 +94,20 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 			
 			Parallel.For(0, this.Length, i => {
 
-				this.states[i] = this.rule.Implement (this.items[i]);
+				this.states.Values [i] = this.rule.Implement (this.items [i]);
             
             });
             
 			Parallel.For (0, this.Length, i => {
 								
-				this.items [i].SetState (this.states [i]);  // set items -> states
+				this.items [i].SetState (this.states.Values [i]);  // set items -> states
 				
 			});
 			
 		}
-
-		public int[] GetStates (out int[] size)  // inherited from IPopulation
+		// inherited from IPopulation
+		public States GetStates ()
 		{
-
-			size = this.size;  // out
 
 			return this.states;
 
@@ -157,10 +134,24 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 
 		}
 
+		public new string ToString ()  // return string with type, Variety, and IRule.  For collection naming
+		{
+
+			string collection = String.Empty;
+
+			collection += "Simple_";
+			collection += this.variety.ToString ();
+			collection += "_";
+			collection += this.rule.ToString ();
+
+			return collection;
+
+		}
+
 		public object Clone ()  // inherited from IPopulation inhertied from ICloneable
 		{
 		
-			return (new Simple (this.variety, this.items, this.rule, this.size, this.states));
+			return (new Simple (this.variety, this.items, this.rule, this.states));
 
 		}
 		

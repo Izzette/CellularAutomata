@@ -10,7 +10,7 @@ namespace CellularAutomata.Populations.Rules  // contains rules
 
 		void Parse (string rule);  // initalization dependacy, interprets rule as string
 		int Implement (ICell cell);  // implements rule, returns new state value
-		string GetRule ();  // returns properly formated rule
+		string ToString ();  // returns properly formated rule
 
 		new object Clone (); // inherited from ICloneable
 

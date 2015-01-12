@@ -7,9 +7,11 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{79776900-273C-40DE-971A-B015B4771D41}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Populations</RootNamespace>
+    <RootNamespace>CellularAutomata.Populations</RootNamespace>
     <AssemblyName>Populations</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <newfilesearch>OnLoadAutoInsert</newfilesearch>
+    <ReleaseVersion>va2.2</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,12 +37,14 @@
   <ItemGroup>
     <Compile Include="IPopulation.cs" />
     <Compile Include="Simple.cs" />
-    <Compile Include="Variety.cs" />
     <Compile Include="Cells\General.cs" />
     <Compile Include="Cells\ICell.cs" />
     <Compile Include="Cells\VonNeumann.cs" />
     <Compile Include="Rules\Absolute.cs" />
     <Compile Include="Rules\IRule.cs" />
+    <Compile Include="States.cs" />
+    <Compile Include="Cells\Arangements.cs" />
+    <Compile Include="Cells\Variety.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />
