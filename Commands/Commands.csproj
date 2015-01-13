@@ -55,7 +55,4 @@
   <ItemGroup>
     <None Include="Commands.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
 </Project>

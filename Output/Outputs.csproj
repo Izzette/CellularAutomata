@@ -36,12 +36,9 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="ImageCreator.cs" />
+    <Compile Include="OneDCubicImageManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ImageManager\" />
   </ItemGroup>
 </Project>

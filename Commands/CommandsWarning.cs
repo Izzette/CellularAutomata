@@ -6,6 +6,13 @@ namespace CellularAutomata.Commands
 	public static class CommandsWarning
 	{
 
+		public static void NotImplemented (string command, string method, string enumerationName)
+		{
+			At (command, method);
+			Console.WriteLine (" NotImplemented: Enumeration {0} not recognized !", enumerationName);
+			Again ();
+		}
+
 		public static void CommandNotFound ()
 		{
 			CommandNotFound ("<MISSING>");

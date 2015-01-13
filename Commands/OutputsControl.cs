@@ -4,79 +4,119 @@ using System.Security.AccessControl;
 using System.Drawing;  // reference System.Drawing
 using System.Drawing.Imaging;
 using CellularAutomata.Commands;  // reference OutputsFormat
-using CellularAutomata.Outputs;  // reference ImageCreator
 using CellularAutomata.Populations; // reference States
-using CellularAutomata.Populations.Cells;  // reference Arrangements
+using CellularAutomata.Populations.Cells;
+using CellularAutomata.Outputs;
 
 namespace CellularAutomata.Commands
 {
 	public static class OutputsControl
 	{
 
-		private static DirectoryInfo bin = Directory.CreateDirectory ("bin");
-		private static Image image;
-
-		private static OutputsFormat DefaultFormat {  // defaults to console output
-			get { return OutputsFormat.Console; }
-			set { ; }
-		}
-
-		// collection name contains CellsVariety, IPopulation type, IRule as string
-		public static void Out (int generation, States states, OutputsFormat format)
+		public static void Init (States states, int maxGeneration, OutputsFormat format)
 		{
 
-			// break if quiet
+			string method = "Init";
+
 			if (OutputsFormat.Quiet == format) {
 				return;
 			}
 
+			CellsArangement cellsArangement = states.Arangement;
+
 			switch (format) {
-
 			case OutputsFormat.Bitmap:
-
-				switch (states.Arangement) {
-
+				switch (cellsArangement) {
 				case CellsArangement.OneDCubic:
-
-					if (null != image) {
-
-						Image tempImage = ImageCreator.General (image, generation, states.Values);
-
-						image = null;
-
-						image = tempImage;
-
-						tempImage = null;
-
-					} else {
-
-						// create image with one line
-						image = ImageCreator.General (states.Values, states.Sizes);
-
-					}  // end if statment
-
+					OneDCubicImageManager.Init (states.Values, maxGeneration);
 					break;
-
-				}  // end switch (states.Sizes.Length) statement
-
+				default:
+					CommandsWarning.NotImplemented (Command, method, cellsArangement.ToString ());
+					break;
+				}  // end switch (cellsArangement) statement
 				break;
+			default:
+				CommandsWarning.NotImplemented (Command, method, cellsArangement.ToString ());
+				break;
+			}  // end switch (format) statment
 
-			}  // end switch (format) statement
+		}  // end Init, public static void method
 
-		}  // end Out, public static void method
-
-		public static void Save (string collection, string name)
+		// collection name contains CellsVariety, IPopulation type, IRule as string
+		public static void Update (States states, int currentGeneration, OutputsFormat format)
 		{
 
-			DirectoryInfo subDirectory = bin.CreateSubdirectory (collection);
+			string method = "Update";
 
-			Bitmap bitmap = new Bitmap (image);
+			if (OutputsFormat.Quiet == format) {
+				return;
+			}
 
-			bitmap.Save (subDirectory.ToString () + "/" + name + ".bmp", ImageFormat.Bmp);
+			CellsArangement cellsArangement = states.Arangement;
 
+			switch (format) {
+				case OutputsFormat.Bitmap:
+				switch (cellsArangement) {
+					case CellsArangement.OneDCubic:
+					OneDCubicImageManager.Update (states.Values, currentGeneration);
+					break;
+					default:
+					CommandsWarning.NotImplemented (Command, method, cellsArangement.ToString ());
+					break;
+				}  // end switch (cellsArangement) statment
+				break;
+			case OutputsFormat.Console:
+				break;
+			default:
+				CommandsWarning.NotImplemented (Command, method, cellsArangement.ToString ());
+				break;
+			}  // end switch (format) statment
+
+		}  // end Update, public static void method
+
+		public static void SaveImage (CellsArangement cellsArangement, string subDirName, string fileName, OutputsFormat format)
+		{
+
+			string method = "Save";
+
+			if (OutputsFormat.Quiet == format) {
+				return;
+			}
+
+			DirectoryInfo subDirectory = bin.CreateSubdirectory (subDirName);
+
+			ImageFormat imageFormat;
+
+			switch (format) {
+			case OutputsFormat.Bitmap:
+				imageFormat = ImageFormat.Bmp;
+				break;
+			default:
+				CommandsWarning.NotImplemented (Command, method, format.ToString ());
+				return;
+			}  // end switch (format)
+
+
+			switch (cellsArangement) {
+				case CellsArangement.OneDCubic:
+				Bitmap bitmap = OneDCubicImageManager.GetBitmap ();
+				bitmap.Save (subDirectory.ToString () + "/" + fileName + ".bmp", imageFormat);
+				break;
+				default:
+				CommandsWarning.NotImplemented (Command, method, cellsArangement.ToString ());
+				break;
+			}  // end switch (cellsArangement) statment
+
+		}  // end SaveBitmap, public static void method
+
+		private static string Command {
+			get { return "OutputsControl"; }
+			set { ; }
 		}
 
-	}  // end OutputsControl
+		private static DirectoryInfo bin = Directory.CreateDirectory ("bin");
+	
+	}  // end OutputsControl, public static class
 
 }  // end CellularAutomata.Commands namespace
 

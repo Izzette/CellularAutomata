@@ -107,6 +107,13 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 
 		}
 
+		public CellsArangement GetCellsArangement ()
+		{
+
+			return items [0].GetArangement ();
+
+		}
+
 		public new string ToString ()  // return string with type, CellsVariety, and IRule.  For collection naming
 		{
 

@@ -3,9 +3,6 @@ using CellularAutomata.Populations;  // reference IPopulation, Simple
 using CellularAutomata.Populations.Rules;  // reference IRule, Absolute
 using CellularAutomata.Populations.Cells; // reference CellsVariety
 using CellularAutomata.Commands;  // reference Option, OutputsFormat, OutputsControl, CommandsWarning
-using System.Drawing;
-using CellularAutomata.Outputs;
-using System.Drawing.Imaging;
 
 namespace CellularAutomata.Commands  // console UI interface
 {
@@ -243,12 +240,15 @@ namespace CellularAutomata.Commands  // console UI interface
 
 			switch (arguments [0]) {
 			case "p":
-				OutputsControl.Out (0, population.GetStates (), format);
+				OutputsControl.Init (population.GetStates (), generation, format);
 				for (int i = 1; i <= generation; i++) {
 					population.Evolve ();
-					OutputsControl.Out (i, population.GetStates (), format);
+					OutputsControl.Update (population.GetStates (), i, format);
 				}
-				OutputsControl.Save (population.ToString (), Convert.ToString (generation));
+				CellsArangement cellsArangement = population.GetCellsArangement ();
+				string subDirName = population.ToString ();
+				string fileName = generation.ToString ();
+				OutputsControl.SaveImage (cellsArangement, subDirName, fileName, format);
 				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
