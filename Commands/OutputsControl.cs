@@ -14,6 +14,7 @@ namespace CellularAutomata.Commands
 	{
 
 		private static DirectoryInfo bin = Directory.CreateDirectory ("bin");
+		private static Image image;
 
 		private static OutputsFormat DefaultFormat {  // defaults to console output
 			get { return OutputsFormat.Console; }
@@ -21,7 +22,7 @@ namespace CellularAutomata.Commands
 		}
 
 		// collection name contains CellsVariety, IPopulation type, IRule as string
-		public static void Out (string collection, int generation, States states, OutputsFormat format)
+		public static void Out (int generation, States states, OutputsFormat format)
 		{
 
 			// break if quiet
@@ -29,40 +30,30 @@ namespace CellularAutomata.Commands
 				return;
 			}
 
-			// subdirectory
-			DirectoryInfo subDirectory = bin.CreateSubdirectory (collection + "/");
-
 			switch (format) {
 
 			case OutputsFormat.Bitmap:
-
-				// generic image
-				Image image;
 
 				switch (states.Arangement) {
 
 				case CellsArangement.OneDCubic:
 
-					// search for image to add a row to
-					FileInfo[] files = subDirectory.GetFiles (Convert.ToString (generation - 1) + ".bmp");
+					if (null != image) {
 
-					if (0 != files.Length) {
+						Image tempImage = ImageCreator.General (image, generation, states.Values);
 
-						FileStream stream = files [0].OpenRead ();
+						image = null;
 
-						Image lastImg = Image.FromStream (stream);
+						image = tempImage;
 
-						image = ImageCreator.General (lastImg, generation, states.Values);
+						tempImage = null;
 
 					} else {
 
 						// create image with one line
-						image = ImageCreator.General (generation, states.Values, states.Sizes);
+						image = ImageCreator.General (states.Values, states.Sizes);
 
 					}  // end if statment
-
-					Bitmap bitmap = new Bitmap (image);
-					bitmap.Save (subDirectory.ToString () + Convert.ToString (generation) + ".bmp", ImageFormat.Bmp);
 
 					break;
 
@@ -72,9 +63,20 @@ namespace CellularAutomata.Commands
 
 			}  // end switch (format) statement
 
+		}  // end Out, public static void method
+
+		public static void Save (string collection, string name)
+		{
+
+			DirectoryInfo subDirectory = bin.CreateSubdirectory (collection);
+
+			Bitmap bitmap = new Bitmap (image);
+
+			bitmap.Save (subDirectory.ToString () + "/" + name + ".bmp", ImageFormat.Bmp);
+
 		}
 
-	}
+	}  // end OutputsControl
 
-}
+}  // end CellularAutomata.Commands namespace
 

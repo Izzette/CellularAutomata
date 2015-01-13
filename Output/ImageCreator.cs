@@ -55,7 +55,7 @@ namespace CellularAutomata.Outputs
 		}  // end GetColor, private static Color method
 
 		// creates new general img
-		public static Image General (int generation, int[] values, int[] size)
+		public static Image General (int[] values, int[] size)
 		{
 
 			// image width

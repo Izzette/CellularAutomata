@@ -3,6 +3,9 @@ using CellularAutomata.Populations;  // reference IPopulation, Simple
 using CellularAutomata.Populations.Rules;  // reference IRule, Absolute
 using CellularAutomata.Populations.Cells; // reference CellsVariety
 using CellularAutomata.Commands;  // reference Option, OutputsFormat, OutputsControl, CommandsWarning
+using System.Drawing;
+using CellularAutomata.Outputs;
+using System.Drawing.Imaging;
 
 namespace CellularAutomata.Commands  // console UI interface
 {
@@ -230,19 +233,22 @@ namespace CellularAutomata.Commands  // console UI interface
 			case "bitmap":
 				format = OutputsFormat.Bitmap;
 				break;
+			case "quiet":
+				format = OutputsFormat.Quiet;
+				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
 				return;
 			}  // end switch (arguments [1]) statment
 
-
 			switch (arguments [0]) {
 			case "p":
-				OutputsControl.Out (population.ToString (), 0, population.GetStates (), format);
+				OutputsControl.Out (0, population.GetStates (), format);
 				for (int i = 1; i <= generation; i++) {
 					population.Evolve ();
-					OutputsControl.Out (population.ToString (), i, population.GetStates (), format);
+					OutputsControl.Out (i, population.GetStates (), format);
 				}
+				OutputsControl.Save (population.ToString (), Convert.ToString (generation));
 				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
