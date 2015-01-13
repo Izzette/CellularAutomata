@@ -3,7 +3,7 @@ using System;
 namespace CellularAutomata.Commands
 {
 
-	public enum OutputFormats
+	public enum OutputsFormat
 	{
 
 		Quiet,

@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference ICell, Arangements
+using CellularAutomata.Populations.Cells;  // reference ICell, CellsArangement
 
 namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 {
@@ -7,59 +7,28 @@ namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 	public class General : ICell  // one dimensional, one neighbour, one state
 	{
 
-		private static Arangements Arangement {
-			get { return Arangements.OneDCubic; }
+		public static CellsArangement Arangement {
+			get { return CellsArangement.OneDCubic; }
 			set { ; }
 		}
 
-		public static ICell[] Build (int[] size, out int[] values) // overload, constructs simple initial condition -> out states
-		{
-
-			if (3 > size [0]) { // safing length, prevent degenerate case
-
-				throw new ArgumentException ("new int (3) is not greater than or equal to parameter (int[] size) [0] !");
-
-			} else if (1 != size.Length) {  // safing number of dimensions
-
-				throw new ArgumentException ("new int (1) does not have the same value as parameter (int[] size).Length !");
-
-			}
-
-			values = new int [size [0]];  // initialize states
-
-			values [0] = 1;  // set seed to 1
-
-			for (int i = 1; i < size [0]; i++) {  // start at 1 because states
-
-				values [i] = 0;  // set all other states to 0
-
-			}
-
-			return General.Build (size, values);  // return overload. exit
-
-		}
-
-		public static ICell[] Build (int[] size, int[] values)  // constructs network; only size [0] is used
+		public static ICell[] Build (int[] sizes, int[] values)  // constructs network; only size [0] is used
 		{
 			
-			if (1 != size.Length) {  // safing number of dimensions
+			if (1 != sizes.Length) {  // safing number of dimensions
 
 				throw new ArgumentException ("new int (1) does not have the same value as parameter (int[] size).Length !");
 
-			} else if (3 > size [0]) { // safing length, prevent degenerate case
+			} else if (3 > sizes [0]) { // safing length, prevent degenerate case
 
 				throw new ArgumentException ("new int (3) is not greater than or equal to parameter (int[] size) [0] !");
-
-			} else if (size [0] != values.Length) {  // safing size and states matchup
-
-				throw new ArgumentException ("parameter (int[] size) [0] does not have the same value as parameter (int[] states).Length !");
-
+			
 			}
 
-			General[] items = new General [size [0]];  // create current to reference cell to be processed
+			General[] items = new General [sizes [0]];  // create current to reference cell to be processed
 			items [0] = new General (values [0]);  //  create root from specified states
 
-			for (int i = 1; i < size [0]; i++) {  // starts at 1 because root has already been created
+			for (int i = 1; i < sizes [0]; i++) {  // starts at 1 because root has already been created
 
 				items [i] = items [i - 1].AddNeighbour (values [i]);  // set new neighbour at specified state, save to next value of items
 
@@ -112,7 +81,7 @@ namespace CellularAutomata.Populations.Cells  // contains Cell Classes
 		}
 
 		// return gemometric arangement
-		public Arangements GetArangement ()
+		public CellsArangement GetArangement ()
 		{
 
 			return General.Arangement;

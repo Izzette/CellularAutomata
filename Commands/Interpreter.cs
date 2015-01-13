@@ -1,140 +1,103 @@
 using System;
-using CellularAutomata.Commands;  // reference ApplicationCommands, Option, PopulationControl
+using CellularAutomata.Commands;  // reference ApplicationCommand, Option, PopulationControl
 
 namespace CellularAutomata.Commands  // console UI interface
 {
 	
-	public class Interpreter
+	public static class Interpreter
 	{	
 
-		public static ApplicationCommands Parse (string line) // returns master application command enum
+		private static string Parse (string line, out string method, out Option[] options, out string[] arguments)
+		{
+
+			// split by spaces
+			string[] phrases = line.Split (new char [1] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+			// command to be returned
+			string command = phrases [0];
+
+			// out method
+			method = phrases [1];
+
+			// options and arugments initialization lengths
+			int numberOption = 0;
+			int numberArgument = 0;
+
+			// set numberOption and numberArugment
+			for (int i = 2; i < phrases.Length; i++) {
+				if (phrases [i].StartsWith ("-")) {
+					numberOption++;
+				} else {
+					numberArgument++;
+				}
+			}
+
+			// initalize options and arguments
+			options = new Option [numberOption];
+			arguments = new string [numberArgument];
+
+			for (int i = 0; i < options.Length; i++) {
+				options [i] = new Option (phrases [2 + i]);
+			}
+
+			for (int i = 0; i < arguments.Length; i++) {
+				arguments [i] = phrases [2 + options.Length + i];
+			}
+
+			// success!
+			return command;
+
+		}  // end Parse, private static string method
+
+		public static ApplicationCommand Excecute (string line) // returns master application command enum
 		{
 
 			// line format$ Command method [-options[:optionArguments]] [arguments]
 
-			string[] phrases = line.Split (new char[1] {' '}, StringSplitOptions.RemoveEmptyEntries);  // split by spaces
-
-			string command = phrases [0];  // first in array is Command
-			string method = phrases [1];  // second in array is Method
-
-			// options and arguments to be parsed
+			string command;
+			string method;
 			Option[] options;
 			string[] arguments;
 
-			int index = 2;  // hard(er) index of parsing phrases, skip command
-
-			int numberOption = 0;  // number of options, for options array size
-
-			for (int i = index; i < phrases.Length; i++) {  // options, incrementing local int i, just peeking
-
-				if (phrases [i].StartsWith ("-")) {  // is an option
-
-					numberOption++;  // increment the number of options
-
-				} else {
-
-					break;  // break at arguments
-
-				}
-
+			// attempt to parse
+			try {
+				command = Parse (line, out method, out options, out arguments);
+			} catch (IndexOutOfRangeException) {
+				Console.WriteLine ("Warning: Command or method not specified!");
+				return ApplicationCommand.Continue;
 			}
 
-			options = new Option[numberOption];  // create array of options
-
-			for ( ; index < numberOption; index++) {  // add each option to array
-
-				string[] optionStrings = phrases [index].Split (new char[] { '-', ':' }, StringSplitOptions.RemoveEmptyEntries);  //split the options and it's arguments
-
-				string optionName = optionStrings [0];  // option name
-
-				string[] optionArgs = new string[optionStrings.Length - 1];  // create array for option arguments, does not include option name
-
-				for (int i = 0; i < optionArgs.Length; i++) {  // loop through option arguments if not empty
-
-					optionArgs [i] = optionStrings [i + 1];  // add to array
-
-				}
-
-				options [index] = new Option (optionName, optionArgs);  // create option
-
-			}
-
-			arguments = new string[phrases.Length - index];  // create array for arguments, may be empty
-
-			for (int i = 0; i < arguments.Length; i++) {  // loop through if not empty
-
-				arguments [i] = phrases [i + index];  // add arguments
-
-			}
-
-			switch (command) {  // distribute!
-
+			switch (command) {
 			// population manager class
-			case "pop":
 			case "Population":
-
-				switch (method) {
-
-				case "new":  // create new population
-
-					PopulationsControl.New (options, arguments);
-
-					break;
-
-				// evolve
-				case "evolve":
-
-					PopulationsControl.Evolve (options, arguments);
-
-					break;
-
-				default:  // could not find method
-
-					string message = "Not a valid command!  Could not find command method Population ";
-					message += method;
-
-					throw new FormatException (message);
-
-				}
-
+			case "pop":
+				PopulationsControl.Excecute (method, options, arguments);
 				break;
-			
 			// master application manager
-			case "app":
 			case "Application":
-
+			case "app":
 				switch (method) {
-
 				case "reset":  // call entry again
-
-					return ApplicationCommands.Reset;
-
+					return ApplicationCommand.Reset;
 				case "quit":  // quit app
-
-					return ApplicationCommands.Quit;
-
+					return ApplicationCommand.Quit;
 				default:  // could not find method
-
-					string message = "Not a valid command!  Could not find command method Application ";
+					string message = "Not a valid command!  Could not find Application method ";
 					message += method;
-
 					throw new FormatException (message);
-
-				}
-
-			default:  // could not find command
-
+				} // end switch (method) statement
+			// could not find command
+			default:
 				string lowMessage = "Not a valid command!  Could not find command ";
 				lowMessage += command;
-
 				throw new FormatException (lowMessage);
+			}  // end switch (command) statement
 
-			}
+			// continue parse line loop in Entry Point
+			return ApplicationCommand.Continue;
 
-			return ApplicationCommands.Continue;  // continue parse line loop in Entry Point
-
-		}
+		}  // end Parse, public static ApplicationCommand method
 		
-	}
+	}  // end Interpreter, public static class
 	
-}
+}  // end CellularAutomata.Commands, namespace

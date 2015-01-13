@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells; // reference ICell, Arangements
+using CellularAutomata.Populations.Cells; // reference ICell, CellsArangement
 
 namespace CellularAutomata.Populations.Cells  // contains Cell classes
 {
@@ -7,37 +7,9 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 	public class VonNeumann : ICell  // range 1, Von Neumann neighbourhoods, 2D
 	{
 
-		private static Arangements Arangement {
-			get { return Arangements.TwoDCubic; }
+		public static CellsArangement Arangement {
+			get { return CellsArangement.TwoDCubic; }
 			set { ; }
-		}
-
-		public static ICell[] Build (int[] size, out int[] values)  // overload constructs inital condition -> out states
-		{
-
-			if (2 != size.Length) {  // safing number of dimensions
-
-				throw new ArgumentException ("new int (2) does not have the same value as parameter (int[] size).Length !");
-
-			} else if ((3 > size [0]) && (3 > size [1])) { // safing length and height, prevent degenerate case
-
-				throw new ArgumentException ("new int (3) is not greater than or equal to parameter (int[] size) [0] && [1] !");
-
-			}
-
-			values = new int [size [0]];  // initialize states
-
-			values [0] = 1;  // set seed to 1
-
-			for (int i = 1; i < size [0]; i++) {  // start at 1 because states
-
-				values [i] = 0;  // set all other states to 0
-
-			}
-
-			return VonNeumann.Build (size, values);  // return overload. exit
-
-
 		}
 
 		public static ICell[] Build (int[] size, int[] states)  // constructs network, only size [0 thru 1] are used
@@ -45,15 +17,11 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 
 			if (2 != size.Length) {  // safing number of dimensions
 
-				throw new ArgumentException ("new int (2) does not have the same value as parameter (int[] size).Length !");
+				throw new ArgumentException ("Warning: specified size does not have the correct number or dimensions!");
 
 			} else if ((3 > size [0]) || (3 > size [1])) { // safing length and height, prevent degenerate case
 
-				throw new ArgumentException ("new int (3) is not greater than or equal to parameter (int[] size) [0] && [1] !");
-
-			} else if (states.Length != (size [0] * size [1])) {  // safing states size matchup
-
-				throw new ArgumentException ("parameter (int[] size) [0] * [1] does not have the same value as parameter (int[] states).Length !");;
+				throw new ArgumentException ("Warning: specified size is degenerate!");
 
 			}
 
@@ -131,7 +99,7 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 		}
 
 		// return gemometric arangement
-		public Arangements GetArangement ()
+		public CellsArangement GetArangement ()
 		{
 
 			return VonNeumann.Arangement;

@@ -31,13 +31,7 @@ namespace CellularAutomata.Populations.Rules  // contains rules
 		public void Parse (string rule)
 		{
 
-			string[] phrases = rule.Split (new char [3] { '[', ']', ',' }, StringSplitOptions.RemoveEmptyEntries);  // split into { "color", "number" }
-
-			if (2 != phrases.Length) {  // safeing format
-
-				throw new ArgumentException ("new int (2) does not have the same value as phrases.Length: Line not in correct format! Should be [color,number]");
-
-			}
+			string[] phrases = rule.Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);  // split into { "color", "number" }
 
 			try {  // safing convert
 
@@ -46,11 +40,7 @@ namespace CellularAutomata.Populations.Rules  // contains rules
 
 			} catch (FormatException) {
 
-				throw new ArgumentException ("Caught FormatException: Line not in correct format! Should be [color,number]");
-
-			} catch (ArgumentNullException) {
-
-				throw new ArgumentException ("Caught ArugmentNullException: Line not in correct format! Should be [color,number]");
+				throw new ArgumentException ("Waring: rule not in correct format! Should be (<k>,<n>)");
 
 			}
 
@@ -84,7 +74,7 @@ namespace CellularAutomata.Populations.Rules  // contains rules
 
 		}
 
-		public object Clone ()  // inherit IRule inherit ICloneable
+		public IRule Clone ()  // inherit IRule
 		{
 
 			return (new Absolute (this.color, this.number, this.rule));

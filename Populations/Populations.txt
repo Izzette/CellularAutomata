@@ -9,7 +9,7 @@ file: States: public struct States:
 	
 	checks for sizes and values compatability.
 	
-file: IPopulation: public IPopulation inherit System.ICloneable:
+file: IPopulation: public IPopulation:
 
 	All base and abstract Populations classes inherit.
 	
@@ -30,14 +30,18 @@ file: IPopulation: public IPopulation inherit System.ICloneable:
 	
 		return rule.
 		
-	Variety GetVariety ():
+	CellsVariety GetCellsVariety ():
 	
-		return variety.
+		return cellsVariety.
 		
 	new string ToString ():
 	
-		return type, Variety, IRule as string.
+		return type, CellsVariety, IRule as string.
 		format "type_Variety_IRule"
+		
+	IPopulation Clone ():
+	
+		clone
 		
 file: Simple: public Simple inherit IPopulation:
 
@@ -45,17 +49,17 @@ file: Simple: public Simple inherit IPopulation:
 	
 		get only, returns items.Length
 		
-	private Simple (Variety variety, ICell[] items, Rule rule, int[] size, int[] states):
+	private Simple (CellsVariety cellsVariety, ICell[] items, Rule rule, int[] size, int[] states):
 	
 		private constructor for Clone () method, passes all instance variables.
 	
-	public Simple (Variety variety, int[] size):
+	public Simple (CellsVariety cellsVariety, int[] size):
 		
 		SetRule () initialization dependancy.
 		public constructor for simple inital conditions.
 		this.states from cell constructor out int[] states.
 	
-	public Simple (Variety variety, int[] size, int[] values):
+	public Simple (CellsVariety cellsVariety, int[] size, int[] values):
 		
 		public constructor for manual states.
 		SetRule () initialization dependancy.

@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Drawing;  // reference System.Drawing
 using System.Drawing.Imaging;
-using CellularAutomata.Commands;  // reference OutputFormats
+using CellularAutomata.Commands;  // reference OutputsFormat
 using CellularAutomata.Outputs;  // reference ImageCreator
 using CellularAutomata.Populations; // reference States
 using CellularAutomata.Populations.Cells;  // reference Arrangements
@@ -15,17 +15,17 @@ namespace CellularAutomata.Commands
 
 		private static DirectoryInfo bin = Directory.CreateDirectory ("bin");
 
-		private static OutputFormats DefaultFormat {  // defaults to console output
-			get { return OutputFormats.Console; }
+		private static OutputsFormat DefaultFormat {  // defaults to console output
+			get { return OutputsFormat.Console; }
 			set { ; }
 		}
 
-		// collection name contains Variety, IPopulation type, IRule as string
-		public static void Out (string collection, int generation, States states, OutputFormats format)
+		// collection name contains CellsVariety, IPopulation type, IRule as string
+		public static void Out (string collection, int generation, States states, OutputsFormat format)
 		{
 
 			// break if quiet
-			if (OutputFormats.Quiet == format) {
+			if (OutputsFormat.Quiet == format) {
 				return;
 			}
 
@@ -34,14 +34,14 @@ namespace CellularAutomata.Commands
 
 			switch (format) {
 
-			case OutputFormats.Bitmap:
+			case OutputsFormat.Bitmap:
 
 				// generic image
 				Image image;
 
 				switch (states.Arangement) {
 
-				case Arangements.OneDCubic:
+				case CellsArangement.OneDCubic:
 
 					// search for image to add a row to
 					FileInfo[] files = subDirectory.GetFiles (Convert.ToString (generation - 1) + ".bmp");

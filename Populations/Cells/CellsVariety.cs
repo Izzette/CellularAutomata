@@ -3,7 +3,7 @@ using System;
 namespace CellularAutomata.Populations.Cells
 {
 
-	public enum Variety  // Cells build type
+	public enum CellsVariety  // Cells build type
 	{
 
 		General,

@@ -12,7 +12,7 @@ namespace CellularAutomata
 
 			Console.WriteLine ("CellularAutomata!");
 
-			ApplicationCommands command;
+			ApplicationCommand command;
 
 			do {
 
@@ -20,15 +20,9 @@ namespace CellularAutomata
 
 				string line = Console.ReadLine ();
 
-				command = Interpreter.Parse (line);
+				command = Interpreter.Excecute (line);
 
-				if (ApplicationCommands.Reset == command) {
-
-					Main (arguments);
-
-				}
-
-			} while (ApplicationCommands.Continue == command);
+			} while (ApplicationCommand.Continue == command);
 
 		}
 	

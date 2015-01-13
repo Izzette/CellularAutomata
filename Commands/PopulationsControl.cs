@@ -1,8 +1,8 @@
 using System;
 using CellularAutomata.Populations;  // reference IPopulation, Simple
 using CellularAutomata.Populations.Rules;  // reference IRule, Absolute
-using CellularAutomata.Populations.Cells; // reference Variety
-using CellularAutomata.Commands;  // reference Option, OutputFormats, OutputsControl
+using CellularAutomata.Populations.Cells; // reference CellsVariety
+using CellularAutomata.Commands;  // reference Option, OutputsFormat, OutputsControl, CommandsWarning
 
 namespace CellularAutomata.Commands  // console UI interface
 {
@@ -11,236 +11,245 @@ namespace CellularAutomata.Commands  // console UI interface
 	public static class PopulationsControl  // interfaces console access to Population
 	{
 
-		// IPopulations
-		static private IPopulation population;
-		static private IPopulation clone;  // Clone
+		// excecute
+		public static void Excecute (string method, Option[] options, string[] arguments) {
 
-		static private Variety DefaultVariety {  // default general
-			get { return Variety.General; }
+			switch (method) {
+			case "new":
+				NewPopulation (options, arguments);
+				break;
+			case "evolve":
+				Evolve (options, arguments);
+				break;
+			default:
+				CommandsWarning.MethodNotFound (Command, method);
+				return;
+			}  // end switch (method) statment
+
+		}  // end Excecute, public static void
+
+		// IPopulations
+		private static IPopulation population;
+
+		// default populations
+		private static CellsVariety DefaultCellsVariety {
+			get { return CellsVariety.General; }
 			set { ; }
 		}
 
-		static private int[] DefaultSize {  // default depends on variety
-			get {
-				switch (variety) {
-				case Variety.General:
-					return (new int [1] { 125 });
-				case Variety.VonNeumann:
-					return (new int [2] { 100, 30 });
-				default:  // will throw errors if a new Variety member is added
-					throw new NotImplementedException ("Population.Variety match not found!");
-				}
-			}
+		// default initial conditions
+		static private int[] DefaultValues {
+			get { return new int [1] { 1 }; }
 			set { ; }
 		}
 
 		static private IRule DefaultRule {  // returns 2k110
 			get {
 				IRule rule = new Absolute ();
-				rule.Parse ("[2,110]");
+				rule.Parse ("(2,110)");
 				return rule;
 			}
 			set { ; }
 		}
-		 
-		//  Starts a defaults
-		static private Variety variety = DefaultVariety;
-		static private IRule rule = DefaultRule;
-		static private int[] size = DefaultSize;
 
-		// method: new
-		// format: [-options[:arguments]] (IPopulation) [(inital condition)]
-		public static void New (Option[] options, string[] arguments)  // Creates reinitializes population
-		{
-
-			foreach (Option o in options) {
-
-				switch (o.name) {
-
-				// format: -s:(x)[:(y) (...) ]
-				case "size":
-				case "s":
-
-					size = new int [o.arguments.Length];
-
-					for (int i = 0; i < o.arguments.Length; i++) {
-
-						size [i] = Convert.ToInt32 (o.arguments [i]);
-
-					}
-
-					// correct any variety incompatability
-					if ((1 == size.Length) && (Variety.General != variety)) {
-
-						variety = Variety.General;
-
-					} else if ((2 == size.Length) && (Variety.VonNeumann != variety)) {
-
-						variety = Variety.VonNeumann;
-
-					}
-
-					break;
-
-				// format: -r:[(k),(n)]
-				// literal brackets above
-				case "rule":
-				case "r":
-
-					rule = new Absolute ();
-					rule.Parse (o.arguments [0]);  // the rule handles the option argument interpretation
-
-					break;
-
-				// foramt: -v:(variety)
-				case "variety":
-				case "v":
-
-					switch (o.arguments [0]) {
-
-					case "general":
-					case "g":
-
-						variety = Variety.General;
-
-						// correct any size incompatabilities
-						if (1 != size.Length) {
-
-							size = DefaultSize;
-
-						}
-
-						break;
-
-					case "vonNeumann":
-					case "v":
-
-						variety = Variety.VonNeumann;
-
-						// correct any size incompatabilities
-						if (2 != size.Length) {
-
-							size = DefaultSize;
-
-						}
-
-						break;
-
-					}
-
-					break;
-
-				}
-
-			}
-
-			IPopulation tempPopulation;
-
-			if (1 < arguments.Length) {  // if specified initial conditions
-
-				int[] values = new int [arguments [1].Length];
-
-				// get each character
-				string[] valuestrings  = arguments [1].Split (new string [1] { string.Empty }, StringSplitOptions.RemoveEmptyEntries);
-
-				for (int i = 0; i < valuestrings.Length; i++) {  // add manual values
-
-					values [i] = Convert.ToInt32 (valuestrings [i]);
-
-				}
-
-				tempPopulation = new Simple (variety, size, values);
-
-			} else {
-
-				// set with simple intital contdition
-				tempPopulation = new Simple (variety, size);
-
-			}  // end if (1 < arguments.Length)
-
-			// setter injection
-			tempPopulation.SetRule (rule);
-
-			// format: (target) [(intial conditions)]
-			switch (arguments [0]) {
-			case "population":
-			case "p":
-				population = tempPopulation;
-				break;
-			case "clone":
-			case "c":
-				clone = tempPopulation;
-				break;
-			}
-
-		}  // end New, public static void method
-
-		private static OutputFormats DefaultFormat {
-			get { return OutputFormats.Bitmap; }
+		private static OutputsFormat DefaultFormat {
+			get { return OutputsFormat.Bitmap; }
 			set { ; }
 		}
 
-		// method: evolve 
-		// format: [-options[:arguments]] (IPopulation) (output)
-		public static void Evolve (Option[] options, string[] arguments)  // Creates reinitializes population
+		private static string Command {
+			get { return "Population"; }
+			set { ; }
+		}
+
+		private static int[] GetSizes (CellsVariety cellsVariety, int[] sizes)
+		{
+			switch (cellsVariety) {
+			case CellsVariety.General:
+				if (1 != sizes.Length) {
+					return new int [1] { 125 };
+				}
+				break;
+			case CellsVariety.VonNeumann:
+				if (2 != sizes.Length) {
+					return new int [2] { 30, 30 };
+				}
+				break;
+			default:
+				throw new ArgumentException ("At PopulationControl.GetSizes: CellsVariety variety not recognized");
+			}  // end switch (cellsVariety) statment
+			return sizes;
+		}  // end GetSizes, private static int[] method
+
+
+		// format: Population new [-<o>[:<arg>]] <population> <seed>
+		private static void NewPopulation (Option[] options, string[] arguments)  // Creates reinitializes population
 		{
 
-			// default number of iterations
-			int generation = 1;
+			string method = "new";
 
-			//  switch for each option
+			int[] sizes = new int [1] { 125 };
+			int[] values = DefaultValues;
+			IRule rule = DefaultRule;
+			CellsVariety cellsVariety = DefaultCellsVariety;
+
 			foreach (Option option in options) {
-
-				switch (option.name) {
-				// multiple generations
-				case "generations":
-				case "g":
-					generation = Convert.ToInt32 (option.arguments [0]);
+				switch (option.Name) {
+				// set sizes
+				// -s:(<x>[,<n>])
+				case "s":
+					// extract sizes
+					string[] sizesStrings;
+					try {
+						sizesStrings = option.Arguments [0].Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					}
+					sizes = new int [sizesStrings.Length];
+					try {
+						for (int i = 0; i < sizes.Length; i++) {
+							sizes [i] = Convert.ToInt32 (sizesStrings [i]);
+						}
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
 					break;
-				}  // end switch (options.name) statement
-
+				// set rule
+				// -r:<type>:<code>
+				case "r":
+					// select rule type
+					if (0 == option.Arguments.Length) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					}
+					switch (option.Arguments [0]) {
+					// Absolute
+					case "a":
+						rule = new Absolute ();
+						break;
+					default:
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					} // end switch (option.Arguments [0]) statement
+					// parse code
+					rule.Parse (option.Arguments [1]);
+					break;
+				// set cellsVariety
+				// -v:<cellsVariety>
+				case "v":
+					if (0 == option.Arguments.Length) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					}
+					// select cellsVariety
+					switch (option.Arguments [0]) {
+					// general
+					case "g":
+						cellsVariety = CellsVariety.General;
+						break;
+					default:
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					} // end switch (option.Argumetns [0]) statment
+					break;
+				default:
+					CommandsWarning.OptionNotFound (Command, method, option.Name);
+					return;
+				}  // end switch (option.Name) statement
 			}  // end foreach (Option option in options) loop
 
-			// set default format
-			OutputFormats format = DefaultFormat;
-
+			if (2 > arguments.Length) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
+			}
+			// extract values
+			char[] valuesStrings = arguments [1].ToCharArray ();
+			values = new int [valuesStrings.Length];
 			try {
-				// second argument is output format
-				switch (arguments [1]) {
-				case "quiet":
-				case "q":
-					format = OutputFormats.Quiet;
-					break;
-				case "bitmap":
-				case "b":
-					format = OutputFormats.Bitmap;
-					break;
-				}  // end switch (arguments [1]) statement
-			} catch (IndexOutOfRangeException) {
-				;
+				for (int i = 0; i < values.Length; i++) {
+					values [i] = Convert.ToInt32 (valuesStrings [i].ToString ());
+				}
+			} catch (FormatException) {
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
+				return;
 			}
 
-			// format: (target) [(intial conditions)]
+			// select population
 			switch (arguments [0]) {
-				case "population":
-				case "p":
+			// main population
+			case "p":
+				population = new Simple (cellsVariety, sizes, values);
+				population.SetRule (rule);
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+				return;
+			}  // end switch (arguments [0]) statment
+			  // end try statment
+
+		}  // end NewPopulation, private static void method
+
+		// method: evolve
+		// evolves population
+		private static void Evolve (Option[] options, string[] arguments)
+		{
+
+			string method = "Evolve";
+
+			int generation = 1;
+			OutputsFormat format = DefaultFormat;
+
+			foreach (Option option in options) {
+				switch (option.Name) {
+				case "g":
+					if (1 > option.Arguments.Length) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					}
+					try {
+						generation = Convert.ToInt32 (option.Arguments [0]);
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
+					break;
+				default:
+					CommandsWarning.OptionNotFound (Command, method, option.Name);
+					return;
+				}  // end switch (option.Name) statement
+			}  // end foreach (Option option in options) loop
+
+			if (2 > arguments.Length) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
+			}
+			// select format
+			switch (arguments [1]) {
+			case "bitmap":
+				format = OutputsFormat.Bitmap;
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
+				return;
+			}  // end switch (arguments [1]) statment
+
+
+			switch (arguments [0]) {
+			case "p":
 				OutputsControl.Out (population.ToString (), 0, population.GetStates (), format);
-				for (int i = 1; i <= 100; i++) {
+				for (int i = 1; i <= generation; i++) {
 					population.Evolve ();
 					OutputsControl.Out (population.ToString (), i, population.GetStates (), format);
 				}
 				break;
-				case "clone":
-				case "c":
-				OutputsControl.Out (clone.ToString (), 0, clone.GetStates (), format);
-				for (int i = 1; i <= 100; i++) {
-					clone.Evolve ();
-					OutputsControl.Out (clone.ToString (), i, clone.GetStates (), format);
-				}
-				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+				return;
 			}
 
-		}  // end Evolve, public static void method
+		}  // end Evolve, private static void method
 
 	}  // end PopulationsControl, public static class
 

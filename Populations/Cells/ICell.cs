@@ -9,7 +9,7 @@ namespace CellularAutomata.Populations.Cells
 		ICell GetNext ();  // returns next ICell in scan
 		int GetState ();  // returns state
 		void SetState (int state);  // sets state
-		Arangements GetArangement ();  // return gemometric arangement
+		CellsArangement GetArangement ();  // return gemometric arangement
 		int GetNeighbourhood (int color);  // returns neighbourhood, color is the number of colors
 		
 	}

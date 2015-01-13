@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference Arangements
+using CellularAutomata.Populations.Cells;  // reference CellsArangement
 
 namespace CellularAutomata.Populations
 {
@@ -7,15 +7,15 @@ namespace CellularAutomata.Populations
 	public struct States
 	{
 
-		private Arangements arangement;
-		public Arangements Arangement {
+		private CellsArangement arangement;
+		public CellsArangement Arangement {
 			get { return this.arangement; }
 			set { ; }
 		}
 		private int[] values;
 		public int[] Values {
 			get { return this.values; }
-			set { ; }
+			set { this.values = value; }
 		}
 		private int[] sizes;
 		public int[] Sizes {
@@ -29,7 +29,7 @@ namespace CellularAutomata.Populations
 		}
 
 		// constructor
-		public States (Arangements arangement, int[] values, int[] sizes)
+		public States (CellsArangement arangement, int[] values, int[] sizes)
 		{
 
 			int length = 1;
@@ -40,7 +40,19 @@ namespace CellularAutomata.Populations
 
 			if (length != values.Length) {
 
-				throw new ArgumentException ("values and sizes do not match");
+				int[] tempValues = new int [length];
+
+				for (int i = 0; i < tempValues.Length; i++) {
+
+					try {
+						tempValues [i] = values [i];
+					} catch (IndexOutOfRangeException) {
+						tempValues [i] = 0;
+					}
+
+				}
+
+				values = tempValues;
 
 			}
 

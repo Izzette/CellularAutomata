@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CellularAutomata.Populations; // reference IPopulation, States
-using CellularAutomata.Populations.Cells;  // reference ICell, General, VonNeumann, Arangements, Variety
+using CellularAutomata.Populations.Cells;  // reference ICell, General, VonNeumann, CellsArangement, CellsVariety
 using CellularAutomata.Populations.Rules;  // reference IRule
 
 namespace CellularAutomata.Populations  // Contains cell collections, Cells namespace, Rules namespace
@@ -17,75 +17,48 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 		}
 
 		private IRule rule;  // get rule
-		private Variety variety;  // kind of network, get variety
+		private CellsVariety cellsVariety;  // kind of network, get cellsVariety
 		private ICell[] items;  // not accessable
 
 		// states structure
 		private States states;
 
 		// private constructor for Clone () method, passes all instance variables
-		private Simple (Variety variety, ICell[] items, IRule rule, States states)
+		private Simple (CellsVariety cellsVariety, ICell[] items, IRule rule, States states)
 		{
 
-			this.variety = variety;
+			this.cellsVariety = cellsVariety;
 			this.items = items;
 			this.rule = rule;
 			this.states = states;
 
 		}
 
-		// public constructor for simple IC, initailization dependancy SetRule (IRule rule)
-		public Simple (Variety variety, int[] sizes)
-		{
-
-			this.variety = variety;
-			int[] tempValues = new int [0] { };
-
-			switch (this.variety) {
-
-			case Variety.General:  // General Cells
-
-				this.items = General.Build (sizes, out tempValues);  // out init this.states
-
-				break;
-
-			case Variety.VonNeumann:  // Von Neumann Cells
-
-				this.items = VonNeumann.Build (sizes, out tempValues);    // out init this.states
-
-				break;
-
-			}
-
-			this.states = new States (this.items [0].GetArangement (), tempValues, sizes);
-			
-		}
-
 		// public constructor for custom states
 		// states can be shorter than, but not longer than length
 		// initailization dependancy SetRule (IRule rule)
-		public Simple (Variety variety, int[] sizes, int[] values)
+		public Simple (CellsVariety cellsVariety, int[] sizes, int[] values)
 		{
 
-			this.variety = variety;
+			this.cellsVariety = cellsVariety;
 
-			switch (this.variety) {
+			switch (this.cellsVariety) {
 
-				case Variety.General:  // General Cells
+			case CellsVariety.General:  // General Cells
 
-				this.items = General.Build (sizes, values);  // out init this.states
+				this.states = new States (General.Arangement, values, sizes);
+				this.items = General.Build (this.states.Sizes, this.states.Values);  // out init this.states
 
 				break;
 
-				case Variety.VonNeumann:  // Von Neumann Cells
+			case CellsVariety.VonNeumann:  // Von Neumann Cells
 
-				this.items = VonNeumann.Build (sizes, values);    // out init this.states
+				this.states = new States (VonNeumann.Arangement, values, sizes);
+				this.items = VonNeumann.Build (this.states.Sizes, this.states.Values);// out init this.states
 
 				break;
 
 			}
-
-			this.states = new States (this.items [0].GetArangement (), values, sizes);
 
 		}
 
@@ -127,20 +100,20 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 
 		}
 
-		public Variety GetVariety ()  // inherit IPopulation
+		public CellsVariety GetCellsVariety ()  // inherit IPopulation
 		{
 
-			return this.variety;
+			return this.cellsVariety;
 
 		}
 
-		public new string ToString ()  // return string with type, Variety, and IRule.  For collection naming
+		public new string ToString ()  // return string with type, CellsVariety, and IRule.  For collection naming
 		{
 
 			string collection = String.Empty;
 
 			collection += "Simple_";
-			collection += this.variety.ToString ();
+			collection += this.cellsVariety.ToString ();
 			collection += "_";
 			collection += this.rule.ToString ();
 
@@ -148,10 +121,10 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 
 		}
 
-		public object Clone ()  // inherited from IPopulation inhertied from ICloneable
+		public IPopulation Clone ()  // inherited from IPopulation inhertied from ICloneable
 		{
 		
-			return (new Simple (this.variety, this.items, this.rule, this.states));
+			return (new Simple (this.cellsVariety, this.items, this.rule, this.states));
 
 		}
 		

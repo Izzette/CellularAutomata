@@ -1,7 +1,7 @@
 
 file: Interpreter: public class Interpreter:
 	
-	private static ApplicationCommands Parse (string line):
+	private static ApplicationCommand Parse (string line):
 		
 		line format: Command method [-options[:args]] [arguments]
 		
@@ -13,9 +13,19 @@ file: Interpreter: public class Interpreter:
 		
 file: Option: public struct Option:
 
-	public Option (string name, string[] arguments)
+	public string Name:
 	
-file: ApplicationCommands: public enum ApplicationCommands:
+		property for name.
+		
+	public string[] Arguments {
+	
+		property for arguments.
+
+	public Option (string phrase):
+	
+		parses phrase
+	
+file: ApplicationCommand: public enum ApplicationCommand:
 
 	commands to pass back to entry point from interpreter.
 	
@@ -33,7 +43,7 @@ file: PopulationControl: public class PopulationControl
 		
 			-size, s:(x)[:(y) (...) ]
 			-rule, r:[(k),(n)]  // literalbrackets
-			-variety, v:(variety)
+			-cellsVariety, v:(cellsVariety)
 		
 		Arguments: (target) [(intial conditions)]
 	

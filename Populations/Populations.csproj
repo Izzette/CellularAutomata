@@ -43,8 +43,8 @@
     <Compile Include="Rules\Absolute.cs" />
     <Compile Include="Rules\IRule.cs" />
     <Compile Include="States.cs" />
-    <Compile Include="Cells\Arangements.cs" />
-    <Compile Include="Cells\Variety.cs" />
+    <Compile Include="Cells\CellsVariety.cs" />
+    <Compile Include="Cells\CellsArangement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />
