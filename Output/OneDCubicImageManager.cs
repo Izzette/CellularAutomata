@@ -38,10 +38,30 @@ namespace CellularAutomata.Outputs
 
 		}
 
-		public static Bitmap GetBitmap ()
+		// return type bool success or failure
+		public static bool Save (string path, OutputsFormat format)
 		{
 
-			return bitmap;
+			ImageFormat imageFormat;
+
+			switch (format) {
+			case OutputsFormat.Bitmap:
+				imageFormat = ImageFormat.Bmp;
+				path += ".bmp";
+				break;
+			default:
+				throw new ArgumentException ();
+			}
+
+			try {
+				bitmap.Save (path, imageFormat);
+			} catch {
+				// failure!
+				return false;
+			}
+
+			// success!
+			return true;
 
 		}
 

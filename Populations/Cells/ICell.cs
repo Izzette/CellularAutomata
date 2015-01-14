@@ -1,6 +1,6 @@
 using System;
 
-namespace CellularAutomata.Populations.Cells
+namespace CellularAutomata.Populations
 {	
 	
 	public interface ICell  // ICell interface, all Cells base classes inherite ICell

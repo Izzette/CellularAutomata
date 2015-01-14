@@ -1,6 +1,6 @@
 using System;
 
-namespace CellularAutomata.Populations.Cells
+namespace CellularAutomata.Populations
 {
 
 	public enum CellsVariety  // Cells build type

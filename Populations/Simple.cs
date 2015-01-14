@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CellularAutomata.Populations; // reference IPopulation, States
-using CellularAutomata.Populations.Cells;  // reference ICell, General, VonNeumann, CellsArangement, CellsVariety
-using CellularAutomata.Populations.Rules;  // reference IRule
+using CellularAutomata.Populations;
 
 namespace CellularAutomata.Populations  // Contains cell collections, Cells namespace, Rules namespace
 {
@@ -57,6 +55,10 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 				this.items = VonNeumann.Build (this.states.Sizes, this.states.Values);// out init this.states
 
 				break;
+
+			default:
+
+				throw new ArgumentException ();
 
 			}
 

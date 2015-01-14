@@ -1,7 +1,7 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference ICell, CellsArangement
+using CellularAutomata.Populations;
 
-namespace CellularAutomata.Populations.Cells  // contains Cell Classes
+namespace CellularAutomata.Populations
 {
 	
 	public class General : ICell  // one dimensional, one neighbour, one state

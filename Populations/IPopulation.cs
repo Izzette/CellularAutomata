@@ -1,6 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference CellsArangement, CellsVariety
-using CellularAutomata.Populations.Rules;  // reference IRule
+using CellularAutomata.Populations;
 
 namespace CellularAutomata.Populations  // contains all Cell collections and Cells namespace
 {

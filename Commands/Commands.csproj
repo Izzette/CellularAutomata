@@ -39,7 +39,6 @@
     <Compile Include="PopulationsControl.cs" />
     <Compile Include="OutputsControl.cs" />
     <Compile Include="ApplicationCommand.cs" />
-    <Compile Include="OutputFormat.cs" />
     <Compile Include="CommandsWarning.cs" />
   </ItemGroup>
   <ItemGroup>

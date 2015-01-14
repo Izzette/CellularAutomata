@@ -1,8 +1,7 @@
 using System;
-using CellularAutomata.Populations;  // reference IPopulation, Simple
-using CellularAutomata.Populations.Rules;  // reference IRule, Absolute
-using CellularAutomata.Populations.Cells; // reference CellsVariety
-using CellularAutomata.Commands;  // reference Option, OutputsFormat, OutputsControl, CommandsWarning
+using CellularAutomata.Populations;
+using CellularAutomata.Commands;
+using CellularAutomata.Outputs;
 
 namespace CellularAutomata.Commands  // console UI interface
 {
@@ -120,7 +119,7 @@ namespace CellularAutomata.Commands  // console UI interface
 				// -r:<type>:<code>
 				case "r":
 					// select rule type
-					if (0 == option.Arguments.Length) {
+					if (2 > option.Arguments.Length) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
 						return;
 					}
@@ -129,12 +128,21 @@ namespace CellularAutomata.Commands  // console UI interface
 					case "a":
 						rule = new Absolute ();
 						break;
+					// Totalistic
+					case "t":
+						rule = new Totalistic ();
+						break;
 					default:
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
 						return;
 					} // end switch (option.Arguments [0]) statement
+					try {
+						rule.Parse (option.Arguments [1]);
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [1]);
+						return;
+					}  // end try catch (FormatException)
 					// parse code
-					rule.Parse (option.Arguments [1]);
 					break;
 				// set cellsVariety
 				// -v:<cellsVariety>
@@ -148,6 +156,9 @@ namespace CellularAutomata.Commands  // console UI interface
 					// general
 					case "g":
 						cellsVariety = CellsVariety.General;
+						break;
+					case "vn":
+						cellsVariety = CellsVariety.VonNeumann;
 						break;
 					default:
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
@@ -240,15 +251,12 @@ namespace CellularAutomata.Commands  // console UI interface
 
 			switch (arguments [0]) {
 			case "p":
-				OutputsControl.Init (population.GetStates (), generation, format);
+				OutputsControl.Init (population, generation, format);
 				for (int i = 1; i <= generation; i++) {
 					population.Evolve ();
-					OutputsControl.Update (population.GetStates (), i, format);
+					OutputsControl.Update (population, i, format);
 				}
-				CellsArangement cellsArangement = population.GetCellsArangement ();
-				string subDirName = population.ToString ();
-				string fileName = generation.ToString ();
-				OutputsControl.SaveImage (cellsArangement, subDirName, fileName, format);
+				OutputsControl.Final (population, generation.ToString (), format);
 				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);

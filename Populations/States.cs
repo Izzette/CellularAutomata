@@ -1,5 +1,5 @@
 using System;
-using CellularAutomata.Populations.Cells;  // reference CellsArangement
+using CellularAutomata.Populations;
 
 namespace CellularAutomata.Populations
 {

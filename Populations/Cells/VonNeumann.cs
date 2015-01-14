@@ -1,7 +1,7 @@
 using System;
-using CellularAutomata.Populations.Cells; // reference ICell, CellsArangement
+using CellularAutomata.Populations;
 
-namespace CellularAutomata.Populations.Cells  // contains Cell classes
+namespace CellularAutomata.Populations
 {
 
 	public class VonNeumann : ICell  // range 1, Von Neumann neighbourhoods, 2D
@@ -28,7 +28,7 @@ namespace CellularAutomata.Populations.Cells  // contains Cell classes
 			VonNeumann[] items = new VonNeumann [states.Length];  // construct array for items
 			items [0] = new VonNeumann (states [0]);  // create root with specified state
 
-			int index = 2;  // keeps track of total number of cells in system, starts at two because index is incremented at end of nested for loop
+			int index = 1;  // keeps track of total number of cells in system, starts at two because index is incremented at end of nested for loop
 
 			for (int vertical = 0; vertical < size [1]; vertical++) {  // vertical height
 			

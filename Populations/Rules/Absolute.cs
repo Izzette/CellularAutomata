@@ -1,37 +1,22 @@
 using System;
-using System.Numerics;  // reference System.Numerics
+using System.Numerics;
 using CellularAutomata.Populations;
-using CellularAutomata.Populations.Cells;  // reference ICell
-using CellularAutomata.Populations.Rules;  // reference IRule
 
-namespace CellularAutomata.Populations.Rules  // contains rules
+namespace CellularAutomata.Populations  // contains rules
 {	
 	
 	public class Absolute : IRule
 	{
-
-		private int color;
-		private BigInteger number;
-		private string rule;
-
-		private Absolute (int color, BigInteger number, string rule)  // private constructor for clone
-		{
-
-			this.color = color;
-			this.number = number;
-			this.rule = rule;
-
-		}
 
 		public Absolute () { ; }
 
 		// Intialization Dependancy
 		// string rule = "[color,number]"
 		// inherit IRule
-		public void Parse (string rule)
+		public void Parse (string code)
 		{
 
-			string[] phrases = rule.Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);  // split into { "color", "number" }
+			string[] phrases = code.Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);  // split into { "color", "number" }
 
 			try {  // safing convert
 
@@ -40,47 +25,61 @@ namespace CellularAutomata.Populations.Rules  // contains rules
 
 			} catch (FormatException) {
 
-				throw new ArgumentException ("Waring: rule not in correct format! Should be (<k>,<n>)");
+				throw new FormatException ();
 
 			}
 
-			this.rule = rule;  // only if no exceptions
+			this.code = code;  // only if no exceptions
 
 		}
 
 		public int Implement (ICell cell)  // inherit IRule
 		{
 
+			BigInteger state;
+
 			int neighbourhood = cell.GetNeighbourhood (this.color);  // gets neighbourhood
 
 			BigInteger color = new BigInteger (this.color);
-
-			BigInteger placeValue = BigInteger.Pow (color, neighbourhood + 1);  // records upper place value
-			BigInteger remaining = BigInteger.Remainder (this.number, placeValue);  // remaining value to be eliminated
+			// records upper place value
+			BigInteger placeValue = BigInteger.Pow (color, neighbourhood + 1);
+			// remaining value to be eliminated
+			state = BigInteger.Remainder (this.number, placeValue);
 
 			placeValue = BigInteger.Divide (placeValue, color);  // lower place value
-			remaining = BigInteger.Divide (remaining, placeValue);  // final answer as BigInteger
+			state = BigInteger.Divide (state, placeValue);  // final answer as BigInteger
 
-			int state = (int)remaining;  // convert to int
-
-			return state;  // return state
+			return (int)state;  // return state
 
 		}
 
 		public new string ToString ()  // inherit IRule
 		{
 
-			return this.rule;
+			return this.code;
 
 		}
 
 		public IRule Clone ()  // inherit IRule
 		{
 
-			return (new Absolute (this.color, this.number, this.rule));
+			return (new Absolute (this.color, this.number, this.code));
 
 		}
 		
+		private int color;
+		private BigInteger number;
+		private string code;
+
+		private Absolute (int color, BigInteger number, string code)  // private constructor for clone
+		{
+
+			this.color = color;
+			this.number = number;
+			this.code = code;
+
+		}
+
 	}
 	
 }

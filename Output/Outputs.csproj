@@ -37,6 +37,8 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="OneDCubicImageManager.cs" />
+    <Compile Include="OutputFormat.cs" />
+    <Compile Include="TwoDCubicImageManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Drawing" />
