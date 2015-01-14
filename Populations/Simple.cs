@@ -59,7 +59,7 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 			case CellsVariety.Moore:
 
 				this.states = new States (Moore.Arangement, values, sizes);
-				this.items = Moore.Build (this.states.Sizes, this.states.Sizes);
+				this.items = Moore.Build (this.states.Sizes, this.states.Values);
 
 				break;
 

@@ -59,7 +59,11 @@ namespace CellularAutomata.Outputs
 				imageFormat = ImageFormat.Bmp;
 				path += ".bmp";
 				break;
-				default:
+			case OutputsFormat.Gif:
+				imageFormat = ImageFormat.Gif;
+				path += ".gif";
+				break;
+			default:
 				throw new ArgumentException ();
 			}
 

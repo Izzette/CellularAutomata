@@ -10,7 +10,9 @@ namespace CellularAutomata.Outputs
 
 		Console,
 
-		Bitmap
+		Bitmap,
+
+		Gif
 
 	}
 

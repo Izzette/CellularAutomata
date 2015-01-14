@@ -106,7 +106,7 @@ namespace CellularAutomata.Populations
 
 		}
 
-		public int GetNeighbourhood (int color)  // search border neighbours clockwise starting with left, end with this
+		public virtual int GetNeighbourhood (int color)  // search border neighbours clockwise starting with left, end with this
 		{
 
 			int[] neighboursState = new int [5] {  // colection of states for code reuse 

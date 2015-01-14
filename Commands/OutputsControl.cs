@@ -22,6 +22,7 @@ namespace CellularAutomata.Commands
 			CellsArangement cellsArangement = states.Arangement;
 
 			switch (format) {
+			case OutputsFormat.Gif:
 			case OutputsFormat.Bitmap:
 				switch (cellsArangement) {
 				case CellsArangement.OneDCubic:
@@ -54,6 +55,7 @@ namespace CellularAutomata.Commands
 			CellsArangement cellsArangement = states.Arangement;
 
 			switch (format) {
+			case OutputsFormat.Gif:
 			case OutputsFormat.Bitmap:
 				switch (cellsArangement) {
 				case CellsArangement.OneDCubic:
@@ -87,6 +89,7 @@ namespace CellularAutomata.Commands
 			switch (cellsArangement) {
 			case CellsArangement.OneDCubic:
 				switch (format) {
+				case OutputsFormat.Gif:
 				case OutputsFormat.Bitmap:
 					SaveImage (population, fileName, format);
 					break;

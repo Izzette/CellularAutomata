@@ -31,10 +31,10 @@ namespace CellularAutomata.Populations
 			int index = 1;  // keeps track of total number of cells in system, starts at two because index is incremented at end of nested for loop
 
 			for (int vertical = 0; vertical < size [1]; vertical++) {  // vertical height
-
+			
 				for (
 					int horizontal = 1;  // start after root or new line
-					(horizontal < size [0] + 1) && (index < states.Length);  // break after new row or after last cell
+				    (horizontal < size [0] + 1) && (index < states.Length);  // break after new row or after last cell
 					horizontal++
 					) {
 
@@ -110,7 +110,7 @@ namespace CellularAutomata.Populations
 		{
 
 			int[] neighboursState = new int [9] {  // colection of states for code reuse 
-
+				
 				this.state,
 				this.left.state,
 				this.left.up.state,
@@ -131,8 +131,6 @@ namespace CellularAutomata.Populations
 
 			}
 
-			Console.WriteLine (neighbourhood);
-
 			return neighbourhood;  // return neighbourhood number. exit
 
 		}
@@ -148,7 +146,7 @@ namespace CellularAutomata.Populations
 			Moore tempDown = this.down;
 
 			Moore tempRoot = this.right.down;  // temporary reference to root, for newRow
-
+		
 			if (newRow) {  // new row
 
 				// does not link to this cell, except singly through this.next;
@@ -190,4 +188,3 @@ namespace CellularAutomata.Populations
 	}
 
 }
-

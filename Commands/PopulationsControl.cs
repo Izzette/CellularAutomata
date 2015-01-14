@@ -74,6 +74,11 @@ namespace CellularAutomata.Commands  // console UI interface
 					return new int [2] { 30, 30 };
 				}
 				break;
+			case CellsVariety.Moore:
+				if (2 != sizes.Length) {
+					return new int [2] { 30, 30 };
+				}
+				break;
 			default:
 				throw new ArgumentException ("At PopulationControl.GetSizes: CellsVariety variety not recognized");
 			}  // end switch (cellsVariety) statment
@@ -246,6 +251,9 @@ namespace CellularAutomata.Commands  // console UI interface
 			switch (arguments [1]) {
 			case "bitmap":
 				format = OutputsFormat.Bitmap;
+				break;
+			case "gif":
+				format = OutputsFormat.Gif;
 				break;
 			case "quiet":
 				format = OutputsFormat.Quiet;
