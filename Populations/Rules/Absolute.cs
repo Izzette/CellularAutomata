@@ -56,7 +56,7 @@ namespace CellularAutomata.Populations  // contains rules
 		public new string ToString ()  // inherit IRule
 		{
 
-			return this.code;
+			return "a" + this.code;
 
 		}
 

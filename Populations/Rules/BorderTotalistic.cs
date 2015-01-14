@@ -1,13 +1,11 @@
 using System;
-using CellularAutomata.Populations;
 
 namespace CellularAutomata.Populations
 {
-
-	public class Totalistic : IRule
+	public class BorderTotalistic : IRule
 	{
 
-		public Totalistic () { ; }
+		public BorderTotalistic () { ; }
 
 		// initalization dependacy, interprets rule as string
 		public void Parse (string code)
@@ -36,7 +34,10 @@ namespace CellularAutomata.Populations
 
 			long state;
 
-			int total = cell.GetNeighbourhood (1);
+			// works with any neighbourhood arangement
+			long oldState = (long)(cell.GetState ());
+			long total = (long)(cell.GetNeighbourhood (1)) - oldState;
+			total = (total * this.color) + oldState;
 
 			// records upper place value
 			long placeValue = (long)Math.Pow (this.color, total + 1);
@@ -53,28 +54,28 @@ namespace CellularAutomata.Populations
 		// returns properly formated rule
 		public new string ToString ()
 		{
-		
-			return "t" + this.code;
+
+			return "bt" + this.code;
 
 		}
 
 		public virtual IRule Clone ()
 		{
-			return (new Totalistic (this.color, this.number, this.code));
+			return (new BorderTotalistic (this.color, this.number, this.code));
 		}
 
 		private int color;
 		private long number;
 		private string code;
 
-		private Totalistic (int color, long number, string code)
+		private BorderTotalistic (int color, long number, string code)
 		{
 			this.color = color;
 			this.number = number;
 			this.code = code;
 		}
 	
-	}  // end Totalistic, public class
+	} // end BorderToatlistic
 
-}  // end CellularAutomata.Populations, namespace
+} // end CellularAutomata.Populations, namespace
 

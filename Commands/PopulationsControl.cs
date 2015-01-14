@@ -132,6 +132,9 @@ namespace CellularAutomata.Commands  // console UI interface
 					case "t":
 						rule = new Totalistic ();
 						break;
+					case "bt":
+						rule = new BorderTotalistic ();
+						break;
 					default:
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
 						return;
@@ -159,6 +162,9 @@ namespace CellularAutomata.Commands  // console UI interface
 						break;
 					case "vn":
 						cellsVariety = CellsVariety.VonNeumann;
+						break;
+					case "m":
+						cellsVariety = CellsVariety.Moore;
 						break;
 					default:
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);

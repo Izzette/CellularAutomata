@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Commands/PopulationsControl.cs">
+    <Files>
+      <File FileName="Populations/Rules/BorderTotalistic.cs" Line="14" Column="15" />
+      <File FileName="Populations/Rules/Totalistic.cs" Line="40" Column="4" />
+      <File FileName="Commands/PopulationsControl.cs" Line="137" Column="13" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -46,6 +46,8 @@
     <Compile Include="Cells\CellsVariety.cs" />
     <Compile Include="Cells\CellsArangement.cs" />
     <Compile Include="Rules\Totalistic.cs" />
+    <Compile Include="Rules\BorderTotalistic.cs" />
+    <Compile Include="Cells\Moore.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />

@@ -4,7 +4,7 @@ using CellularAutomata.Populations;
 namespace CellularAutomata.Populations
 {
 
-	public class VonNeumann : ICell  // range 1, Von Neumann neighbourhoods, 2D
+	public class Moore : ICell  // range 1, Von Neumann neighbourhoods, 2D
 	{
 
 		public static CellsArangement Arangement {
@@ -25,16 +25,16 @@ namespace CellularAutomata.Populations
 
 			}
 
-			VonNeumann[] items = new VonNeumann [states.Length];  // construct array for items
-			items [0] = new VonNeumann (states [0]);  // create root with specified state
+			Moore[] items = new Moore [states.Length];  // construct array for items
+			items [0] = new Moore (states [0]);  // create root with specified state
 
 			int index = 1;  // keeps track of total number of cells in system, starts at two because index is incremented at end of nested for loop
 
 			for (int vertical = 0; vertical < size [1]; vertical++) {  // vertical height
-			
+
 				for (
 					int horizontal = 1;  // start after root or new line
-				    (horizontal < size [0] + 1) && (index < states.Length);  // break after new row or after last cell
+					(horizontal < size [0] + 1) && (index < states.Length);  // break after new row or after last cell
 					horizontal++
 					) {
 
@@ -54,15 +54,15 @@ namespace CellularAutomata.Populations
 		private int state; // this state
 
 		// border neigbhours in scan order, clockwise starting with left, make double links
-		private VonNeumann left;
-		private VonNeumann up;
-		private VonNeumann right;
-		private VonNeumann down;
+		private Moore left;
+		private Moore up;
+		private Moore right;
+		private Moore down;
 
 		// next cell reference holder, single links
-		private VonNeumann next;
+		private Moore next;
 
-		public VonNeumann (int state)  // constructs with specified state
+		public Moore (int state)  // constructs with specified state
 		{
 
 			this.state = state;  // set specified state
@@ -102,20 +102,24 @@ namespace CellularAutomata.Populations
 		public CellsArangement GetArangement ()
 		{
 
-			return VonNeumann.Arangement;
+			return Moore.Arangement;
 
 		}
 
 		public int GetNeighbourhood (int color)  // search border neighbours clockwise starting with left, end with this
 		{
 
-			int[] neighboursState = new int [5] {  // colection of states for code reuse 
-				
+			int[] neighboursState = new int [9] {  // colection of states for code reuse 
+
 				this.state,
 				this.left.state,
+				this.left.up.state,
 				this.up.state,
+				this.up.right.state,
 				this.right.state,
-				this.down.state
+				this.right.down.state,
+				this.down.state,
+				this.down.left.state
 
 			};
 
@@ -127,22 +131,24 @@ namespace CellularAutomata.Populations
 
 			}
 
+			Console.WriteLine (neighbourhood);
+
 			return neighbourhood;  // return neighbourhood number. exit
 
 		}
 
-		public VonNeumann AddNeighbour (int state, bool newRow) // Adds neighbour with passed state, starts new roow if (newRow) returns cell added
+		public Moore AddNeighbour (int state, bool newRow) // Adds neighbour with passed state, starts new roow if (newRow) returns cell added
 		{
 
-			VonNeumann cell = new VonNeumann (state);  // construct new cell
+			Moore cell = new Moore (state);  // construct new cell
 
 			// temporary reference holders
-			VonNeumann tempUp = this.up;  
-			VonNeumann tempRight = this.right;
-			VonNeumann tempDown = this.down;
+			Moore tempUp = this.up;  
+			Moore tempRight = this.right;
+			Moore tempDown = this.down;
 
-			VonNeumann tempRoot = this.right.down;  // temporary reference to root, for newRow
-		
+			Moore tempRoot = this.right.down;  // temporary reference to root, for newRow
+
 			if (newRow) {  // new row
 
 				// does not link to this cell, except singly through this.next;
@@ -184,3 +190,4 @@ namespace CellularAutomata.Populations
 	}
 
 }
+

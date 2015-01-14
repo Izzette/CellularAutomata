@@ -63,14 +63,14 @@ namespace CellularAutomata.Commands  // console UI interface
 			try {
 				command = Parse (line, out method, out options, out arguments);
 			} catch (IndexOutOfRangeException) {
-				Console.WriteLine ("Warning: Command or method not specified!");
+				CommandsWarning.CommandNotFound ("or Method)");
 				return ApplicationCommand.Continue;
 			}
 
 			switch (command) {
 			// population manager class
 			case "Population":
-			case "pop":
+			case "Pop":
 				PopulationsControl.Excecute (method, options, arguments);
 				break;
 			// master application manager
@@ -82,15 +82,13 @@ namespace CellularAutomata.Commands  // console UI interface
 				case "quit":  // quit app
 					return ApplicationCommand.Quit;
 				default:  // could not find method
-					string message = "Not a valid command!  Could not find Application method ";
-					message += method;
-					throw new FormatException (message);
+					CommandsWarning.MethodNotFound (command, method);
+					return ApplicationCommand.Continue;
 				} // end switch (method) statement
 			// could not find command
 			default:
-				string lowMessage = "Not a valid command!  Could not find command ";
-				lowMessage += command;
-				throw new FormatException (lowMessage);
+				CommandsWarning.CommandNotFound (command);
+				return ApplicationCommand.Continue;
 			}  // end switch (command) statement
 
 			// continue parse line loop in Entry Point
