@@ -15,25 +15,24 @@ namespace CellularAutomata.Outputs
 		{
 
 			int width = values.Length;
-			int height = maxGeneration + 1;
+			int height = (maxGeneration + 1);
 
-			bitmap = new Bitmap (width, height);
+			bitmap = new Bitmap (width * 4, height * 4);
 
-			Parallel.For (0, width, i => {
-				Color color = GetColor (values [i]);
-				bitmap.SetPixel (i, 0, color);
-			});
+			Update (values, 0);
 
 		}  // end InitOneDCubicBitmap, public static void method
 
 		public static void Update (int[] values, int currentGeneration)
 		{
 
-			Parallel.For (1, bitmap.Size.Width, i => {
+			Parallel.For (1, values.Length, i => {
 				// select color
 				Color color = GetColor (values [i]);
 				// encode pixel
-				bitmap.SetPixel (i, currentGeneration, color);
+				for (int ie = 0; ie < 16; ie++) {
+					bitmap.SetPixel ((i * 4) + (ie % 4), (currentGeneration * 4) + (ie / 4), color);
+				}
 			}); // end Parallel.For call
 
 		}

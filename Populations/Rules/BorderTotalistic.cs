@@ -11,7 +11,8 @@ namespace CellularAutomata.Populations
 		public void Parse (string code)
 		{
 
-			string[] phrases = code.Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);  // split into { "color", "number" }
+			// split into { "color", "number" }
+			string[] phrases = code.Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
 			try {
 
@@ -29,7 +30,7 @@ namespace CellularAutomata.Populations
 		}  // end Parse, public void method
 
 		// implements rule, returns new state value
-		public virtual int Implement (ICell cell)
+		public int Implement (ICell cell)
 		{
 
 			long state;

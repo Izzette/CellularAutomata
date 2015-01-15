@@ -31,7 +31,7 @@ namespace CellularAutomata.Populations
 		}  // end Parse, public void method
 
 		// implements rule, returns new state value
-		public virtual int Implement (ICell cell)
+		public int Implement (ICell cell)
 		{
 
 			long state;

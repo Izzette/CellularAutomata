@@ -140,6 +140,9 @@ namespace CellularAutomata.Commands  // console UI interface
 					case "bt":
 						rule = new BorderTotalistic ();
 						break;
+					case "ll":
+						rule = new LifeLike ();
+						break;
 					default:
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
 						return;

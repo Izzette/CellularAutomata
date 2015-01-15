@@ -23,7 +23,7 @@ namespace CellularAutomata.Populations  // contains rules
 				this.color = Convert.ToInt32 (phrases [0]);
 				this.number = BigInteger.Parse (phrases [1]);
 
-			} catch (FormatException) {
+			} catch (IndexOutOfRangeException) {
 
 				throw new FormatException ();
 

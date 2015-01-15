@@ -23,27 +23,24 @@ namespace CellularAutomata.Outputs
 				throw new ArgumentException ();
 			}
 
-			bitmap = new Bitmap (width, height);
+			bitmap = new Bitmap (width * 4, height * 4);
 
-			Parallel.For (0, values.Length, i => {
-				int x = i % width;
-				int y = i / width;
-				Color color = GetColor (values [i]);
-				bitmap.SetPixel (x, y, color);
-			});
+			Update (values);
 
 		}  // end InitOneDCubicBitmap, public static void method
 
 		public static void Update (int[] values)
 		{
 
-			int width = bitmap.Size.Width;
+			int width = bitmap.Size.Width / 4;
 
 			Parallel.For (0, values.Length, i => {
 				int x = i % width;
 				int y = i / width;
 				Color color = GetColor (values [i]);
-				bitmap.SetPixel (x, y, color);
+				for (int ie = 0; ie < 16; ie++) {
+					bitmap.SetPixel ((x * 4) + (ie % 4), (y * 4) + (ie / 4), color);
+				}
 			});
 
 		}
