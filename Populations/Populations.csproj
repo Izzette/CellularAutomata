@@ -49,6 +49,7 @@
     <Compile Include="Rules\BorderTotalistic.cs" />
     <Compile Include="Cells\Moore.cs" />
     <Compile Include="Rules\LifeLike.cs" />
+    <Compile Include="Cells\NextGeneral.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />

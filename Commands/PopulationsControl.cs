@@ -174,6 +174,9 @@ namespace CellularAutomata.Commands  // console UI interface
 					case "m":
 						cellsVariety = CellsVariety.Moore;
 						break;
+					case "ng":
+						cellsVariety = CellsVariety.NextGeneral;
+						break;
 					default:
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
 						return;

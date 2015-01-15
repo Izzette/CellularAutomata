@@ -8,6 +8,8 @@ namespace CellularAutomata.Populations
 
 		General,
 
+		NextGeneral,
+
 		VonNeumann,
 
 		Moore

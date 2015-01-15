@@ -10,7 +10,7 @@ namespace CellularAutomata
 		public static void Main (string[] arguments)
 		{
 
-			Console.WriteLine ("CellularAutomata!");
+			Console.WriteLine (" Welcome to CellularAutomata!");
 
 			ApplicationCommand command;
 

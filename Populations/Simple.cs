@@ -63,6 +63,13 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 
 				break;
 
+			case CellsVariety.NextGeneral:
+
+				this.states = new States (NextGeneral.Arangement, values, sizes);
+				this.items = NextGeneral.Build (this.states.Sizes, this.states.Values);
+
+				break;
+
 			default:
 
 				throw new ArgumentException ();
