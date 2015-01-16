@@ -264,6 +264,9 @@ namespace CellularAutomata.Commands  // console UI interface
 			case "quiet":
 				format = OutputsFormat.Quiet;
 				break;
+			case "bmpSect":
+				format = OutputsFormat.BitmapSection;
+				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
 				return;

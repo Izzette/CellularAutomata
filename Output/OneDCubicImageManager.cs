@@ -45,6 +45,7 @@ namespace CellularAutomata.Outputs
 
 			switch (format) {
 			case OutputsFormat.Bitmap:
+			case OutputsFormat.BitmapSection:
 				imageFormat = ImageFormat.Bmp;
 				path += ".bmp";
 				break;

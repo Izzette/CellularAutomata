@@ -12,6 +12,8 @@ namespace CellularAutomata.Outputs
 
 		Bitmap,
 
+		BitmapSection,
+
 		Gif
 
 	}

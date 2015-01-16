@@ -30,11 +30,25 @@ namespace CellularAutomata.Commands
 					break;
 				case CellsArangement.TwoDCubic:
 					TwoDCubicImageManager.Init (states.Sizes, states.Values);
-					SaveImage (population, "InitalCondition", format);
+					SaveImage (population, "0", format);
 					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statement
+				break;
+			case OutputsFormat.BitmapSection:
+				switch (cellsArangement) {
+				case CellsArangement.TwoDCubic:
+				case CellsArangement.OneDCubic:
+					int[] sectionValues = new int [states.Sizes [0]];
+					for (int i = 0; i < sectionValues.Length; i++) {
+						sectionValues [i] = states.Values [i];
+					}
+					OneDCubicImageManager.Init (sectionValues, maxGeneration);
+					break;
+				default:
+					throw new ArgumentException ();
+				}
 				break;
 			default:
 				throw new ArgumentException ();
@@ -69,7 +83,19 @@ namespace CellularAutomata.Commands
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statment
 				break;
-			case OutputsFormat.Console:
+			case OutputsFormat.BitmapSection:
+				switch (cellsArangement) {
+					case CellsArangement.TwoDCubic:
+					case CellsArangement.OneDCubic:
+					int[] sectionValues = new int [states.Sizes [0]];
+					for (int i = 0; i < sectionValues.Length; i++) {
+						sectionValues [i] = states.Values [i];
+					}
+					OneDCubicImageManager.Update (sectionValues, currentGeneration);
+					break;
+				default:
+					throw new ArgumentException ();
+				}
 				break;
 			default:
 				throw new ArgumentException ();
@@ -81,6 +107,13 @@ namespace CellularAutomata.Commands
 		{
 
 			if (OutputsFormat.Quiet == format) {
+				return;
+			}
+
+			if (OutputsFormat.BitmapSection == format) {
+				string subDirName = population.ToString ();
+				DirectoryInfo subDirectory = bin.CreateSubdirectory (subDirName);
+				OneDCubicImageManager.Save (subDirectory.ToString () + "/" + fileName + "sect", format);
 				return;
 			}
 

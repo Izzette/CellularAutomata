@@ -2,9 +2,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Program/Program.cs">
     <Files>
-      <File FileName="Output/OneDCubicImageManager.cs" Line="34" Column="66" />
-      <File FileName="Output/TwoDCubicImageManager.cs" Line="42" Column="52" />
-      <File FileName="Commands/OutputsControl.cs" Line="100" Column="29" />
+      <File FileName="Output/OneDCubicImageManager.cs" Line="1" Column="1" />
+      <File FileName="Output/TwoDCubicImageManager.cs" Line="1" Column="1" />
+      <File FileName="Commands/OutputsControl.cs" Line="1" Column="1" />
       <File FileName="Program/Program.cs" Line="12" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
