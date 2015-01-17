@@ -200,19 +200,44 @@ namespace CellularAutomata.Commands  // console UI interface
 					values [i] = Convert.ToInt32 (valuesStrings [i].ToString ());
 				}
 			} catch (FormatException) {
-				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
-				return;
+				switch (arguments [1]) {
+				case "rand":
+					if (3 > arguments.Length) {
+						CommandsWarning.ArgumentNotValid (Command, method);
+						return;
+					}
+					try {
+						int tempLength = 1;
+						foreach (int n in sizes) {
+							tempLength = tempLength * n;
+						}
+						int[] tempValues = RandomSequence.GetSequence (Convert.ToInt32 (arguments [2]), tempLength);
+						States tempStates = new States (CellsArangement.OneDCubic, tempValues, new int [1] {tempLength});
+						values = tempStates.Values;
+					} catch (FormatException) {
+						CommandsWarning.ArgumentNotValid (Command, method, arguments [2]);
+						return;
+					}
+					break;
+				default:
+					CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
+					return;
+				}
 			}
 
 			// select population
 			switch (arguments [0]) {
 			// main population
 			case "p":
-				population = new Simple (cellsVariety, sizes, values);
+				try {
+					population = new Simple (cellsVariety, sizes, values);
+				} catch (ArgumentException) {
+					CommandsWarning.OptionArgumentNotValid (Command, method, "<SIZE MISSING OR WRONG>");
+				}
 				population.SetRule (rule);
 				break;
 			default:
-				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+				CommandsWarning.ArgumentNotValid (Command, method, "<INITIAL CONDITION>");
 				return;
 			}  // end switch (arguments [0]) statment
 			  // end try statment

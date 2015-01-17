@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Program/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Output/TwoDCubicImageManager.cs">
     <Files>
       <File FileName="Output/OneDCubicImageManager.cs" Line="1" Column="1" />
       <File FileName="Output/TwoDCubicImageManager.cs" Line="1" Column="1" />

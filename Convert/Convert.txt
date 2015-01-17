@@ -1,2 +1,0 @@
-
-Python program to convert from totalistic code to rule numbers

@@ -40,6 +40,7 @@
     <Compile Include="OutputsControl.cs" />
     <Compile Include="ApplicationCommand.cs" />
     <Compile Include="CommandsWarning.cs" />
+    <Compile Include="RandomSequence.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Populations\Populations.csproj">
@@ -53,5 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Commands.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Numerics" />
   </ItemGroup>
 </Project>
