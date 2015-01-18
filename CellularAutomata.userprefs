@@ -1,14 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Commands/RandomSequence.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Output/OneDCubicImageManager.cs">
     <Files>
-      <File FileName="Commands/RandomSequence.cs" Line="77" Column="56" />
-      <File FileName="Commands/PopulationsControl.cs" Line="224" Column="13" />
-      <File FileName="Populations/Cells/NextGeneral.cs" Line="20" Column="1" />
-      <File FileName="Populations/Simple.cs" Line="55" Column="1" />
-      <File FileName="Commands/OutputsControl.cs" Line="1" Column="1" />
-      <File FileName="Output/OneDCubicImageManager.cs" Line="1" Column="1" />
-      <File FileName="Populations/Cells/VonNeumann.cs" Line="20" Column="1" />
+      <File FileName="Commands/RandomSequence.cs" Line="1" Column="1" />
+      <File FileName="Commands/Interpreter.cs" Line="1" Column="1" />
+      <File FileName="Commands/OutputsControl.cs" Line="32" Column="71" />
+      <File FileName="Output/OneDCubicImageManager.cs" Line="12" Column="3" />
+      <File FileName="Output/TwoDCubicImageManager.cs" Line="12" Column="3" />
+      <File FileName="Commands/PopulationsControl.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="MonoDevelop.Debugger.WatchPad">

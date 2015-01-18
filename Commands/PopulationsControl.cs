@@ -18,7 +18,36 @@ namespace CellularAutomata.Commands  // console UI interface
 				NewPopulation (options, arguments);
 				break;
 			case "evolve":
-				Evolve (options, arguments);
+				try {
+					Evolve (options, arguments);
+				} catch (NullReferenceException) {
+					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize population before evolution");
+					return;
+				}
+				break;
+			case "rule":
+				try {
+					SetRule (options, arguments);
+				} catch (NullReferenceException) {
+					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize population before setting rule");
+					return;
+				}
+				break;
+			case "clone":
+				try {
+					Clone (options, arguments);
+				} catch (NullReferenceException) {
+					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize from population before cloning into other");
+					return;
+				}
+				break;
+			case "states":
+				try {
+					CopyStates (options, arguments);
+				} catch (NullReferenceException) {
+					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize from population before copying states into other");
+					return;
+				}
 				break;
 			default:
 				CommandsWarning.MethodNotFound (Command, method);
@@ -29,10 +58,16 @@ namespace CellularAutomata.Commands  // console UI interface
 
 		// IPopulations
 		private static IPopulation population;
+		private static IPopulation clone;
 
 		// default populations
 		private static CellsVariety DefaultCellsVariety {
 			get { return CellsVariety.General; }
+			set { ; }
+		}
+
+		static private int[] DefaultSizes {
+			get { return new int [1] { 125 }; }
 			set { ; }
 		}
 
@@ -61,126 +96,138 @@ namespace CellularAutomata.Commands  // console UI interface
 			set { ; }
 		}
 
-		private static int[] GetSizes (CellsVariety cellsVariety, int[] sizes)
+		private static int[] GetSizes (string code)
 		{
-			switch (cellsVariety) {
-			case CellsVariety.General:
-				if (1 != sizes.Length) {
-					return new int [1] { 125 };
-				}
-				break;
-			case CellsVariety.VonNeumann:
-				if (2 != sizes.Length) {
-					return new int [2] { 30, 30 };
-				}
-				break;
-			case CellsVariety.Moore:
-				if (2 != sizes.Length) {
-					return new int [2] { 30, 30 };
-				}
-				break;
-			default:
-				throw new ArgumentException ("At PopulationControl.GetSizes: CellsVariety variety not recognized");
-			}  // end switch (cellsVariety) statment
+			int[] sizes;
+			string[] sizesStrings;
+			sizesStrings = code.Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
+			sizes = new int [sizesStrings.Length];
+			for (int i = 0; i < sizes.Length; i++) {
+				sizes [i] = Convert.ToInt32 (sizesStrings [i]);
+			}
 			return sizes;
 		}  // end GetSizes, private static int[] method
 
+		private static IRule GetRule (string code)
+		{
+			IRule rule;
+			switch (code) {
+			case "a":
+				rule = new Absolute ();
+				break;
+			case "t":
+				rule = new Totalistic ();
+				break;
+			case "bt":
+				rule = new BorderTotalistic ();
+				break;
+			case "ll":
+				rule = new LifeLike ();
+				break;
+			default:
+				throw new FormatException ();
+			} // end switch (code) statement
+			return rule;
+		}  // end GetRule, private static IRule method
 
-		// format: Population new [-<o>[:<arg>]] <population> <seed>
-		private static void NewPopulation (Option[] options, string[] arguments)  // Creates reinitializes population
+		private static CellsVariety GetVariety (string code)
+		{
+			CellsVariety cellsVariety;
+			switch (code) {
+			case "g":
+				cellsVariety = CellsVariety.General;
+				break;
+			case "vn":
+				cellsVariety = CellsVariety.VonNeumann;
+				break;
+			case "m":
+				cellsVariety = CellsVariety.Moore;
+				break;
+			case "ng":
+				cellsVariety = CellsVariety.NextGeneral;
+				break;
+			default:
+				throw new FormatException ();
+			} // end switch (option.Argumetns [0]) statment
+			return cellsVariety;
+		}  // end GetVariety, private static CellsVariety method
+
+		private static int[] GetValues (string code)
+		{
+			int[] values;
+			char[] valuesStrings = code.ToCharArray ();
+			values = new int [valuesStrings.Length];
+			for (int i = 0; i < values.Length; i++) {
+				values [i] = Convert.ToInt32 (valuesStrings [i].ToString ());
+			}
+			return values;
+		}
+
+		private static int[] GetRandomValues (string color, int[] sizes)
+		{
+			int[] values;
+			int length = 1;
+			foreach (int n in sizes) {
+				length = length * n;
+			}
+			values = RandomSequence.GetSequence (Convert.ToInt32 (color), length);
+			return values;
+		}
+
+		private static void NewPopulation (Option[] options, string[] arguments)
 		{
 
 			string method = "new";
 
-			int[] sizes = new int [1] { 125 };
+			int[] sizes = DefaultSizes;
 			int[] values = DefaultValues;
 			IRule rule = DefaultRule;
 			CellsVariety cellsVariety = DefaultCellsVariety;
 
 			foreach (Option option in options) {
 				switch (option.Name) {
-				// set sizes
-				// -s:(<x>[,<n>])
 				case "s":
-					// extract sizes
-					string[] sizesStrings;
 					try {
-						sizesStrings = option.Arguments [0].Split (new char [3] { '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
+						sizes = GetSizes (option.Arguments [0]);
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
+					break;
+				case "r":
+					try {
+						rule = GetRule (option.Arguments [0]);
+						rule.Parse (option.Arguments [1]);
+					} catch (FormatException) {
+						string combined = option.Arguments [0] + "or" + option.Arguments [1];
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, combined);
+						return;
 					} catch (IndexOutOfRangeException) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
 						return;
 					}
-					sizes = new int [sizesStrings.Length];
+					break;
+				case "v":
 					try {
-						for (int i = 0; i < sizes.Length; i++) {
-							sizes [i] = Convert.ToInt32 (sizesStrings [i]);
-						}
+						cellsVariety = GetVariety (option.Arguments [0]);
 					} catch (FormatException) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
-						return;
-					}
-					break;
-				// set rule
-				// -r:<type>:<code>
-				case "r":
-					// select rule type
-					if (2 > option.Arguments.Length) {
+					} catch (IndexOutOfRangeException) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
 						return;
-					}
-					switch (option.Arguments [0]) {
-					// Absolute
-					case "a":
-						rule = new Absolute ();
-						break;
-					// Totalistic
-					case "t":
-						rule = new Totalistic ();
-						break;
-					case "bt":
-						rule = new BorderTotalistic ();
-						break;
-					case "ll":
-						rule = new LifeLike ();
-						break;
-					default:
-						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
-						return;
-					} // end switch (option.Arguments [0]) statement
+					} // end try statment
 					try {
-						rule.Parse (option.Arguments [1]);
+						sizes = GetSizes (option.Arguments [1]);
 					} catch (FormatException) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [1]);
 						return;
-					}  // end try catch (FormatException)
-					// parse code
-					break;
-				// set cellsVariety
-				// -v:<cellsVariety>
-				case "v":
-					if (0 == option.Arguments.Length) {
-						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, "<MISSING SIZE DECLAREATION>");
 						return;
-					}
-					// select cellsVariety
-					switch (option.Arguments [0]) {
-					// general
-					case "g":
-						cellsVariety = CellsVariety.General;
-						break;
-					case "vn":
-						cellsVariety = CellsVariety.VonNeumann;
-						break;
-					case "m":
-						cellsVariety = CellsVariety.Moore;
-						break;
-					case "ng":
-						cellsVariety = CellsVariety.NextGeneral;
-						break;
-					default:
-						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
-						return;
-					} // end switch (option.Argumetns [0]) statment
+					}  // end try statment
 					break;
 				default:
 					CommandsWarning.OptionNotFound (Command, method, option.Name);
@@ -188,68 +235,55 @@ namespace CellularAutomata.Commands  // console UI interface
 				}  // end switch (option.Name) statement
 			}  // end foreach (Option option in options) loop
 
-			if (2 > arguments.Length) {
-				CommandsWarning.ArgumentNotValid (Command, method);
-				return;
-			}
-			// extract values
-			char[] valuesStrings = arguments [1].ToCharArray ();
-			values = new int [valuesStrings.Length];
 			try {
-				for (int i = 0; i < values.Length; i++) {
-					values [i] = Convert.ToInt32 (valuesStrings [i].ToString ());
-				}
-			} catch (FormatException) {
 				switch (arguments [1]) {
+				case "str":
+					values = GetValues (arguments [2]);
+					break;
 				case "rand":
-					if (3 > arguments.Length) {
-						CommandsWarning.ArgumentNotValid (Command, method);
-						return;
-					}
-					try {
-						int tempLength = 1;
-						foreach (int n in sizes) {
-							tempLength = tempLength * n;
-						}
-						int[] tempValues = RandomSequence.GetSequence (Convert.ToInt32 (arguments [2]), tempLength);
-						States tempStates = new States (CellsArangement.OneDCubic, tempValues, new int [1] {tempLength});
-						values = tempStates.Values;
-					} catch (FormatException) {
-						CommandsWarning.ArgumentNotValid (Command, method, arguments [2]);
-						return;
-					}
+					values = GetRandomValues (arguments [2], sizes);
 					break;
 				default:
 					CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
 					return;
 				}
+			} catch (FormatException) {
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [2]);
+				return;
+			} catch (IndexOutOfRangeException) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
 			}
 
-			// select population
-			switch (arguments [0]) {
-			// main population
-			case "p":
-				try {
+			try {
+				// select population
+				switch (arguments [0]) {
+				// main population
+				case "p":
 					population = new Simple (cellsVariety, sizes, values);
-				} catch (ArgumentException) {
-					CommandsWarning.OptionArgumentNotValid (Command, method, "<SIZE MISSING OR WRONG>");
-				}
-				population.SetRule (rule);
-				break;
-			default:
-				CommandsWarning.ArgumentNotValid (Command, method, "<INITIAL CONDITION>");
+					population.SetRule (rule);
+					break;
+				case "c":
+					clone = new Simple (cellsVariety, sizes, values);
+					clone.SetRule (rule);
+					break;
+				default:
+					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+					return;
+				}  // end switch (arguments [0]) statment
+			} catch (ArgumentException) {
+				CommandsWarning.OptionArgumentNotValid (Command, method, "<SIZE MISSING OR WRONG>");
 				return;
-			}  // end switch (arguments [0]) statment
-			  // end try statment
-
+			}  catch (IndexOutOfRangeException) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
+			}  // end try statment
 		}  // end NewPopulation, private static void method
 
-		// method: evolve
-		// evolves population
 		private static void Evolve (Option[] options, string[] arguments)
 		{
 
-			string method = "Evolve";
+			string method = "evolve";
 
 			int generation = 1;
 			OutputsFormat format = DefaultFormat;
@@ -257,14 +291,13 @@ namespace CellularAutomata.Commands  // console UI interface
 			foreach (Option option in options) {
 				switch (option.Name) {
 				case "g":
-					if (1 > option.Arguments.Length) {
-						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
-						return;
-					}
 					try {
 						generation = Convert.ToInt32 (option.Arguments [0]);
 					} catch (FormatException) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
 						return;
 					}
 					break;
@@ -306,12 +339,126 @@ namespace CellularAutomata.Commands  // console UI interface
 				}
 				OutputsControl.Final (population, generation.ToString (), format);
 				break;
+			case "c":
+				OutputsControl.Init (clone, generation, format);
+				for (int i = 1; i <= generation; i++) {
+					clone.Evolve ();
+					OutputsControl.Update (clone, i, format);
+				}
+				OutputsControl.Final (clone, generation.ToString (), format);
+				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
 				return;
 			}
 
 		}  // end Evolve, private static void method
+
+		private static void SetRule (Option[] options, string[] arguments)
+		{
+
+			string method = "rule";
+			IRule rule;
+
+			try {
+				rule = GetRule (arguments [1]);
+				rule.Parse (arguments [2]);
+			} catch (FormatException) {
+				string combined = arguments [1] + " or " + arguments [2];
+				CommandsWarning.ArgumentNotValid (Command, method, combined);
+				return;
+			} catch (IndexOutOfRangeException) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
+			}  // end try statment
+
+			switch (arguments [0]) {
+			case "p":
+				population.SetRule (rule);
+				break;
+			case "c":
+				clone.SetRule (rule);
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
+			}  // end switch (arguments [0]) statment
+		
+		}  // end SetRule, private static void method
+
+		private static void Clone (Option[] options, string[] arguments)
+		{
+
+			string method = "clone";
+
+			IPopulation tempClone;
+
+			switch (arguments [1]) {
+			case "p":
+				tempClone = population.Clone ();
+				break;
+			case "c":
+				tempClone = clone.Clone ();
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
+				return;
+			}  // end switch (arguments [1]) statment
+
+			switch (arguments [0]) {
+			case "p":
+				population = tempClone.Clone ();
+				break;
+			case "c":
+				clone = tempClone.Clone ();
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+				return;
+			}  // end switch (arguments [1]) statment
+
+		}  // end Clone, private static void method
+
+		private static void CopyStates (Option[] options, string[] arguments)
+		{
+
+			string method = "states";
+
+			States states;
+
+			switch (arguments [1]) {
+			case "p":
+				states = population.GetStates ();
+				break;
+			case "c":
+				states = population.GetStates ();
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
+				return;
+			}  // end switch (arguments [1]) statment
+
+			IRule rule;
+			CellsVariety cellsVariety;
+			switch (arguments [0]) {
+			case "p":
+				rule = population.GetRule ();
+				cellsVariety = population.GetCellsVariety ();
+				population = new Simple (cellsVariety, states.Sizes, states.Values);
+				population.SetRule (rule);
+				break;
+			case "c":
+				rule = clone.GetRule ();
+				cellsVariety = clone.GetCellsVariety ();
+				clone = new Simple (cellsVariety, states.Sizes, states.Values);
+				clone.SetRule (rule);
+				break;
+			default:
+				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+				return;
+			}  // end switch (arguments [0]) statment
+		
+		}  // end CopyStates, private static void method
 
 	}  // end PopulationsControl, public static class
 
