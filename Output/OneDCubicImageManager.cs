@@ -11,13 +11,18 @@ namespace CellularAutomata.Outputs
 	public static class OneDCubicImageManager
 	{
 
+		public static void ReScale (int newScale)
+		{
+			scale = newScale;
+		}
+
 		public static void Init (int[] values, int maxGeneration)
 		{
 
 			int width = values.Length;
 			int height = (maxGeneration + 1);
 
-			bitmap = new Bitmap (width * 4, height * 4);
+			bitmap = new Bitmap (width * scale, height * scale);
 
 			Update (values, 0);
 
@@ -26,12 +31,12 @@ namespace CellularAutomata.Outputs
 		public static void Update (int[] values, int currentGeneration)
 		{
 
-			Parallel.For (1, values.Length, i => {
+			Parallel.For (0, values.Length, i => {
 				// select color
 				Color color = GetColor (values [i]);
 				// encode pixel
-				for (int ie = 0; ie < 16; ie++) {
-					bitmap.SetPixel ((i * 4) + (ie % 4), (currentGeneration * 4) + (ie / 4), color);
+				for (int ie = 0; ie < Math.Pow (scale, 2); ie++) {
+					bitmap.SetPixel ((i * scale) + (ie % scale), (currentGeneration * scale) + (ie / scale), color);
 				}
 			}); // end Parallel.For call
 
@@ -112,6 +117,8 @@ namespace CellularAutomata.Outputs
 			return color;
 
 		}  // end GetColor, private static Color method
+
+		private static int scale = 2;
 
 	}  // end OneDCubicImageManager, public static class
 

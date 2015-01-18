@@ -10,6 +10,42 @@ namespace CellularAutomata.Commands
 	public static class OutputsControl
 	{
 
+		public static void Excecute (string method, Option[] options, string[] arguments)
+		{
+			switch (method) {
+			case "rescale":
+				if (2 > arguments.Length) {
+					CommandsWarning.ArgumentNotValid (Command, method);
+					return;
+				}
+				switch (arguments [0]) {
+				case "one":
+					try {
+						OneDCubicImageManager.ReScale (Convert.ToInt32 (arguments [1]));
+					} catch (FormatException) {
+						CommandsWarning.ArgumentNotValid (Command, method, "<NEW SCALE>");
+						return;
+					}
+					break;
+				case "two":
+					try {
+						TwoDCubicImageManager.ReScale (Convert.ToInt32 (arguments [1]));
+					} catch (FormatException) {
+						CommandsWarning.ArgumentNotValid (Command, method, "<NEW SCALE>");
+						return;
+					}
+					break;
+				default:
+					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+					return;
+				}
+				break;
+			default:
+				CommandsWarning.MethodNotFound (Command, method);
+				return;
+			}
+		}
+
 		public static void Init (IPopulation population, int maxGeneration, OutputsFormat format)
 		{
 

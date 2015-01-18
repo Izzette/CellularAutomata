@@ -10,6 +10,11 @@ namespace CellularAutomata.Outputs
 	public static class TwoDCubicImageManager
 	{
 
+		public static void ReScale (int newScale)
+		{
+			scale = newScale;
+		}
+
 		public static void Init (int[] sizes, int[] values)
 		{
 
@@ -23,7 +28,7 @@ namespace CellularAutomata.Outputs
 				throw new ArgumentException ();
 			}
 
-			bitmap = new Bitmap (width * 4, height * 4);
+			bitmap = new Bitmap (width * scale, height * scale);
 
 			Update (values);
 
@@ -32,14 +37,14 @@ namespace CellularAutomata.Outputs
 		public static void Update (int[] values)
 		{
 
-			int width = bitmap.Size.Width / 4;
+			int width = bitmap.Size.Width / scale;
 
 			Parallel.For (0, values.Length, i => {
 				int x = i % width;
 				int y = i / width;
 				Color color = GetColor (values [i]);
-				for (int ie = 0; ie < 16; ie++) {
-					bitmap.SetPixel ((x * 4) + (ie % 4), (y * 4) + (ie / 4), color);
+				for (int ie = 0; ie < Math.Pow (scale, 2); ie++) {
+					bitmap.SetPixel ((x * scale) + (ie % scale), (y * scale) + (ie / scale), color);
 				}
 			});
 
@@ -119,6 +124,9 @@ namespace CellularAutomata.Outputs
 			return color;
 
 		}
+
+		private static int scale = 4;
+
 	}
 
 }

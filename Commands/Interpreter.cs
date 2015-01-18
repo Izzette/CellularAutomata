@@ -69,13 +69,24 @@ namespace CellularAutomata.Commands  // console UI interface
 
 			switch (command) {
 			// population manager class
-			case "Population":
 			case "Pop":
 				PopulationsControl.Excecute (method, options, arguments);
 				break;
+			case "Out":
+				OutputsControl.Excecute (method, options, arguments);
+				break;
+			case "Rand":
+				switch (method) {
+				case "init":
+					RandomSequence.Init ();
+					break;
+				default:
+					CommandsWarning.MethodNotFound (command, method);
+					return ApplicationCommand.Continue;
+				}
+				break;
 			// master application manager
-			case "Application":
-			case "app":
+			case "App":
 				switch (method) {
 				case "reset":  // call entry again
 					return ApplicationCommand.Reset;
