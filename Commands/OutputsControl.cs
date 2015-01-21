@@ -46,7 +46,7 @@ namespace CellularAutomata.Commands
 			}
 		}
 
-		public static void Init (IPopulation population, int maxGeneration, OutputsFormat format)
+		public static void Init (IPopulation population, int maxGeneration, string filename, OutputsFormat format)
 		{
 
 			if (OutputsFormat.Quiet == format) {
@@ -60,13 +60,14 @@ namespace CellularAutomata.Commands
 			switch (format) {
 			case OutputsFormat.Gif:
 			case OutputsFormat.Bitmap:
+			case OutputsFormat.Png:
 				switch (cellsArangement) {
 				case CellsArangement.OneDCubic:
 					OneDCubicImageManager.Init (states.Values, maxGeneration);
 					break;
 				case CellsArangement.TwoDCubic:
 					TwoDCubicImageManager.Init (states.Sizes, states.Values);
-					SaveImage (population, "0", format);
+					SaveImage (population, filename, format);
 					break;
 				default:
 					throw new ArgumentException ();
@@ -93,7 +94,7 @@ namespace CellularAutomata.Commands
 		}  // end Init, public static void method
 
 		// collection name contains CellsVariety, IPopulation type, IRule as string
-		public static void Update (IPopulation population, int currentGeneration, OutputsFormat format)
+		public static void Update (IPopulation population, int currentGeneration, string filename, OutputsFormat format)
 		{
 
 			if (OutputsFormat.Quiet == format) {
@@ -107,13 +108,14 @@ namespace CellularAutomata.Commands
 			switch (format) {
 			case OutputsFormat.Gif:
 			case OutputsFormat.Bitmap:
+			case OutputsFormat.Png:
 				switch (cellsArangement) {
 				case CellsArangement.OneDCubic:
 					OneDCubicImageManager.Update (states.Values, currentGeneration);
 					break;
 				case CellsArangement.TwoDCubic:
 					TwoDCubicImageManager.Update (states.Values);
-					SaveImage (population, currentGeneration.ToString (), format);
+					SaveImage (population, filename, format);
 					break;
 				default:
 					throw new ArgumentException ();
@@ -160,6 +162,7 @@ namespace CellularAutomata.Commands
 				switch (format) {
 				case OutputsFormat.Gif:
 				case OutputsFormat.Bitmap:
+				case OutputsFormat.Png:
 					SaveImage (population, fileName, format);
 					break;
 				default:

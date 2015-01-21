@@ -108,6 +108,22 @@ namespace CellularAutomata.Commands  // console UI interface
 			return sizes;
 		}  // end GetSizes, private static int[] method
 
+		private static IPopulation GetPopulation (string pop)
+		{
+			IPopulation tempPop;
+			switch (pop) {
+			case "p":
+				tempPop = population;
+				break;
+			case "c":
+				tempPop = clone;
+				break;
+			default:
+				throw new FormatException ();
+			}
+			return tempPop;
+		}
+
 		private static IRule GetRule (string code)
 		{
 			IRule rule;
@@ -325,32 +341,33 @@ namespace CellularAutomata.Commands  // console UI interface
 			case "bmpSect":
 				format = OutputsFormat.BitmapSection;
 				break;
+			case "png":
+				format = OutputsFormat.Png;
+				break;
 			default:
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [1]);
 				return;
 			}  // end switch (arguments [1]) statment
 
-			switch (arguments [0]) {
-			case "p":
-				OutputsControl.Init (population, generation, format);
-				for (int i = 1; i <= generation; i++) {
-					population.Evolve ();
-					OutputsControl.Update (population, i, format);
-				}
-				OutputsControl.Final (population, generation.ToString (), format);
-				break;
-			case "c":
-				OutputsControl.Init (clone, generation, format);
-				for (int i = 1; i <= generation; i++) {
-					clone.Evolve ();
-					OutputsControl.Update (clone, i, format);
-				}
-				OutputsControl.Final (clone, generation.ToString (), format);
-				break;
-			default:
+			IPopulation tempPop;
+
+			try {
+				tempPop = GetPopulation (arguments [0]);
+			} catch (FormatException) {
 				CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
 				return;
+			} catch (IndexOutOfRangeException) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
 			}
+
+			OutputsControl.Init (tempPop, generation, "img" + "".PadLeft ((int)Math.Log10 (generation) + 1, '0'), format);
+			for (int i = 1; i <= generation; i++) {
+				population.Evolve ();
+				OutputsControl.Update (tempPop, i, "img" + i.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0'), format);
+			}
+			string filename = "img" + generation.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
+			OutputsControl.Final (tempPop, filename, format);
 
 		}  // end Evolve, private static void method
 
@@ -364,8 +381,13 @@ namespace CellularAutomata.Commands  // console UI interface
 				rule = GetRule (arguments [1]);
 				rule.Parse (arguments [2]);
 			} catch (FormatException) {
-				string combined = arguments [1] + " or " + arguments [2];
-				CommandsWarning.ArgumentNotValid (Command, method, combined);
+				try {
+					string combined = arguments [1] + " or " + arguments [2];
+					CommandsWarning.ArgumentNotValid (Command, method, combined);
+				} catch (IndexOutOfRangeException) {
+					CommandsWarning.ArgumentNotValid (Command, method);
+					return;
+				}  // end try statment
 				return;
 			} catch (IndexOutOfRangeException) {
 				CommandsWarning.ArgumentNotValid (Command, method);
