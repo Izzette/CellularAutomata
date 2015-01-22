@@ -199,9 +199,13 @@ namespace CellularAutomata.Commands  // console UI interface
 			int[] values = DefaultValues;
 			IRule rule = DefaultRule;
 			CellsVariety cellsVariety = DefaultCellsVariety;
+			bool init = false;
 
 			foreach (Option option in options) {
 				switch (option.Name) {
+				case "i":
+					init = true;
+					break;
 				case "s":
 					try {
 						sizes = GetSizes (option.Arguments [0]);
@@ -257,6 +261,15 @@ namespace CellularAutomata.Commands  // console UI interface
 					values = GetValues (arguments [2]);
 					break;
 				case "rand":
+					if (init) {
+						int length = 1;
+						foreach (int s in sizes) {
+							length = length * s;
+						}
+						int color = Convert.ToInt32 (arguments [2]);
+						int maxRandSize = (int)Math.Ceiling ((float)length / (int)(Math.Log (UInt32.MaxValue, color) - Math.Log (color, 2)));
+						RandomSequence.Init (maxRandSize, maxRandSize,  5, 8);
+					}
 					values = GetRandomValues (arguments [2], sizes);
 					break;
 				default:

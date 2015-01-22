@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Numerics;
 using CellularAutomata.Populations;
 
 namespace CellularAutomata.Commands
@@ -18,21 +17,27 @@ namespace CellularAutomata.Commands
 		public static void Init ()
 		{
 
+			Init (2500, 10000, 17, 24);
+
+		}
+
+		public static void Init (int minSize, int maxSize, int minGeneration, int maxGeneration)
+		{
+
 			Random random = new Random ();
 
-			int length = random.Next (1000, 10000);
+			int length = 32 * random.Next (minSize, maxSize);
 			int[] sizes = new int [1] {length};
 			int[] values = new int [length];
 
-			int[] numbers = new int [(length / 32) + 1];
+			uint[] numbers = new uint [(int)Math.Ceiling ((float)length / 32F)];
 
 			Parallel.For (0, numbers.Length, i => {
-				numbers [i] = random.Next ();
+				numbers [i] = (uint)random.Next ();
 			});
 
 			for (int i = 0; i < length; i++) {
-				int currentNumber = numbers [i / 32];
-				currentNumber = Math.DivRem (currentNumber, 2, out values [i]);
+				numbers [i / 32] = (uint)Math.DivRem ((int)numbers [i / 32], 2, out values [i]);
 			}
 
 			States states = new States (CellsArangement.OneDCubic, values, sizes);
@@ -42,7 +47,7 @@ namespace CellularAutomata.Commands
 			rule.Parse ("(2,1436965290)");
 			population.SetRule (rule);
 
-			int generations = random.Next (100, 200);
+			int generations = random.Next (minGeneration, maxGeneration);
 
 			for (int i = 0; i < generations; i++) {
 				population.Evolve ();
@@ -64,20 +69,28 @@ namespace CellularAutomata.Commands
 			int[] popValues = population.GetStates ().Values;
 			int popLength = popValues.Length;
 
-			BigInteger bigInt = BigInteger.Zero;
+			uint numerical = 0;
+			int digit = (int)(Math.Log (UInt32.MaxValue, color) - Math.Log (color, 2));
+			int startIndex = 0;
 
 			for (int i = 0; i < length; i++) {
-				if (0 == i % popLength) {
+				if (popLength <= startIndex + 32) {
+					startIndex = 0;
 					for (int ie = 0; ie < 4; ie++) {
 						population.Evolve ();
 					}
 					popValues = population.GetStates ().Values;
-					bigInt = BigInteger.Zero;
-					for (int ie = 0; ie < popLength; ie++) {
-						bigInt += BigInteger.Pow (2, ie) * popValues [ie];
+				}
+				if (0 == i % digit) {
+					numerical = 0;
+					startIndex += 32;
+					for (int ie = 0; ie < 32; ie++) {
+						numerical = numerical * 2;
+						numerical += (uint)popValues [ie + startIndex];
 					}
 				}
-				values [i] = (int)(BigInteger.Remainder (bigInt, BigInteger.Pow (color, (i % popLength) + 1)) / BigInteger.Pow (color, (i % popLength)));
+				values [i] = (int)(numerical % (uint)color);
+				numerical = numerical / (uint)color;
 			}
 
 			return values;
