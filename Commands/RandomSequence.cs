@@ -30,14 +30,14 @@ namespace CellularAutomata.Commands
 			int[] sizes = new int [1] {length};
 			int[] values = new int [length];
 
-			uint[] numbers = new uint [(int)Math.Ceiling ((float)length / 32F)];
+			uint[] numbers = new uint [(int)Math.Ceiling ((float)length / 31F)];
 
 			Parallel.For (0, numbers.Length, i => {
 				numbers [i] = (uint)random.Next ();
 			});
 
 			for (int i = 0; i < length; i++) {
-				numbers [i / 32] = (uint)Math.DivRem ((int)numbers [i / 32], 2, out values [i]);
+				numbers [i / 31] = (uint)Math.DivRem ((int)numbers [i / 31], 2, out values [i]);
 			}
 
 			States states = new States (CellsArangement.OneDCubic, values, sizes);

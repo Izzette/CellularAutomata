@@ -268,7 +268,7 @@ namespace CellularAutomata.Commands  // console UI interface
 						}
 						int color = Convert.ToInt32 (arguments [2]);
 						int maxRandSize = (int)Math.Ceiling ((float)length / (int)(Math.Log (UInt32.MaxValue, color) - Math.Log (color, 2)));
-						RandomSequence.Init (maxRandSize, maxRandSize,  5, 8);
+						RandomSequence.Init (maxRandSize, maxRandSize, 5, 8);
 					}
 					values = GetRandomValues (arguments [2], sizes);
 					break;
