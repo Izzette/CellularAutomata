@@ -28,7 +28,7 @@ namespace NG5K
 
 				Interpreter.Excecute ("Pop new -v:ng:(750) p rand 5");
 				Interpreter.Excecute (String.Format ("Pop rule p bt (5,{0})", ruleNumber.ToString ()));
-				Interpreter.Excecute ("Pop evolve -g:540 p bitmap");
+				Interpreter.Excecute (String.Format ("Pop evolve -g:540 -d:NG5K/{0}_ p bitmap", ruleNumber.ToString ()));
 
 			}
 		

@@ -46,14 +46,12 @@ namespace CellularAutomata.Commands
 			}
 		}
 
-		public static void Init (IPopulation population, int maxGeneration, string filename, OutputsFormat format)
+		public static void Init (States states, int maxGeneration, string path, OutputsFormat format)
 		{
 
 			if (OutputsFormat.Quiet == format) {
 				return;
 			}
-
-			States states = population.GetStates ();
 
 			CellsArangement cellsArangement = states.Arangement;
 
@@ -67,7 +65,7 @@ namespace CellularAutomata.Commands
 					break;
 				case CellsArangement.TwoDCubic:
 					TwoDCubicImageManager.Init (states.Sizes, states.Values);
-					SaveImage (population, filename, format);
+					SaveImage (path, cellsArangement, format);
 					break;
 				default:
 					throw new ArgumentException ();
@@ -94,14 +92,12 @@ namespace CellularAutomata.Commands
 		}  // end Init, public static void method
 
 		// collection name contains CellsVariety, IPopulation type, IRule as string
-		public static void Update (IPopulation population, int currentGeneration, string filename, OutputsFormat format)
+		public static void Update (States states, int currentGeneration, string path, OutputsFormat format)
 		{
 
 			if (OutputsFormat.Quiet == format) {
 				return;
 			}
-
-			States states = population.GetStates ();
 
 			CellsArangement cellsArangement = states.Arangement;
 
@@ -115,7 +111,7 @@ namespace CellularAutomata.Commands
 					break;
 				case CellsArangement.TwoDCubic:
 					TwoDCubicImageManager.Update (states.Values);
-					SaveImage (population, filename, format);
+					SaveImage (path, cellsArangement, format);
 					break;
 				default:
 					throw new ArgumentException ();
@@ -141,59 +137,47 @@ namespace CellularAutomata.Commands
 
 		}  // end Update, public static void method
 
-		public static void Final (IPopulation population, string fileName, OutputsFormat format)
+		public static void Final (string path, CellsArangement cellsArangement, OutputsFormat format)
 		{
+		
+			string[] splitPath = path.Split (new char [1] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-			if (OutputsFormat.Quiet == format) {
-				return;
+			if (2 == splitPath.Length) {
+				bin.CreateSubdirectory (splitPath [0]);
 			}
-
-			if (OutputsFormat.BitmapSection == format) {
-				string subDirName = population.ToString ();
-				DirectoryInfo subDirectory = bin.CreateSubdirectory (subDirName);
-				OneDCubicImageManager.Save (subDirectory.ToString () + "/" + fileName + "sect", format);
-				return;
-			}
-
-			CellsArangement cellsArangement = population.GetCellsArangement ();
 
 			switch (cellsArangement) {
-			case CellsArangement.OneDCubic:
+				case CellsArangement.OneDCubic:
 				switch (format) {
-				case OutputsFormat.Gif:
-				case OutputsFormat.Bitmap:
-				case OutputsFormat.Png:
-					SaveImage (population, fileName, format);
+					case OutputsFormat.Gif:
+					case OutputsFormat.Bitmap:
+					case OutputsFormat.Png:
+					SaveImage (path, cellsArangement, format);
 					break;
-				default:
+					default:
 					throw new ArgumentException ();
 				}
 				break;
-			case CellsArangement.TwoDCubic:
+				case CellsArangement.TwoDCubic:
 				return;
-			default:
+				default:
 				throw new ArgumentException ();
 			}
 
 		}
 
-		private static void SaveImage (IPopulation population, string fileName, OutputsFormat format)
+		private static void SaveImage (string path, CellsArangement cellsArangement, OutputsFormat format)
 		{
 
-			string subDirName = population.ToString ();
-
-			CellsArangement cellsArangement = population.GetCellsArangement ();
-
-			DirectoryInfo subDirectory = bin.CreateSubdirectory (subDirName);
-
+			path = "bin/" + path;
 			bool success;
 
 			switch (cellsArangement) {
 			case CellsArangement.OneDCubic:
-				success = OneDCubicImageManager.Save (subDirectory.ToString () + "/" + fileName, format);
+				success = OneDCubicImageManager.Save (path, format);
 				break;
 			case CellsArangement.TwoDCubic:
-				success = TwoDCubicImageManager.Save (subDirectory.ToString () + "/" + fileName, format);
+				success = TwoDCubicImageManager.Save (path, format);
 				break;
 			default:
 				throw new ArgumentException ();

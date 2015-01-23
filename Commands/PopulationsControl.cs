@@ -314,11 +314,23 @@ namespace CellularAutomata.Commands  // console UI interface
 
 			string method = "evolve";
 
+			string subDirName = String.Empty;
 			int generation = 1;
 			OutputsFormat format = DefaultFormat;
 
 			foreach (Option option in options) {
 				switch (option.Name) {
+				case "d":
+					try {
+						subDirName = option.Arguments [0];
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
+					break;
 				case "g":
 					try {
 						generation = Convert.ToInt32 (option.Arguments [0]);
@@ -374,13 +386,19 @@ namespace CellularAutomata.Commands  // console UI interface
 				return;
 			}
 
-			OutputsControl.Init (tempPop, generation, "img" + "".PadLeft ((int)Math.Log10 (generation) + 1, '0'), format);
+			if (String.Empty == subDirName) {
+				subDirName = population.ToString () + "/";
+			}
+
+			string path = subDirName + "img" + "".PadLeft ((int)Math.Log10 (generation) + 1, '0');
+			OutputsControl.Init (tempPop.GetStates (), generation, path, format);
 			for (int i = 1; i <= generation; i++) {
 				population.Evolve ();
-				OutputsControl.Update (tempPop, i, "img" + i.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0'), format);
+				path = subDirName + "img" + i.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
+				OutputsControl.Update (tempPop.GetStates (), i, path, format);
 			}
-			string filename = "img" + generation.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
-			OutputsControl.Final (tempPop, filename, format);
+			path = subDirName + "img" + generation.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
+			OutputsControl.Final (path, population.GetCellsArangement (), format);
 
 		}  // end Evolve, private static void method
 

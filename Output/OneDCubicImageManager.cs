@@ -69,11 +69,11 @@ namespace CellularAutomata.Outputs
 			try {
 				bitmap.Save (path, imageFormat);
 			} catch {
-				// failure!
+				//failure!
 				return false;
 			}
 
-			// success!
+			//success!
 			return true;
 
 		}
