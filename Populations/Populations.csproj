@@ -51,6 +51,7 @@
     <Compile Include="Rules\LifeLike.cs" />
     <Compile Include="Cells\NextGeneral.cs" />
     <Compile Include="Rules\Average.cs" />
+    <Compile Include="Cells\Hexagonal.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />

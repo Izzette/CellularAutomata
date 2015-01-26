@@ -9,7 +9,9 @@ namespace CellularAutomata.Populations
 
 		OneDCubic,
 
-		TwoDCubic
+		TwoDCubic,
+
+		TwoDHexagonal
 
 	} // end CellsArangement, public enum
 

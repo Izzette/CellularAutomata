@@ -12,7 +12,9 @@ namespace CellularAutomata.Populations
 
 		VonNeumann,
 
-		Moore
+		Moore,
+
+		Hexagonal
 
 	}
 
