@@ -37,54 +37,34 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 		// initailization dependancy SetRule (IRule rule)
 		public Simple (CellsVariety cellsVariety, int[] sizes, int[] values)
 		{
-
 			this.cellsVariety = cellsVariety;
-
 			switch (this.cellsVariety) {
-
 			case CellsVariety.General:  // General Cells
-
 				this.states = new States (General.Arangement, values, sizes);
 				this.items = General.Build (this.states.Sizes, this.states.Values);  // out init this.states
-
 				break;
-
 			case CellsVariety.VonNeumann:  // Von Neumann Cells
-
 				this.states = new States (VonNeumann.Arangement, values, sizes);
 				this.items = VonNeumann.Build (this.states.Sizes, this.states.Values);// out init this.states
-
 				break;
-
 			case CellsVariety.Moore:
-
 				this.states = new States (Moore.Arangement, values, sizes);
 				this.items = Moore.Build (this.states.Sizes, this.states.Values);
-
 				break;
-
 			case CellsVariety.NextGeneral:
-
 				this.states = new States (NextGeneral.Arangement, values, sizes);
 				this.items = NextGeneral.Build (this.states.Sizes, this.states.Values);
-
 				break;
-
 			default:
-
 				throw new ArgumentException ();
-
 			}
-
 		}
 
 		public void Evolve ()  // inherited from IPopulation, evolves once, parallel ineffective on Mono
 		{
 			
 			Parallel.For(0, this.Length, i => {
-
 				this.states.Values [i] = this.rule.Implement (this.items [i]);
-            
             });
             
 			Parallel.For (0, this.Length, i => {

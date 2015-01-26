@@ -140,6 +140,9 @@ namespace CellularAutomata.Commands  // console UI interface
 			case "ll":
 				rule = new LifeLike ();
 				break;
+			case "avg":
+				rule = new Average ();
+				break;
 			default:
 				throw new FormatException ();
 			} // end switch (code) statement

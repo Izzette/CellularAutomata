@@ -99,28 +99,30 @@ namespace CellularAutomata.Outputs
 			// default black
 			switch (state) {
 			case 0:
-				color = Color.White;
+				color = Color.FromArgb (255, 255, 255);
 				break;
 			case 1:
-				color = Color.Red;
-				break;
 			case 2:
-				color = Color.Yellow;
+			case 4:
+			case 8:
+				color = Color.FromArgb (127, 127, 127);
 				break;
 			case 3:
-				color = Color.Green;
-				break;
-			case 4:
-				color = Color.Cyan;
-				break;
 			case 5:
-				color = Color.Blue;
-				break;
 			case 6:
-				color = Color.Magenta;
+			case 9:
+			case 10:
+			case 12:
+				color = Color.FromArgb (63, 63, 63);
+				break;
+			case 7:
+			case 11:
+			case 13:
+			case 14:
+				color = Color.FromArgb (31, 31, 31);
 				break;
 			default:
-				color = Color.Black;
+				color = Color.FromArgb (15, 15, 15);
 				break;
 			}  // end switch statement
 

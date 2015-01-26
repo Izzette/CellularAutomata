@@ -50,6 +50,7 @@
     <Compile Include="Cells\Moore.cs" />
     <Compile Include="Rules\LifeLike.cs" />
     <Compile Include="Cells\NextGeneral.cs" />
+    <Compile Include="Rules\Average.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />
