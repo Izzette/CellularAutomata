@@ -61,6 +61,12 @@ namespace CellularAutomata.Commands
 				return;
 			}
 
+			string[] splitPath = path.Split (new char [1] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+			if (2 == splitPath.Length) {
+				bin.CreateSubdirectory (splitPath [0]);
+			}
+
 			CellsArangement cellsArangement = states.Arangement;
 
 			switch (format) {
@@ -157,28 +163,37 @@ namespace CellularAutomata.Commands
 
 		public static void Final (string path, CellsArangement cellsArangement, OutputsFormat format)
 		{
-		
-			string[] splitPath = path.Split (new char [1] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-			if (2 == splitPath.Length) {
-				bin.CreateSubdirectory (splitPath [0]);
+			if (OutputsFormat.Quiet == format) {
+				return;
 			}
 
-			switch (cellsArangement) {
-			case CellsArangement.OneDCubic:
-				switch (format) {
-					case OutputsFormat.Gif:
-					case OutputsFormat.Bitmap:
-					case OutputsFormat.Png:
+			switch (format) {
+			case OutputsFormat.Gif:
+			case OutputsFormat.Bitmap:
+			case OutputsFormat.Png:
+				switch (cellsArangement) {
+				case CellsArangement.OneDCubic:
 					SaveImage (path, cellsArangement, format);
 					break;
-					default:
+				case CellsArangement.TwoDCubic:
+				case CellsArangement.TwoDHexagonal:
+					return;
+				default:
 					throw new ArgumentException ();
 				}
 				break;
-			case CellsArangement.TwoDCubic:
-			case CellsArangement.TwoDHexagonal:
-				return;
+			case OutputsFormat.BitmapSection:
+				switch (cellsArangement) {
+				case CellsArangement.OneDCubic:
+				case CellsArangement.TwoDCubic:
+				case CellsArangement.TwoDHexagonal:
+					SaveImage (path + "Sect", cellsArangement, format);
+					break;
+				default:
+					throw new ArgumentException ();
+				}
+				break;
 			default:
 				throw new ArgumentException ();
 			}
@@ -188,22 +203,45 @@ namespace CellularAutomata.Commands
 		private static void SaveImage (string path, CellsArangement cellsArangement, OutputsFormat format)
 		{
 
+			if (OutputsFormat.Quiet == format) {
+				return;
+			}
+
 			path = "bin/" + path;
 			bool success;
 
-			switch (cellsArangement) {
-			case CellsArangement.OneDCubic:
-				success = OneDCubicImageManager.Save (path, format);
+			switch (format) {
+			case OutputsFormat.Bitmap:
+			case OutputsFormat.Gif:
+			case OutputsFormat.Png:
+				switch (cellsArangement) {
+				case CellsArangement.OneDCubic:
+					success = OneDCubicImageManager.Save (path, format);
+					break;
+				case CellsArangement.TwoDCubic:
+					success = TwoDCubicImageManager.Save (path, format);
+					break;
+				case CellsArangement.TwoDHexagonal:
+					success = TwoDHexagonalImageManager.Save (path, format);
+					break;
+				default:
+					throw new ArgumentException ();
+				}  // end switch (cellsArangement) statment
 				break;
-			case CellsArangement.TwoDCubic:
-				success = TwoDCubicImageManager.Save (path, format);
-				break;
-			case CellsArangement.TwoDHexagonal:
-				success = TwoDHexagonalImageManager.Save (path, format);
+			case OutputsFormat.BitmapSection:
+				switch (cellsArangement) {
+				case CellsArangement.OneDCubic:
+				case CellsArangement.TwoDCubic:
+				case CellsArangement.TwoDHexagonal:
+					success = OneDCubicImageManager.Save (path, format);
+					break;
+				default:
+					throw new ArgumentException ();
+				}
 				break;
 			default:
 				throw new ArgumentException ();
-			}  // end switch (cellsArangement) statment
+			}
 
 			if (!success) {
 				throw new IOException ();
