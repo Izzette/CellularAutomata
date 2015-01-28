@@ -39,6 +39,7 @@
     <Compile Include="OneDCubicImageManager.cs" />
     <Compile Include="OutputFormat.cs" />
     <Compile Include="TwoDCubicImageManager.cs" />
+    <Compile Include="TwoDHexagonalImageManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Drawing" />

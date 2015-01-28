@@ -165,6 +165,9 @@ namespace CellularAutomata.Commands  // console UI interface
 			case "ng":
 				cellsVariety = CellsVariety.NextGeneral;
 				break;
+			case "h":
+				cellsVariety = CellsVariety.Hexagonal;
+				break;
 			default:
 				throw new FormatException ();
 			} // end switch (option.Argumetns [0]) statment
@@ -390,18 +393,18 @@ namespace CellularAutomata.Commands  // console UI interface
 			}
 
 			if (String.Empty == subDirName) {
-				subDirName = population.ToString () + "/";
+				subDirName = tempPop.ToString () + "/";
 			}
 
 			string path = subDirName + "img" + "".PadLeft ((int)Math.Log10 (generation) + 1, '0');
 			OutputsControl.Init (tempPop.GetStates (), generation, path, format);
 			for (int i = 1; i <= generation; i++) {
-				population.Evolve ();
+				tempPop.Evolve ();
 				path = subDirName + "img" + i.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
 				OutputsControl.Update (tempPop.GetStates (), i, path, format);
 			}
 			path = subDirName + "img" + generation.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
-			OutputsControl.Final (path, population.GetCellsArangement (), format);
+			OutputsControl.Final (path, tempPop.GetCellsArangement (), format);
 
 		}  // end Evolve, private static void method
 

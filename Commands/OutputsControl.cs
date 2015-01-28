@@ -35,6 +35,14 @@ namespace CellularAutomata.Commands
 						return;
 					}
 					break;
+				case "hex":
+					try {
+						TwoDHexagonalImageManager.ReScale (Convert.ToInt32 (arguments [1]));
+					} catch (FormatException) {
+						CommandsWarning.ArgumentNotValid (Command, method, "<NEW SCALE>");
+						return;
+					}
+					break;
 				default:
 					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
 					return;
@@ -67,6 +75,10 @@ namespace CellularAutomata.Commands
 					TwoDCubicImageManager.Init (states.Sizes, states.Values);
 					SaveImage (path, cellsArangement, format);
 					break;
+				case CellsArangement.TwoDHexagonal:
+					TwoDHexagonalImageManager.Init (states.Sizes, states.Values);
+					SaveImage (path, cellsArangement, format);
+					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statement
@@ -75,6 +87,7 @@ namespace CellularAutomata.Commands
 				switch (cellsArangement) {
 				case CellsArangement.TwoDCubic:
 				case CellsArangement.OneDCubic:
+				case CellsArangement.TwoDHexagonal:
 					int[] sectionValues = new int [states.Sizes [0]];
 					for (int i = 0; i < sectionValues.Length; i++) {
 						sectionValues [i] = states.Values [i];
@@ -113,6 +126,10 @@ namespace CellularAutomata.Commands
 					TwoDCubicImageManager.Update (states.Values);
 					SaveImage (path, cellsArangement, format);
 					break;
+				case CellsArangement.TwoDHexagonal:
+					TwoDHexagonalImageManager.Update (states.Values);
+					SaveImage (path, cellsArangement, format);
+					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statment
@@ -121,6 +138,7 @@ namespace CellularAutomata.Commands
 				switch (cellsArangement) {
 					case CellsArangement.TwoDCubic:
 					case CellsArangement.OneDCubic:
+					case CellsArangement.TwoDHexagonal:
 					int[] sectionValues = new int [states.Sizes [0]];
 					for (int i = 0; i < sectionValues.Length; i++) {
 						sectionValues [i] = states.Values [i];
@@ -147,7 +165,7 @@ namespace CellularAutomata.Commands
 			}
 
 			switch (cellsArangement) {
-				case CellsArangement.OneDCubic:
+			case CellsArangement.OneDCubic:
 				switch (format) {
 					case OutputsFormat.Gif:
 					case OutputsFormat.Bitmap:
@@ -158,9 +176,10 @@ namespace CellularAutomata.Commands
 					throw new ArgumentException ();
 				}
 				break;
-				case CellsArangement.TwoDCubic:
+			case CellsArangement.TwoDCubic:
+			case CellsArangement.TwoDHexagonal:
 				return;
-				default:
+			default:
 				throw new ArgumentException ();
 			}
 
@@ -178,6 +197,9 @@ namespace CellularAutomata.Commands
 				break;
 			case CellsArangement.TwoDCubic:
 				success = TwoDCubicImageManager.Save (path, format);
+				break;
+			case CellsArangement.TwoDHexagonal:
+				success = TwoDHexagonalImageManager.Save (path, format);
 				break;
 			default:
 				throw new ArgumentException ();

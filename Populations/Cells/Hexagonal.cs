@@ -6,6 +6,11 @@ namespace CellularAutomata.Populations
 	public class Hexagonal : ICell
 	{
 
+		public static CellsArangement Arangement {
+			get { return CellsArangement.TwoDHexagonal; }
+			set { ; }
+		}
+
 		public static ICell[] Build (int[] sizes, int[] values)
 		{
 			if (0 != (sizes [1]) % 2) {
@@ -14,7 +19,7 @@ namespace CellularAutomata.Populations
 			Hexagonal[][] rows = new Hexagonal [sizes [1]][];
 			for (int i = 0; i < sizes [1]; i++) {
 				int[] rowValues = new int [sizes [0]];
-				Array.ConstrainedCopy (values, 0, rowValues, 0, sizes [0]);
+				Array.ConstrainedCopy (values, i * sizes [0], rowValues, 0, sizes [0]);
 				rows [i] = ConstructRow (sizes [0], rowValues);
 			}
 			return AssembleRows (rows);
@@ -37,7 +42,7 @@ namespace CellularAutomata.Populations
 
 		public CellsArangement GetArangement ()
 		{
-			return CellsArangement.TwoDHexagonal;
+			return Hexagonal.Arangement;
 		}
 
 		public int GetNeighbourhood (int color)
@@ -72,21 +77,21 @@ namespace CellularAutomata.Populations
 				int[,] lowerIndex = new int [2, 2] {
 					{
 						((upperIndex [0] + 1) % numberRows),
-						((upperIndex [1] + 1) % rowLength)
+						((upperIndex [1] + rowLength + 1 - ((upperIndex [0] + 1) % 2)) % rowLength)
 					},
 					{
 						((upperIndex [0] + 1) % numberRows),
-						((upperIndex [1]) % rowLength)
+						((upperIndex [1] + rowLength - ((upperIndex [0] + 1) % 2)) % rowLength)
 					}
 				};
 				Hexagonal upperCell = rows [upperIndex [0]][upperIndex [1]];
 				items [i] = upperCell;
 				for (int ie = 0; ie < 2; ie++) {
 					Hexagonal addCell = rows [lowerIndex [ie, 0]][lowerIndex [ie, 1]];
-					upperCell.neighbours [i + 4] = addCell;
-					addCell.neighbours [i + 1] = upperCell;
+					upperCell.neighbours [ie + 4] = addCell;
+					addCell.neighbours [ie + 1] = upperCell;
 				}
-				if (0 == (i + 1) % rowLength) {
+				if ((0 == (i + 1) % rowLength) && (items.Length != i + 1)) {
 					upperCell.next = rows [upperIndex [0] + 1] [0];
 				}
 			}

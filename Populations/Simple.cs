@@ -55,6 +55,10 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 				this.states = new States (NextGeneral.Arangement, values, sizes);
 				this.items = NextGeneral.Build (this.states.Sizes, this.states.Values);
 				break;
+			case CellsVariety.Hexagonal:
+				this.states = new States (Hexagonal.Arangement, values, sizes);
+				this.items = Hexagonal.Build (this.states.Sizes, this.states.Values);
+				break;
 			default:
 				throw new ArgumentException ();
 			}
