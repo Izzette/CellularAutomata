@@ -11,7 +11,9 @@ namespace CellularAutomata.Populations
 
 		TwoDCubic,
 
-		TwoDHexagonal
+		TwoDHexagonal,
+
+		Tunnel
 
 	} // end CellsArangement, public enum
 

@@ -90,43 +90,35 @@ namespace CellularAutomata.Outputs
 		private static Color GetColor (int state)
 		{
 
-			// color object to be returned
 			Color color;
 
-			// intializes color from Color enum
-			// state 0 is white
-			// state (1,2,3,4,5,6) -> (R,Y,G,C,B,M) rainbow
-			// default black
 			switch (state) {
-			case 0:
-				color = Color.FromArgb (255, 255, 255);
+				case 0:
+				color = Color.White;
 				break;
-			case 1:
-			case 2:
-			case 4:
-			case 8:
-				color = Color.FromArgb (127, 127, 127);
+				case 1:
+				color = Color.Red;
 				break;
-			case 3:
-			case 5:
-			case 6:
-			case 9:
-			case 10:
-			case 12:
-				color = Color.FromArgb (63, 63, 63);
+				case 2:
+				color = Color.Yellow;
 				break;
-			case 7:
-			case 11:
-			case 13:
-			case 14:
-				color = Color.FromArgb (31, 31, 31);
+				case 3:
+				color = Color.Green;
 				break;
-			default:
-				color = Color.FromArgb (15, 15, 15);
+				case 4:
+				color = Color.Cyan;
 				break;
-			}  // end switch statement
+				case 5:
+				color = Color.Blue;
+				break;
+				case 6:
+				color = Color.Magenta;
+				break;
+				default:
+				color = Color.Black;
+				break;
+			}
 
-			// success!
 			return color;
 
 		}

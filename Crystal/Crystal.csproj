@@ -5,20 +5,19 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B943F5B7-687A-41E1-90E5-47B3E0E643D1}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>CellularAutomata.Outputs</RootNamespace>
-    <AssemblyName>Output</AssemblyName>
-    <newfilesearch>OnLoadAutoInsert</newfilesearch>
+    <ProjectGuid>{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Crystal</RootNamespace>
+    <AssemblyName>Crystal</AssemblyName>
     <ReleaseVersion>va2.2</ReleaseVersion>
+    <StartupObject>Crystal.Program</StartupObject>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Description>Handles output.</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -36,18 +35,12 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="OneDCubicImageManager.cs" />
-    <Compile Include="OutputFormat.cs" />
-    <Compile Include="TwoDCubicImageManager.cs" />
-    <Compile Include="TwoDHexagonalImageManager.cs" />
-    <Compile Include="TunnelImageManager.cs" />
-    <Compile Include="Vector\VectorHandling.cs" />
-    <Compile Include="Vector\Vector.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Vector\" />
+    <ProjectReference Include="..\Commands\Commands.csproj">
+      <Project>{17AECAED-A681-464D-82CE-72C2A9ABAF5D}</Project>
+      <Name>Commands</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

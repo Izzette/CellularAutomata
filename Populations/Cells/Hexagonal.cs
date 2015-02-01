@@ -11,7 +11,7 @@ namespace CellularAutomata.Populations
 			set { ; }
 		}
 
-		public static ICell[] Build (int[] sizes, int[] values)
+		public static Hexagonal[] Build (int[] sizes, int[] values)
 		{
 			if (0 != (sizes [1]) % 2) {
 				throw new ArgumentException ();
@@ -23,6 +23,11 @@ namespace CellularAutomata.Populations
 				rows [i] = ConstructRow (sizes [0], rowValues);
 			}
 			return AssembleRows (rows);
+		}
+
+		public Hexagonal[] GetNeighbours ()
+		{
+			return this.neighbours;
 		}
 
 		public ICell GetNext ()

@@ -52,6 +52,7 @@
     <Compile Include="Cells\NextGeneral.cs" />
     <Compile Include="Rules\Average.cs" />
     <Compile Include="Cells\Hexagonal.cs" />
+    <Compile Include="Tunnel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cells\" />

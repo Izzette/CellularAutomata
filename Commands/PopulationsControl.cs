@@ -17,37 +17,20 @@ namespace CellularAutomata.Commands  // console UI interface
 			case "new":
 				NewPopulation (options, arguments);
 				break;
+			case "tunnel":
+				NewTunnel (options, arguments);
+				break;
 			case "evolve":
-				try {
-					Evolve (options, arguments);
-				} catch (NullReferenceException) {
-					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize population before evolution");
-					return;
-				}
+				Evolve (options, arguments);
 				break;
 			case "rule":
-				try {
-					SetRule (options, arguments);
-				} catch (NullReferenceException) {
-					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize population before setting rule");
-					return;
-				}
+				SetRule (options, arguments);
 				break;
 			case "clone":
-				try {
-					Clone (options, arguments);
-				} catch (NullReferenceException) {
-					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize from population before cloning into other");
-					return;
-				}
+				Clone (options, arguments);
 				break;
 			case "states":
-				try {
-					CopyStates (options, arguments);
-				} catch (NullReferenceException) {
-					Console.WriteLine (" WARNING: NULL REFFERENCE EXCEPTION: must initialize from population before copying states into other");
-					return;
-				}
+				CopyStates (options, arguments);
 				break;
 			default:
 				CommandsWarning.MethodNotFound (Command, method);
@@ -314,6 +297,55 @@ namespace CellularAutomata.Commands  // console UI interface
 				return;
 			}  // end try statment
 		}  // end NewPopulation, private static void method
+
+		private static void NewTunnel (Option[] options, string[] arguments)
+		{
+			string method = "tunnel";
+
+			int[] sizes = DefaultSizes;
+			int[] values = DefaultValues;
+
+			foreach (Option option in options) {
+				switch (option.Name) {
+					case "s":
+					try {
+						sizes = GetSizes (option.Arguments [0]);
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
+					break;
+					default:
+					CommandsWarning.OptionNotFound (Command, method, option.Name);
+					return;
+				}  // end switch (option.Name) statement
+			}  // end foreach (Option option in options) loop
+
+			try {
+				// select population
+				switch (arguments [0]) {
+					// main population
+					case "p":
+					population = new Tunnel (sizes);
+					break;
+					case "c":
+					clone = new Tunnel (sizes);
+					break;
+					default:
+					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
+					return;
+				}  // end switch (arguments [0]) statment
+			} catch (ArgumentException) {
+				CommandsWarning.OptionArgumentNotValid (Command, method, "<SIZE MISSING OR WRONG>");
+				return;
+			}  catch (IndexOutOfRangeException) {
+				CommandsWarning.ArgumentNotValid (Command, method);
+				return;
+			}  // end try statment
+		}
 
 		private static void Evolve (Option[] options, string[] arguments)
 		{

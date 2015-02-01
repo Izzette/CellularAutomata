@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfTesting", "PerfTesting\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NG5K", "NG5K\NG5K.csproj", "{70BBF51A-7047-462A-951B-6CEF2E2FE929}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexT1K", "Hex5KBt\HexT1K.csproj", "{5694D71D-B48A-4941-9307-22CA18508F73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crystal", "Crystal\Crystal.csproj", "{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -32,6 +36,12 @@ Global
 		{1D3FAB54-43FF-452D-A224-9074043FB63D}.Default|Any CPU.Build.0 = Debug|Any CPU
 		{1D3FAB54-43FF-452D-A224-9074043FB63D}.Release|x86.ActiveCfg = Release|Any CPU
 		{1D3FAB54-43FF-452D-A224-9074043FB63D}.Release|x86.Build.0 = Release|Any CPU
+		{5694D71D-B48A-4941-9307-22CA18508F73}.Debug|x86.ActiveCfg = Debug|x86
+		{5694D71D-B48A-4941-9307-22CA18508F73}.Debug|x86.Build.0 = Debug|x86
+		{5694D71D-B48A-4941-9307-22CA18508F73}.Default|Any CPU.ActiveCfg = Debug|x86
+		{5694D71D-B48A-4941-9307-22CA18508F73}.Default|Any CPU.Build.0 = Debug|x86
+		{5694D71D-B48A-4941-9307-22CA18508F73}.Release|x86.ActiveCfg = Release|x86
+		{5694D71D-B48A-4941-9307-22CA18508F73}.Release|x86.Build.0 = Release|x86
 		{70BBF51A-7047-462A-951B-6CEF2E2FE929}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{70BBF51A-7047-462A-951B-6CEF2E2FE929}.Debug|x86.Build.0 = Debug|Any CPU
 		{70BBF51A-7047-462A-951B-6CEF2E2FE929}.Default|Any CPU.ActiveCfg = Debug|Any CPU
@@ -56,6 +66,12 @@ Global
 		{B943F5B7-687A-41E1-90E5-47B3E0E643D1}.Default|Any CPU.Build.0 = Debug|x86
 		{B943F5B7-687A-41E1-90E5-47B3E0E643D1}.Release|x86.ActiveCfg = Release|x86
 		{B943F5B7-687A-41E1-90E5-47B3E0E643D1}.Release|x86.Build.0 = Release|x86
+		{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}.Debug|x86.ActiveCfg = Debug|x86
+		{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}.Debug|x86.Build.0 = Debug|x86
+		{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}.Default|Any CPU.ActiveCfg = Debug|x86
+		{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}.Default|Any CPU.Build.0 = Debug|x86
+		{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}.Release|x86.ActiveCfg = Release|x86
+		{C8611996-8DB1-426B-BEC9-22A7B72BB1E4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Program\Program.csproj

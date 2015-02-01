@@ -43,6 +43,13 @@ namespace CellularAutomata.Commands
 						return;
 					}
 					break;
+				case "tunnel":
+					try {
+						TunnelImageManager.ReScale (Convert.ToInt32 (arguments [1]));
+					} catch (FormatException) {
+						CommandsWarning.ArgumentNotValid (Command, method, "<NEW SCALE>");
+					}
+					break;
 				default:
 					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
 					return;
@@ -85,6 +92,10 @@ namespace CellularAutomata.Commands
 					TwoDHexagonalImageManager.Init (states.Sizes, states.Values);
 					SaveImage (path, cellsArangement, format);
 					break;
+				case CellsArangement.Tunnel:
+					TunnelImageManager.Init (states.Sizes, states.Values);
+					SaveImage (path, cellsArangement, format);
+					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statement
@@ -94,6 +105,7 @@ namespace CellularAutomata.Commands
 				case CellsArangement.TwoDCubic:
 				case CellsArangement.OneDCubic:
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					int[] sectionValues = new int [states.Sizes [0]];
 					for (int i = 0; i < sectionValues.Length; i++) {
 						sectionValues [i] = states.Values [i];
@@ -136,15 +148,20 @@ namespace CellularAutomata.Commands
 					TwoDHexagonalImageManager.Update (states.Values);
 					SaveImage (path, cellsArangement, format);
 					break;
+				case CellsArangement.Tunnel:
+					TunnelImageManager.Update (states.Values);
+					SaveImage (path, cellsArangement, format);
+					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statment
 				break;
 			case OutputsFormat.BitmapSection:
 				switch (cellsArangement) {
-					case CellsArangement.TwoDCubic:
-					case CellsArangement.OneDCubic:
-					case CellsArangement.TwoDHexagonal:
+				case CellsArangement.TwoDCubic:
+				case CellsArangement.OneDCubic:
+				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					int[] sectionValues = new int [states.Sizes [0]];
 					for (int i = 0; i < sectionValues.Length; i++) {
 						sectionValues [i] = states.Values [i];
@@ -178,6 +195,7 @@ namespace CellularAutomata.Commands
 					break;
 				case CellsArangement.TwoDCubic:
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					return;
 				default:
 					throw new ArgumentException ();
@@ -188,6 +206,7 @@ namespace CellularAutomata.Commands
 				case CellsArangement.OneDCubic:
 				case CellsArangement.TwoDCubic:
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					SaveImage (path + "Sect", cellsArangement, format);
 					break;
 				default:
@@ -224,6 +243,9 @@ namespace CellularAutomata.Commands
 				case CellsArangement.TwoDHexagonal:
 					success = TwoDHexagonalImageManager.Save (path, format);
 					break;
+				case CellsArangement.Tunnel:
+					success = TunnelImageManager.Save (path, format);
+					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statment
@@ -233,6 +255,7 @@ namespace CellularAutomata.Commands
 				case CellsArangement.OneDCubic:
 				case CellsArangement.TwoDCubic:
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					success = OneDCubicImageManager.Save (path, format);
 					break;
 				default:
