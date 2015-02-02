@@ -144,7 +144,7 @@ namespace CellularAutomata.Outputs.Vectors
 
 		public double D {
 			get { return this.d; }
-			set { D = value; }
+			set { d = value; }
 		}
 
 		public DensityVector (double x, double y, double d)

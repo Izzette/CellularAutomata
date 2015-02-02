@@ -87,7 +87,7 @@ namespace CellularAutomata.Outputs
 
 		private static Bitmap bitmap;
 		private static int blockSize = 20;
-		private static int blockScale = 20;
+		private static int blockScale = 10;
 
 		private static void Draw (int[] states, int[] sizes)
 		{
@@ -132,13 +132,13 @@ namespace CellularAutomata.Outputs
 		private static void DrawVectorDot (DensityVector vector, int[] center)
 		{
 
-			double max = ((double)blockSize * 0.5D) - 1D;
+			double max = ((double)blockScale * 0.5D) - 1D;
 			DensityVector scaledVector = (double)blockScale * vector;
-			int size = (int)Math.Min (Math.Sqrt(DensityVector.Magnitude (vector)) * (double)blockScale, max);
+			int size = (int)Math.Min (DensityVector.Magnitude (vector) * (double)blockScale, max);
 			
 			int[] coords = new int [2] {
-				(int)(Math.Sign (scaledVector.X) * -1D * Math.Min (2D * Math.Abs (scaledVector.X), max * 0.5D)) + center [0],
-				(int)(Math.Sign (scaledVector.Y) * -1D * Math.Min (2D * Math.Abs (scaledVector.Y), max * 0.5D)) + center [1]
+				(int)(Math.Sign (scaledVector.X) * -1D * Math.Min (Math.Abs (scaledVector.X), max * 0.5D)) + center [0],
+				(int)(Math.Sign (scaledVector.Y) * -1D * Math.Min (Math.Abs (scaledVector.Y), max * 0.5D)) + center [1]
 			};
 
 			int[] corner = new int [2] { coords [0] - (size / 2), coords [1] - (size / 2) };

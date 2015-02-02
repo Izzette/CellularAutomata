@@ -1,5 +1,6 @@
 using System;
 using CellularAutomata.Outputs.Vectors;
+using System.Threading.Tasks;
 
 namespace CellularAutomata.Outputs.Vectors
 {
@@ -16,7 +17,7 @@ namespace CellularAutomata.Outputs.Vectors
 
 			double squareSize = Math.Pow (blockSize, 2D);
 			DensityVector factor = DensityVector.Pow (
-				new DensityVector (squareSize, squareSize, squareSize * 6D),
+				squareSize,
 				-1D
 				);
 			int numberWidth = sizes [0] / blockSize;
@@ -24,17 +25,21 @@ namespace CellularAutomata.Outputs.Vectors
 			DensityVector[,] result = new DensityVector [numberWidth, numberHeight];
 
 			int numberCells = sizes [0] * sizes [1];
-			for (int i = 0; i < numberCells; i++) {
+			//for (int i = 0; i < numberCells; i++) {
+			Parallel.For (0, numberCells, i => {
 				int width = i % sizes [0];
 				int height = i / sizes [0];
 				result [width / blockSize, height / blockSize] += ComputeSingleVector (states [i], exclusiveMaxState);
-			}
+			});
+			//}
 
-			for (int i = 0; i < result.Length; i++) {
+			//for (int i = 0; i < result.Length; i++) {
+			Parallel.For (0, result.Length, i => {
 				int x = i % numberWidth;
 				int y = i / numberHeight;
 				result [x, y] *= factor;
-			}
+			});
+			//}
 
 			return result;
 
@@ -55,6 +60,8 @@ namespace CellularAutomata.Outputs.Vectors
 					result += new DensityVector (1D, angle);
 				}
 			}
+
+			result.D /= (double)maxParticles;
 
 			return result;
 

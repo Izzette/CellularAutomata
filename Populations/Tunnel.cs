@@ -13,18 +13,18 @@ namespace CellularAutomata.Populations
 			int[] values = new int [sizes [0] * sizes [1]];
 			Random random = new Random ();
 			for (int i = 0; i < values.Length; i++) {
-				if (i < values.Length / 4) {
-					if (0 == random.Next (0, 2)) {
-						values [i] = random.Next (0, 64);
-					} else {
-						values [i] = 0;
-					}
+				if (
+					((sizes [0] * 2) / 5 < i % sizes [0])
+				    &&
+					((sizes [0] * 3) / 5 > i % sizes [0])
+					&&
+					((sizes [1] * 2) / 5 < i / sizes [0])
+					&&
+					((sizes [1] * 3) / 5 > i / sizes [0])
+					) {
+					values [i] = 0;
 				} else {
-					if (0 == random.Next (0, 64)) {
-						values [i] = (int)Math.Pow (2, random.Next (0, 6));
-					} else {
-						values [i] = 0;
-					}
+					values [i] = random.Next (0, 64);
 				}
 			}
 			this.states = new States (CellsArangement.Tunnel, values, sizes);
@@ -34,12 +34,13 @@ namespace CellularAutomata.Populations
 		public void Evolve ()
 		{
 			Random random = new Random ();
-			for (int g = 0; g < 5; g++) {
-//				Parallel.For (0, this.states.Sizes [0], i => {
-//					this.items [i].SetState (random.Next (0, 16) + (int)Math.Pow (2, random.Next (4, 6)));
-//					this.items [i + this.Length - this.states.Sizes [0]].SetState (0);
-//				});
+			for (int g = 0; g < 2; g++) {
 				Parallel.For (0, this.Length, i => {
+//					if (0 == i % this.states.Sizes [0]) {
+//						this.items [i].SetState (random.Next (0, 64));
+//					} else if (0 == (i + 1) % this.states.Sizes [0]) {
+//						this.items [i].SetState (0);
+//					}
 					this.states.Values [i] = this.Implement (this.items [i], ref random);
 				});
 				Parallel.For (0, this.Length, i => {
@@ -106,15 +107,25 @@ namespace CellularAutomata.Populations
 				if (0 == numberNeighbours - (collide * 2)) {
 					int side = random.Next (0, 2);
 					for (int i = 0; i < 3; i++) {
-						int[] veryNewStates = new int [6] { 0, 0, 0, 0, 0, 0 };
 						if (0 < side) {
-							veryNewStates [i + 1] = newStates [i];
-							veryNewStates [(i + 4) % 6] = newStates [i + 3];
+							newStates = new int [6] {
+								newStates [1],
+								newStates [2],
+								newStates [3],
+								newStates [4],
+								newStates [5],
+								newStates [0]
+							};
 						} else {
-							veryNewStates [(i + 5) % 6] = newStates [i];
-							veryNewStates [i + 2] = newStates [i + 3];
+							newStates = new int [6] {
+								newStates [5],
+								newStates [0],
+								newStates [1],
+								newStates [2],
+								newStates [3],
+								newStates [4]
+							};
 						}
-						newStates = veryNewStates;
 					}
 				} else if (3 == numberNeighbours) {
 					int straight = 0;
