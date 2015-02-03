@@ -3,46 +3,115 @@ using System;
 namespace CellularAutomata.Fluids.Hexagonal
 {
 
-	public class Cell
+	class Cell
 	{
 
-		public byte State {
+		public int State {
 			get { return this.state; }
 			set { this.state = value; }
 		}
 
-		public Cell (byte state)
+		public Cell (int state)
 		{
 			this.state = state;
 			this.neighbours = new Cell [6];
 		}
 
-		private byte state;
+		private int state;
 		private Cell[] neighbours;
 
 		public static void Init ()
 		{
-			digits = new byte [8];
-			digits [0] = (byte)1;
+
+			random = new Random ();
+
+			digits = new int [8];
+
+			digits [0] = 1;
 			for (int i = 1; i < digits.Length; i++) {
-				digits [i] = (byte)2 * digits [i - 1];
+				digits [i] = 2 * digits [i - 1];
 			}
 
-			rule = new byte [256, 2];
-			for (byte state = 0; state < (byte)rule.GetLength (0); state++) {
-				byte[] states = new byte [8];
-				for (int ie = 0; ie < states.Length; ie++) {
-					states [ie] = (state & digits [ie]) >> ie;
+			rule = new int [256, 2];
+
+			for (int state = 0; state < rule.GetLength (0); state++) {
+
+				bool[] exclusions = new bool [8];
+				for (int i = 0; i < exclusions.Length; i++) {
+					exclusions [i] = (0 < (state & digits [i]));
 				}
-			}
-		}
+				int numberParticles = 0;
+				int numberCollisions = 0;
+				for (int i = 0; i < 3; i++) {
+					if (exclusions [i] && exclusions [i + 3]) {
+						numberCollisions++;
+						numberParticles += 2;
+					} else if (exclusions [i] || exclusions [i + 3]) {
+						numberParticles++;
+					}
+				}
+				if (0 == numberCollisions) {
+					if (3 == numberParticles) {
+						rule [state, 0] = digits [0] | digits [2] | digits [4];
+						rule [state, 1] = digits [1] | digits [3] | digits [5];
+					} else {
+						rule [state, 0] = state;
+						rule [state, 1] = state;
+					}
+				} else if (1 == numberCollisions) {
+					if (2 == numberParticles) {
+						for (int i = 0; i < 3; i++) {
+							if (exclusions [i]) {
+								rule [state, 0] = digits [i + 1] | digits [(i + 4) % 6];
+								rule [state, 1] = digits [(i + 5) % 6] | digits [i + 2];
+								break;
+							}
+						}
+					} else if (3 == numberParticles) {
+						for (int i = 0; i < 6; i++) {
+							if (exclusions [i] && (!exclusions [(i + 3) % 6])) {
+								if (!exclusions [(i + 1) % 6]) {
+									rule [state, 0] = digits [i] | digits [(i + 3) % 6] | digits [(i + 4) % 6];
+									rule [state, 1] = digits [i] | digits [(i + 1) % 6] | digits [(i + 4) % 6];
+								} else {
+									rule [state, 0] = digits [i] | digits [(i + 2) % 6] | digits [(i + 5) % 6];
+									rule [state, 1] = digits [i] | digits [(i + 2) % 6] | digits [(i + 3) % 6];
+								}
+								break;
+							}
+						}
+					} else {
+						rule [state, 0] = state;
+						rule [state, 1] = state;
+					}
+				} else if (2 == numberCollisions) {
+					if (4 == numberParticles) {
+						for (int i = 0; i < 3; i++) {
+							if (exclusions [i] && exclusions [i + 1]) {
+								rule [state, 0] = digits [i + 1] | digits [i + 2] | digits [(i + 4) % 6] | digits [(i + 5) % 6];
+								rule [state, 1] = digits [(i + 5) % 6] | digits [i] | digits [i + 2] | digits [i + 3];
+								break;
+							}
+						}
+					} else {
+						rule [state, 0] = state;
+						rule [state, 1] = state;
+					}
+				} else {
+					rule [state, 0] = state;
+					rule [state, 1] = state;
+				}  // end if numberCollisions
 
-		private static byte Presence (byte state, int place)
+			}  // end for states
+
+		}  // end Init
+
+		public static int Implement (Cell cell)
 		{
-
+			return Interact (Receive (cell));
 		}
 
-		private static byte Receive (Cell cell)
+		private static int Receive (Cell cell)
 		{
 			return (
 				(cell.neighbours [0].state & digits [0])
@@ -56,13 +125,14 @@ namespace CellularAutomata.Fluids.Hexagonal
 				);
 		}
 
-		private static byte Interact (byte state)
+		private static int Interact (int state)
 		{
-
+			return rule [state, random.Next (0, 2)];
 		}
 
-		private static byte[] digits;
-		private static byte[] rule;
+		private static int[] digits;
+		private static int[,] rule;
+		private static Random random;
 	
 	}
 
