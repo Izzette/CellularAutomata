@@ -89,13 +89,14 @@ namespace CellularAutomata.Commands
 					SaveImage (path, cellsArangement, format);
 					break;
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					TwoDHexagonalImageManager.Init (states.Sizes, states.Values);
 					SaveImage (path, cellsArangement, format);
 					break;
-				case CellsArangement.Tunnel:
-					TunnelImageManager.Init (states.Sizes, states.Values);
-					SaveImage (path, cellsArangement, format);
-					break;
+//				case CellsArangement.Tunnel:
+//					TunnelImageManager.Init (states.Sizes, states.Values);
+//					SaveImage (path, cellsArangement, format);
+//					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statement
@@ -145,13 +146,14 @@ namespace CellularAutomata.Commands
 					SaveImage (path, cellsArangement, format);
 					break;
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					TwoDHexagonalImageManager.Update (states.Values);
 					SaveImage (path, cellsArangement, format);
 					break;
-				case CellsArangement.Tunnel:
-					TunnelImageManager.Update (states.Values);
-					SaveImage (path, cellsArangement, format);
-					break;
+//				case CellsArangement.Tunnel:
+//					TunnelImageManager.Update (states.Values);
+//					SaveImage (path, cellsArangement, format);
+//					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statment
@@ -241,11 +243,12 @@ namespace CellularAutomata.Commands
 					success = TwoDCubicImageManager.Save (path, format);
 					break;
 				case CellsArangement.TwoDHexagonal:
+				case CellsArangement.Tunnel:
 					success = TwoDHexagonalImageManager.Save (path, format);
 					break;
-				case CellsArangement.Tunnel:
-					success = TunnelImageManager.Save (path, format);
-					break;
+//				case CellsArangement.Tunnel:
+//					success = TunnelImageManager.Save (path, format);
+//					break;
 				default:
 					throw new ArgumentException ();
 				}  // end switch (cellsArangement) statment

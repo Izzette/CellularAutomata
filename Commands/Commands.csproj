@@ -52,7 +52,4 @@
       <Name>Outputs</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Commands.txt" />
-  </ItemGroup>
 </Project>

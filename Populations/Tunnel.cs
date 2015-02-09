@@ -14,17 +14,17 @@ namespace CellularAutomata.Populations
 			Random random = new Random ();
 			for (int i = 0; i < values.Length; i++) {
 				if (
-					((sizes [0] * 2) / 5 < i % sizes [0])
+					((sizes [0] * 1) / 5 < i % sizes [0])
 				    &&
-					((sizes [0] * 3) / 5 > i % sizes [0])
+					((sizes [0] * 4) / 5 > i % sizes [0])
 					&&
-					((sizes [1] * 2) / 5 < i / sizes [0])
+					((sizes [1] * 1) / 5 < i / sizes [0])
 					&&
-					((sizes [1] * 3) / 5 > i / sizes [0])
+					((sizes [1] * 4) / 5 > i / sizes [0])
 					) {
 					values [i] = 0;
 				} else {
-					values [i] = random.Next (0, 64);
+					values [i] = random.Next (0, 2) * (int)Math.Pow (2, random.Next (0, 6));
 				}
 			}
 			this.states = new States (CellsArangement.Tunnel, values, sizes);
@@ -50,7 +50,18 @@ namespace CellularAutomata.Populations
 		}
 		public States GetStates ()
 		{
-			return this.states;
+			int[] densities = new int [this.states.Values.Length];
+			for (int i = 0; i < densities.Length; i++) {
+				int d = 0;
+				int state = this.states.Values [i];
+				for (int j = 0; j < 6; j++) {
+					int temp;
+					state = Math.DivRem (state, 2, out temp);
+					d += temp;
+				}
+				densities [i] = d;
+			}
+			return new States (this.states.Arangement, densities, this.states.Sizes);
 		}
 		public void SetRule (IRule rule) {
 			throw new ArgumentException ();
