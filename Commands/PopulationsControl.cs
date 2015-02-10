@@ -304,12 +304,36 @@ namespace CellularAutomata.Commands  // console UI interface
 
 			int[] sizes = DefaultSizes;
 			int[] values = DefaultValues;
+			int updateToDraw = 1;
+			int scale = 1;
 
 			foreach (Option option in options) {
 				switch (option.Name) {
 					case "s":
 					try {
 						sizes = GetSizes (option.Arguments [0]);
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
+					break;
+					case "u":
+					try {
+						updateToDraw = Convert.ToInt32 (option.Arguments [0]);
+					} catch (IndexOutOfRangeException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
+						return;
+					} catch (FormatException) {
+						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name, option.Arguments [0]);
+						return;
+					}
+					break;
+					case "r":
+					try {
+						scale = Convert.ToInt32 (option.Arguments [0]);
 					} catch (IndexOutOfRangeException) {
 						CommandsWarning.OptionArgumentNotValid (Command, method, option.Name);
 						return;
@@ -329,10 +353,10 @@ namespace CellularAutomata.Commands  // console UI interface
 				switch (arguments [0]) {
 					// main population
 					case "p":
-					population = new Tunnel (sizes, Convert.ToDouble (arguments [1]), Convert.ToInt32 (arguments [2]));
+					population = new Tunnel (sizes, Convert.ToDouble (arguments [1]), Convert.ToDouble (arguments [2]), updateToDraw, scale);
 					break;
 					case "c":
-					clone = new Tunnel (sizes, Convert.ToDouble (arguments [1]), Convert.ToInt32 (arguments [2]));
+					clone = new Tunnel (sizes, Convert.ToDouble (arguments [1]), Convert.ToDouble (arguments [2]), updateToDraw, scale);
 					break;
 					default:
 					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);

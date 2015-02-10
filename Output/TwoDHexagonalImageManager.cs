@@ -97,15 +97,13 @@ namespace CellularAutomata.Outputs
 			Color color;
 
 			if (0 >= state) {
-				return Color.White;
-			} else {
 				return Color.Black;
 			}
 
 			state--;
 
 			int[] colors = new int [3];
-			int maxState = 6;
+			const int maxState = 6;
 
 			if (maxState <= state) {
 				return Color.White;
