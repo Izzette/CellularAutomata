@@ -8,23 +8,29 @@ namespace CellularAutomata.Populations
 	public class Tunnel : IPopulation
 	{
 
-		public Tunnel (int[] sizes)
+		public Tunnel (int[] sizes, double wavelength, int number)
 		{
+			Init ();
 			int[] values = new int [sizes [0] * sizes [1]];
 			Random random = new Random ();
+			double[] center = new double [2] { (double)sizes [0] / 2D, (double)sizes [1] / 2D };
+			double smallest = (double)Math.Min (sizes [0], sizes [1]);
 			for (int i = 0; i < values.Length; i++) {
-				if (
-					((sizes [0] * 1) / 5 < i % sizes [0])
-				    &&
-					((sizes [0] * 4) / 5 > i % sizes [0])
-					&&
-					((sizes [1] * 1) / 5 < i / sizes [0])
-					&&
-					((sizes [1] * 4) / 5 > i / sizes [0])
-					) {
-					values [i] = 0;
+				if (0 == random.Next (0, 16)) {
+					double distance = Math.Sqrt (Math.Pow ((double)(i % sizes [0]) - center [0], 2D) + Math.Pow ((double)(i / sizes [0]) - center [1], 2D));
+					if (wavelength * (double)number > distance) {
+						if ((double)random.Next (Int32.MinValue, Int32.MaxValue) < ((double)Int32.MaxValue * Math.Sin ((distance / wavelength) * 2D * Math.PI))) {
+							values [i] = (int)Math.Pow (2, random.Next (0, 6)) + (int)Math.Pow (2, random.Next (0, 6));
+						} else {
+							values [i] = 0;
+						}
+					} else if (0 == random.Next (0, 2)) {
+						values [i] = (int)Math.Pow (2, random.Next (0, 6));
+					} else {
+						values [i] = 0;
+					}
 				} else {
-					values [i] = random.Next (0, 2) * (int)Math.Pow (2, random.Next (0, 6));
+					values [i] = 0;
 				}
 			}
 			this.states = new States (CellsArangement.Tunnel, values, sizes);
@@ -33,35 +39,49 @@ namespace CellularAutomata.Populations
 
 		public void Evolve ()
 		{
-			Random random = new Random ();
 			for (int g = 0; g < 2; g++) {
-				Parallel.For (0, this.Length, i => {
-//					if (0 == i % this.states.Sizes [0]) {
-//						this.items [i].SetState (random.Next (0, 64));
-//					} else if (0 == (i + 1) % this.states.Sizes [0]) {
-//						this.items [i].SetState (0);
-//					}
-					this.states.Values [i] = this.Implement (this.items [i], ref random);
+				int threads = this.states.Sizes [1] * 2;
+				Parallel.For (0, threads, p => {
+					int other = (Length / threads);
+					int number = p * other;
+					for (int i = number; i < number + other; i++) {
+						this.states.Values [i] = Implement (this.items [i]);
+					}
 				});
-				Parallel.For (0, this.Length, i => {
-					this.items [i].SetState (this.states.Values [i]);  // set items -> states
+				Parallel.For (0, threads, p => {
+					int other = (Length / threads);
+					int number = p * other;
+					for (int i = number; i < number + other; i++) {
+						this.items [i].SetState (this.states.Values [i]);  // set items -> states
+					}
 				});
 			}
 		}
 		public States GetStates ()
 		{
-			int[] densities = new int [this.states.Values.Length];
-			for (int i = 0; i < densities.Length; i++) {
+			int range = 2;
+			int[] densities = new int [this.states.Values.Length / (range * range)];
+			Parallel.For (0, densities.Length, i => {
 				int d = 0;
-				int state = this.states.Values [i];
-				for (int j = 0; j < 6; j++) {
+				int x = (range * i) % this.states.Sizes [0];
+				int state = 0;
+				for (int v = 0; v < range; v++) {
+					int y = range * this.states.Sizes [0] * ((i * range) / (this.states.Sizes [0]));
+					for (int w = 0; w < range; w++) {
+						state += this.states.Values [x + y];
+						state <<= 6;
+						y += this.states.Sizes [0];
+					}
+					x++;
+				}
+				while (0 < state) {
 					int temp;
 					state = Math.DivRem (state, 2, out temp);
 					d += temp;
 				}
 				densities [i] = d;
-			}
-			return new States (this.states.Arangement, densities, this.states.Sizes);
+			});
+			return new States (this.states.Arangement, densities, new int [2]  {this.states.Sizes [0] / range, this.states.Sizes [1] / range});
 		}
 		public void SetRule (IRule rule) {
 			throw new ArgumentException ();
@@ -84,7 +104,7 @@ namespace CellularAutomata.Populations
 		}
 		public IPopulation Clone ()
 		{
-			return new Tunnel (this.states.Sizes);
+			return new Tunnel (this.states.Sizes, 10D, 1);
 		}
 
 		private States states;
@@ -95,105 +115,118 @@ namespace CellularAutomata.Populations
 			set { ; }
 		}
 
-		private int Implement (Hexagonal cell, ref Random random)
+		public static void Init ()
 		{
-			Hexagonal[] neighbours = cell.GetNeighbours ();
-			int numberNeighbours = 0;
-			int collide = 0;
-			int[] newStates = new int [6];
-			for (int i = 0; i < 6; i++) {
-				int placeValue = (int)Math.Pow (2, ((i + 3) % 6));
-				int isNeighbour = (int)(neighbours [i].GetState () % (placeValue * 2)) / placeValue;
-				if (0 < isNeighbour) {
-					if (0 < newStates [i]) {
-						collide++;
-					}
-					numberNeighbours++;
-					newStates [(i + 3) % 6] = 1;
-				} else {
-					newStates [(i + 3) % 6] = 0;
-				}
+
+			random = new Random ();
+
+			digits = new int [8];
+
+			digits [0] = 1;
+			for (int i = 1; i < digits.Length; i++) {
+				digits [i] = 2 * digits [i - 1];
 			}
-			if (0 < collide) {
-				if (0 == numberNeighbours - (collide * 2)) {
-					int side = random.Next (0, 2);
-					for (int i = 0; i < 3; i++) {
-						if (0 < side) {
-							newStates = new int [6] {
-								newStates [1],
-								newStates [2],
-								newStates [3],
-								newStates [4],
-								newStates [5],
-								newStates [0]
-							};
-						} else {
-							newStates = new int [6] {
-								newStates [5],
-								newStates [0],
-								newStates [1],
-								newStates [2],
-								newStates [3],
-								newStates [4]
-							};
-						}
+
+			rule = new int [64, 2];
+
+			for (int state = 0; state < rule.GetLength (0); state++) {
+
+				bool[] exclusions = new bool [8];
+				for (int i = 0; i < exclusions.Length; i++) {
+					exclusions [i] = (0 < (state & digits [i]));
+				}
+				int numberParticles = 0;
+				int numberCollisions = 0;
+				for (int i = 0; i < 3; i++) {
+					if (exclusions [i] && exclusions [i + 3]) {
+						numberCollisions++;
+						numberParticles += 2;
+					} else if (exclusions [i] || exclusions [i + 3]) {
+						numberParticles++;
 					}
-				} else if (3 == numberNeighbours) {
-					int straight = 0;
-					int observe = 0;
-					for (int i = 0; i < 6; i++) {
-						if (0 < newStates [i]) {
-							if (0 < newStates [(i + 3) % 6]) {
-								straight = i % 3;
-							} else {
-								observe = i;
+				}
+				if (0 == numberCollisions) {
+					if (3 == numberParticles) {
+						rule [state, 0] = digits [0] | digits [2] | digits [4];
+						rule [state, 1] = digits [1] | digits [3] | digits [5];
+					} else {
+						rule [state, 0] = state;
+						rule [state, 1] = state;
+					}
+				} else if (1 == numberCollisions) {
+					if (2 == numberParticles) {
+						for (int i = 0; i < 3; i++) {
+							if (exclusions [i]) {
+								rule [state, 0] = digits [i + 1] | digits [(i + 4) % 6];
+								rule [state, 1] = digits [(i + 5) % 6] | digits [i + 2];
+								break;
 							}
 						}
-					}
-					newStates [straight] = 0;
-					newStates [straight + 3] = 0;
-					int side = random.Next (0, 2);
-					if (0 < side) {
-						int arange = ((observe + 3) - straight) % 3;
-						switch (arange) {
-						case 1:
-							newStates [(observe + 3) % 6] = 1;
-							newStates [(observe + 4) % 6] = 1;
-							break;
-						case 2:
-							newStates [(observe + 2) % 6] = 1;
-							newStates [(observe + 3) % 6] = 1;
-							break;
+					} else if (3 == numberParticles) {
+						for (int i = 0; i < 6; i++) {
+							if (exclusions [i] && (!exclusions [(i + 3) % 6])) {
+								if (!exclusions [(i + 1) % 6]) {
+									rule [state, 0] = digits [i] | digits [(i + 3) % 6] | digits [(i + 4) % 6];
+									rule [state, 1] = digits [i] | digits [(i + 1) % 6] | digits [(i + 4) % 6];
+								} else {
+									rule [state, 0] = digits [i] | digits [(i + 2) % 6] | digits [(i + 5) % 6];
+									rule [state, 1] = digits [i] | digits [(i + 2) % 6] | digits [(i + 3) % 6];
+								}
+								break;
+							}
 						}
 					} else {
-						if ((observe % 3) == (straight + 1) % 3) {
-							newStates [(straight + 5) % 6] = 1;
-							newStates [straight + 2] = 1;
-						} else {
-							newStates [straight + 1] = 1;
-							newStates [(straight + 4) % 6] = 1;
-						}
+						rule [state, 0] = state;
+						rule [state, 1] = state;
 					}
-				}
-			} else if (3 == numberNeighbours) {
-				int side = random.Next (0, 2);
-				if (0 < side) {
-					newStates = new int [6] {
-						newStates [1],
-						newStates [2],
-						newStates [3],
-						newStates [4],
-						newStates [5],
-						newStates [0]
-					};
-				}
-			}
-			int newState = 0;
-			for (int i = 0; i < 6; i++) {
-				newState += newStates [i] * (int)Math.Pow (2, i);
-			}
-			return newState;
+				} else if (2 == numberCollisions) {
+					if (4 == numberParticles) {
+						for (int i = 0; i < 3; i++) {
+							if (exclusions [i] && exclusions [i + 1]) {
+								rule [state, 0] = digits [i + 1] | digits [i + 2] | digits [(i + 4) % 6] | digits [(i + 5) % 6];
+								rule [state, 1] = digits [(i + 5) % 6] | digits [i] | digits [i + 2] | digits [i + 3];
+								break;
+							}
+						}
+					} else {
+						rule [state, 0] = state;
+						rule [state, 1] = state;
+					}
+				} else {
+					rule [state, 0] = state;
+					rule [state, 1] = state;
+				}  // end if numberCollisions
+
+			}  // end for states
+
+		}  // end Init
+
+		public static int Implement (Hexagonal cell)
+		{
+			return Interact (Receive (cell));
 		}
+
+		private static int Receive (Hexagonal cell)
+		{
+			Hexagonal[] neighbours = cell.GetNeighbours ();
+			return (
+				(neighbours [0].GetState () & digits [0])
+				| (neighbours [1].GetState () & digits [1])
+				| (neighbours [2].GetState () & digits [2])
+				| (neighbours [3].GetState () & digits [3])
+				| (neighbours [4].GetState () & digits [4])
+				| (neighbours [5].GetState () & digits [5])
+				);
+		}
+
+		private static int Interact (int state)
+		{
+			return rule [state, random.Next (0, 2)];
+		}
+
+		private static int[] digits;
+		private static int[,] rule;
+		private static Random random;
 	
 	}
 

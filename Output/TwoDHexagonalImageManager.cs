@@ -39,18 +39,18 @@ namespace CellularAutomata.Outputs
 
 			int width = bitmap.Size.Width / scale;
 
-			Parallel.For (0, values.Length, i => {
+			for (int i = 0; i < values.Length; i++) {
 				int y = i / width;
 				int x = i % width;
 				Color color = GetColor (values [i]);
-				for (int ie = 0; ie < Math.Pow (scale, 2); ie++) {
+				for (int ie = 0; ie < (int)Math.Pow (scale, 2); ie++) {
 					bitmap.SetPixel (
 						((x * scale) + (ie % scale) + ((y % 2) * (scale / 2))) % (width * scale),
 						(y * scale) + (ie / scale),
 						color
 						);
 				}
-			});
+			}
 
 		}
 
@@ -96,32 +96,34 @@ namespace CellularAutomata.Outputs
 
 			Color color;
 
-			switch (state) {
-			case 0:
-				color = Color.White;
-				break;
-			case 1:
-				color = Color.Red;
-				break;
-			case 2:
-				color = Color.Yellow;
-				break;
-			case 3:
-				color = Color.Green;
-				break;
-			case 4:
-				color = Color.Cyan;
-				break;
-			case 5:
-				color = Color.Blue;
-				break;
-			case 6:
-				color = Color.Magenta;
-				break;
-			default:
-				color = Color.Black;
-				break;
+			if (0 >= state) {
+				return Color.White;
+			} else {
+				return Color.Black;
 			}
+
+			state--;
+
+			int[] colors = new int [3];
+			int maxState = 6;
+
+			if (maxState <= state) {
+				return Color.White;
+			}
+
+			for (int i = 0; i < 3; i++) {
+				if (i == (3 * state) / maxState) {
+					int mag = (255 * (state % (maxState / 3))) / (maxState / 3);
+					if (250 < mag) {
+						mag = 255;
+					}
+					colors [i] = 255 - mag;
+					colors [(i + 1) % 3] = mag;
+					break;
+				}
+			}
+
+			color = Color.FromArgb (colors [0], colors [1], colors [2]);
 
 			return color;
 

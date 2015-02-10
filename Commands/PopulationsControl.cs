@@ -329,10 +329,10 @@ namespace CellularAutomata.Commands  // console UI interface
 				switch (arguments [0]) {
 					// main population
 					case "p":
-					population = new Tunnel (sizes);
+					population = new Tunnel (sizes, Convert.ToDouble (arguments [1]), Convert.ToInt32 (arguments [2]));
 					break;
 					case "c":
-					clone = new Tunnel (sizes);
+					clone = new Tunnel (sizes, Convert.ToDouble (arguments [1]), Convert.ToInt32 (arguments [2]));
 					break;
 					default:
 					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
