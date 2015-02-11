@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Program/Program.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Populations/Tunnel.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program/Program.cs">
     <Files>
-      <File FileName="Populations/Tunnel.cs" Line="14" Column="14" />
-      <File FileName="Output/TwoDHexagonalImageManager.cs" Line="3" Column="3" />
-      <File FileName="Commands/PopulationsControl.cs" Line="1" Column="1" />
+      <File FileName="Populations/Tunnel.cs" Line="1" Column="1" />
+      <File FileName="Output/TwoDHexagonalImageManager.cs" Line="1" Column="1" />
+      <File FileName="Commands/PopulationsControl.cs" Line="32" Column="32" />
+      <File FileName="Program/Program.cs" Line="20" Column="20" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

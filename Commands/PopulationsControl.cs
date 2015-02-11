@@ -182,7 +182,7 @@ namespace CellularAutomata.Commands  // console UI interface
 		private static void NewPopulation (Option[] options, string[] arguments)
 		{
 
-			string method = "new";
+			const string method = "new";
 
 			int[] sizes = DefaultSizes;
 			int[] values = DefaultValues;
@@ -454,20 +454,57 @@ namespace CellularAutomata.Commands  // console UI interface
 
 			string path = subDirName + "img" + "".PadLeft ((int)Math.Log10 (generation) + 1, '0');
 			OutputsControl.Init (tempPop.GetStates (), generation, path, format);
-			for (int i = 1; i <= generation; i++) {
+			ConsoleKeyInfo cki = new ConsoleKeyInfo ();
+			Console.Write (" (Press 'h' for help): ");
+			for (int i = 1; i < generation; i++) {
+				if (Console.KeyAvailable) {
+					cki = Console.ReadKey (false);
+					Console.WriteLine ();
+					switch (cki.KeyChar) {
+					case 'h':
+						Console.WriteLine (" Pop evolve help menu:");
+						Console.WriteLine (" key h: display this help text");
+						Console.WriteLine (" key s: display evolve status");
+						Console.WriteLine (" key p: pause");
+						Console.WriteLine (" key q: break loop");
+						break;
+					case 's':
+						Console.WriteLine (
+							" Pop evolve status: {0} {1}% {2}/{3}",
+							DateTime.Now,
+							((int)(100D * (double)i / (double)generation)).ToString (),
+							i.ToString (),
+							generation.ToString ()
+						);
+						break;
+					case 'p':
+						Console.Write (" Paused, press enter to continue");
+						Console.ReadLine ();
+						break;
+					case 'q':
+						Console.Write (" Are you sure you want to break? [Y,n]: ");
+						string answer = Console.ReadLine ();
+						if ((String.Empty == answer) || ("y" == answer.ToLower ())) {
+							return;
+						}
+						break;
+					}
+					Console.Write (" (Press 'h' for help): ");
+				}
 				tempPop.Evolve ();
 				path = subDirName + "img" + i.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
 				OutputsControl.Update (tempPop.GetStates (), i, path, format);
 			}
 			path = subDirName + "img" + generation.ToString ().PadLeft ((int)Math.Log10 (generation) + 1, '0');
 			OutputsControl.Final (path, tempPop.GetCellsArangement (), format);
+			Console.Beep ();
 
 		}  // end Evolve, private static void method
 
 		private static void SetRule (Option[] options, string[] arguments)
 		{
 
-			string method = "rule";
+			const string method = "rule";
 			IRule rule;
 
 			try {
