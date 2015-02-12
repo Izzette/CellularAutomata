@@ -12,7 +12,7 @@ namespace CellularAutomata
 		{
 
 			Console.WriteLine (" Welcome to CellularAutomata!");
-
+			
 			history = new LinkedList<string> ();
 
 			ApplicationCommand command;

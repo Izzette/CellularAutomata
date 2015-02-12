@@ -12,7 +12,7 @@ namespace CellularAutomata.Populations
 		public void Parse (string code) { ; }  // only has one state
 
 		// states 0 to 7, on moore neighbourhood only
-		public int Implement (ICell cell)
+		public ushort Implement (ICell cell)
 		{
 			int neighbourhood = cell.GetNeighbourhood (16);
 			int newState = 0;
@@ -33,7 +33,7 @@ namespace CellularAutomata.Populations
 					newState += ((oldState % (int)Math.Pow (2, i + 1)) / (int)Math.Pow (2, i)) * (int)Math.Pow (2, (i + 2) % 4);
 				}
 			}
-			return newState;
+			return (ushort)newState;
 		}
 
 		public new string ToString ()
@@ -46,7 +46,7 @@ namespace CellularAutomata.Populations
 			return new Average ();
 		}
 
-		private string code = "avg";
+		private const string code = "avg";
 	
 	}
 

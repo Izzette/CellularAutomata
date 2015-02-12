@@ -9,10 +9,9 @@ namespace CellularAutomata.Populations
 
 		public static CellsArangement Arangement {
 			get { return CellsArangement.OneDCubic; }
-			set { ; }
 		}
 
-		public static ICell[] Build (int[] sizes, int[] values)  // constructs network; only size [0] is used
+		public static ICell[] Build (int[] sizes, ushort[] values)  // constructs network; only size [0] is used
 		{
 			
 			if (1 != sizes.Length) {  // safing number of dimensions
@@ -38,7 +37,7 @@ namespace CellularAutomata.Populations
 
 		}
 		
-		private int state; // color as int
+		private ushort state; // color as int
 
 		// scan order right, this, left
 		private General right;  // graphical right
@@ -46,7 +45,7 @@ namespace CellularAutomata.Populations
 
 		private General next; // next cell in line
 
-		public General (int state)  // Constructor, sets this state to state
+		public General (ushort state)  // Constructor, sets this state to state
 		{
 			
 			this.state = state;  // set state
@@ -66,14 +65,14 @@ namespace CellularAutomata.Populations
 			
 		}
 
-		public int GetState ()  // inherited from ICell
+		public ushort GetState ()  // inherited from ICell
 		{
 			
 			return this.state;  // returns state. exit
 			
 		}
 
-		public void SetState (int state)  // inherited from ICell
+		public void SetState (ushort state)  // inherited from ICell
 		{
 			
 			this.state = state;  // set state
@@ -111,7 +110,7 @@ namespace CellularAutomata.Populations
 			
 		}
 		
-		public General AddNeighbour (int state)  // Adds neighbour with passed state, returns cell added
+		public General AddNeighbour (ushort state)  // Adds neighbour with passed state, returns cell added
 		{
 
 			General cell = new General (state);  // construct new cell

@@ -10,26 +10,24 @@ namespace CellularAutomata.Populations
 		private CellsArangement arangement;
 		public CellsArangement Arangement {
 			get { return this.arangement; }
-			set { ; }
 		}
-		private int[] values;
-		public int[] Values {
-			get { return this.values; }
-			set { this.values = value; }
+		ushort[] values;
+		public ushort[] Values {
+			get {
+				return values;
+			}
 		}
-		private int[] sizes;
+		private readonly int[] sizes;
 		public int[] Sizes {
 			get { return this.sizes; }
-			set { ; }
 		}
 
 		public int Length {
-			get { return values.Length; }
-			set { ; }
+			get { return Values.Length; }
 		}
 
 		// constructor
-		public States (CellsArangement arangement, int[] values, int[] sizes)
+		public States (CellsArangement arangement, ushort[] values, int[] sizes)
 		{
 
 			int length = 1;
@@ -40,7 +38,7 @@ namespace CellularAutomata.Populations
 
 			if (length != values.Length) {
 
-				int[] tempValues = new int [length];
+				ushort[] tempValues = new ushort[length];
 
 				for (int i = 0; i < tempValues.Length; i++) {
 

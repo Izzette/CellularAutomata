@@ -31,7 +31,7 @@ namespace CellularAutomata.Populations
 		}  // end Parse, public void method
 
 		// implements rule, returns new state value
-		public int Implement (ICell cell)
+		public ushort Implement (ICell cell)
 		{
 
 			long state;
@@ -46,7 +46,7 @@ namespace CellularAutomata.Populations
 			placeValue = placeValue / color;
 			state = state / placeValue;
 
-			return (int)state;
+			return (ushort)state;
 
 		} // end Implement, public virtual int method
 

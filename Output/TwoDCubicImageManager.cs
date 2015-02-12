@@ -15,7 +15,7 @@ namespace CellularAutomata.Outputs
 			scale = newScale;
 		}
 
-		public static void Init (int[] sizes, int[] values)
+		public static void Init (int[] sizes, ushort[] values)
 		{
 
 			int width;
@@ -34,7 +34,7 @@ namespace CellularAutomata.Outputs
 
 		}  // end InitOneDCubicBitmap, public static void method
 
-		public static void Update (int[] values)
+		public static void Update (ushort[] values)
 		{
 
 			int width = bitmap.Size.Width / scale;

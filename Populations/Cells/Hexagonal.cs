@@ -8,17 +8,16 @@ namespace CellularAutomata.Populations
 
 		public static CellsArangement Arangement {
 			get { return CellsArangement.TwoDHexagonal; }
-			set { ; }
 		}
 
-		public static Hexagonal[] Build (int[] sizes, int[] values)
+		public static Hexagonal[] Build (int[] sizes, ushort[] values)
 		{
 			if (0 != (sizes [1]) % 2) {
 				throw new ArgumentException ();
 			}
 			Hexagonal[][] rows = new Hexagonal [sizes [1]][];
 			for (int i = 0; i < sizes [1]; i++) {
-				int[] rowValues = new int [sizes [0]];
+				ushort[] rowValues = new ushort [sizes [0]];
 				Array.ConstrainedCopy (values, i * sizes [0], rowValues, 0, sizes [0]);
 				rows [i] = ConstructRow (sizes [0], rowValues);
 			}
@@ -35,12 +34,12 @@ namespace CellularAutomata.Populations
 			return this.next;
 		}
 
-		public int GetState ()
+		public ushort GetState ()
 		{
 			return this.state;
 		}
 
-		public void SetState (int state)
+		public void SetState (ushort state)
 		{
 			this.state = state;
 		}
@@ -59,7 +58,7 @@ namespace CellularAutomata.Populations
 			return neighbourhood;
 		}
 
-		private static Hexagonal[] ConstructRow (int length, int[] values)
+		private static Hexagonal[] ConstructRow (int length, ushort[] values)
 		{
 			Hexagonal[] row = new Hexagonal [length];
 			row [0] = new Hexagonal (values [0]);
@@ -103,11 +102,11 @@ namespace CellularAutomata.Populations
 			return items;
 		}
 
-		private int state;
+		private ushort state;
 		private Hexagonal[] neighbours;
 		private Hexagonal next;
 
-		private Hexagonal (int state)
+		private Hexagonal (ushort state)
 		{
 			this.state = state;
 			this.neighbours = new Hexagonal[6];
@@ -116,7 +115,7 @@ namespace CellularAutomata.Populations
 			}
 		}
 
-		private Hexagonal AddNeighbour (int state)
+		private Hexagonal AddNeighbour (ushort state)
 		{
 			Hexagonal newCell = new Hexagonal (state);
 			Hexagonal tempN3 = this.neighbours [3];

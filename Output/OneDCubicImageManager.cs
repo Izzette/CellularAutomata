@@ -16,7 +16,7 @@ namespace CellularAutomata.Outputs
 			scale = newScale;
 		}
 
-		public static void Init (int[] values, int maxGeneration)
+		public static void Init (ushort[] values, int maxGeneration)
 		{
 
 			int width = values.Length;
@@ -28,7 +28,7 @@ namespace CellularAutomata.Outputs
 
 		}  // end InitOneDCubicBitmap, public static void method
 
-		public static void Update (int[] values, int currentGeneration)
+		public static void Update (ushort[] values, int currentGeneration)
 		{
 
 			Parallel.For (0, values.Length, i => {

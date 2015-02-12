@@ -33,7 +33,7 @@ namespace CellularAutomata.Populations  // contains rules
 
 		}
 
-		public int Implement (ICell cell)  // inherit IRule
+		public ushort Implement (ICell cell)  // inherit IRule
 		{
 
 			BigInteger state;
@@ -49,7 +49,7 @@ namespace CellularAutomata.Populations  // contains rules
 			placeValue = BigInteger.Divide (placeValue, color);  // lower place value
 			state = BigInteger.Divide (state, placeValue);  // final answer as BigInteger
 
-			return (int)state;  // return state
+			return (ushort)state;  // return state
 
 		}
 

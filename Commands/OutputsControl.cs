@@ -43,13 +43,6 @@ namespace CellularAutomata.Commands
 						return;
 					}
 					break;
-				case "tunnel":
-					try {
-						TunnelImageManager.ReScale (Convert.ToInt32 (arguments [1]));
-					} catch (FormatException) {
-						CommandsWarning.ArgumentNotValid (Command, method, "<NEW SCALE>");
-					}
-					break;
 				default:
 					CommandsWarning.ArgumentNotValid (Command, method, arguments [0]);
 					return;
@@ -107,7 +100,7 @@ namespace CellularAutomata.Commands
 				case CellsArangement.OneDCubic:
 				case CellsArangement.TwoDHexagonal:
 				case CellsArangement.Tunnel:
-					int[] sectionValues = new int [states.Sizes [0]];
+					ushort[] sectionValues = new ushort[states.Sizes [0]];
 					for (int i = 0; i < sectionValues.Length; i++) {
 						sectionValues [i] = states.Values [i];
 					}
@@ -164,7 +157,7 @@ namespace CellularAutomata.Commands
 				case CellsArangement.OneDCubic:
 				case CellsArangement.TwoDHexagonal:
 				case CellsArangement.Tunnel:
-					int[] sectionValues = new int [states.Sizes [0]];
+					ushort[] sectionValues = new ushort[states.Sizes [0]];
 					for (int i = 0; i < sectionValues.Length; i++) {
 						sectionValues [i] = states.Values [i];
 					}

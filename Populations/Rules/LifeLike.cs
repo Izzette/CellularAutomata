@@ -45,13 +45,13 @@ namespace CellularAutomata.Populations
 		} // end Parse, public void method
 
 		// implements rule, returns new state value
-		public int Implement (ICell cell)
+		public ushort Implement (ICell cell)
 		{
 
-			int state;
+			ushort state;
 
 			// works with any neighbourhood arangement
-			int oldState = cell.GetState ();
+			ushort oldState = cell.GetState ();
 			int total = cell.GetNeighbourhood (1) - oldState;
 
 			int number;
@@ -63,12 +63,12 @@ namespace CellularAutomata.Populations
 			} // end if (1 == oldState) else, statment
 
 			// records upper place value
-			int placeValue = (int)Math.Pow (2, total + 1);
+			ushort placeValue = (ushort)Math.Pow (2, total + 1);
 			// remaining value to be eliminated
-			state = number % placeValue;
+			state = (ushort)(number % placeValue);
 			// assign lower place value
-			placeValue = placeValue / 2;
-			state = state / placeValue;
+			placeValue = (ushort)(placeValue / 2);
+			state = (ushort)(state / placeValue);
 
 			return state;
 

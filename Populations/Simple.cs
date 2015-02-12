@@ -11,7 +11,6 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 
 		private int Length {  // no set
 			get { return items.Length; }
-			set { ; }
 		}
 
 		private IRule rule;  // get rule
@@ -35,7 +34,7 @@ namespace CellularAutomata.Populations  // Contains cell collections, Cells name
 		// public constructor for custom states
 		// states can be shorter than, but not longer than length
 		// initailization dependancy SetRule (IRule rule)
-		public Simple (CellsVariety cellsVariety, int[] sizes, int[] values)
+		public Simple (CellsVariety cellsVariety, int[] sizes, ushort[] values)
 		{
 			this.cellsVariety = cellsVariety;
 			switch (this.cellsVariety) {

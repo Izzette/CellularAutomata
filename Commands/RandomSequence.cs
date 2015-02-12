@@ -11,7 +11,6 @@ namespace CellularAutomata.Commands
 
 		public static bool IsInitialized {
 			get { return isInitialized; }
-			set { ; }
 		}
 
 		public static void Init ()
@@ -28,7 +27,7 @@ namespace CellularAutomata.Commands
 
 			int length = 32 * random.Next (minSize, maxSize);
 			int[] sizes = new int [1] {length};
-			int[] values = new int [length];
+			ushort[] values = new ushort[length];
 
 			uint[] numbers = new uint [(int)Math.Ceiling ((float)length / 31F)];
 
@@ -37,7 +36,9 @@ namespace CellularAutomata.Commands
 			});
 
 			for (int i = 0; i < length; i++) {
-				numbers [i / 31] = (uint)Math.DivRem ((int)numbers [i / 31], 2, out values [i]);
+				int temp;
+				numbers [i / 31] = (uint)Math.DivRem ((int)numbers [i / 31], 2, out temp);
+				values [i] = (ushort)temp;
 			}
 
 			States states = new States (CellsArangement.OneDCubic, values, sizes);
@@ -57,16 +58,16 @@ namespace CellularAutomata.Commands
 
 		}
 
-		public static int[] GetSequence (int color, int length)
+		public static ushort[] GetSequence (int color, int length)
 		{
 
 			if (!isInitialized) {
 				Init ();
 			}
 
-			int[] values = new int [length];
+			ushort[] values = new ushort[length];
 
-			int[] popValues = population.GetStates ().Values;
+			ushort[] popValues = population.GetStates ().Values;
 			int popLength = popValues.Length;
 
 			uint numerical = 0;
@@ -89,7 +90,7 @@ namespace CellularAutomata.Commands
 						numerical += (uint)popValues [ie + startIndex];
 					}
 				}
-				values [i] = (int)(numerical % (uint)color);
+				values [i] = (ushort)(numerical % (uint)color);
 				numerical = numerical / (uint)color;
 			}
 

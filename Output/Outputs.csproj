@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B943F5B7-687A-41E1-90E5-47B3E0E643D1}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -40,7 +40,6 @@
     <Compile Include="OutputFormat.cs" />
     <Compile Include="TwoDCubicImageManager.cs" />
     <Compile Include="TwoDHexagonalImageManager.cs" />
-    <Compile Include="TunnelImageManager.cs" />
     <Compile Include="Vector\VectorHandling.cs" />
     <Compile Include="Vector\Vector.cs" />
   </ItemGroup>

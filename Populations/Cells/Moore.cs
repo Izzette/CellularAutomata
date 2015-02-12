@@ -9,10 +9,9 @@ namespace CellularAutomata.Populations
 
 		public static CellsArangement Arangement {
 			get { return CellsArangement.TwoDCubic; }
-			set { ; }
 		}
 
-		public static ICell[] Build (int[] size, int[] states)  // constructs network, only size [0 thru 1] are used
+		public static ICell[] Build (int[] size, ushort[] states)  // constructs network, only size [0 thru 1] are used
 		{
 
 			if (2 != size.Length) {  // safing number of dimensions
@@ -51,7 +50,7 @@ namespace CellularAutomata.Populations
 
 		}
 
-		private int state; // this state
+		private ushort state; // this state
 
 		// border neigbhours in scan order, clockwise starting with left, make double links
 		private Moore left;
@@ -62,7 +61,7 @@ namespace CellularAutomata.Populations
 		// next cell reference holder, single links
 		private Moore next;
 
-		public Moore (int state)  // constructs with specified state
+		public Moore (ushort state)  // constructs with specified state
 		{
 
 			this.state = state;  // set specified state
@@ -84,14 +83,14 @@ namespace CellularAutomata.Populations
 
 		}
 
-		public int GetState ()  // inherited from ICell
+		public ushort GetState ()  // inherited from ICell
 		{
 
 			return this.state;  // return state. exit
 
 		}
 
-		public void SetState (int state)  // inherited from ICell
+		public void SetState (ushort state)  // inherited from ICell
 		{
 
 			this.state = state;  // set state. exit
@@ -135,7 +134,7 @@ namespace CellularAutomata.Populations
 
 		}
 
-		public Moore AddNeighbour (int state, bool newRow) // Adds neighbour with passed state, starts new roow if (newRow) returns cell added
+		public Moore AddNeighbour (ushort state, bool newRow) // Adds neighbour with passed state, starts new roow if (newRow) returns cell added
 		{
 
 			Moore cell = new Moore (state);  // construct new cell

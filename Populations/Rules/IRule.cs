@@ -8,7 +8,7 @@ namespace CellularAutomata.Populations  // contains rules
 	{
 
 		void Parse (string code);  // initalization dependacy, interprets rule as string
-		int Implement (ICell cell);  // implements rule, returns new state value
+		ushort Implement (ICell cell);  // implements rule, returns new state value
 		string ToString ();  // returns properly formated rule
 		IRule Clone ();
 

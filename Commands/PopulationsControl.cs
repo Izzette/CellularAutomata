@@ -46,18 +46,15 @@ namespace CellularAutomata.Commands  // console UI interface
 		// default populations
 		private static CellsVariety DefaultCellsVariety {
 			get { return CellsVariety.General; }
-			set { ; }
 		}
 
 		static private int[] DefaultSizes {
 			get { return new int [1] { 125 }; }
-			set { ; }
 		}
 
 		// default initial conditions
-		static private int[] DefaultValues {
-			get { return new int [1] { 1 }; }
-			set { ; }
+		static private ushort[] DefaultValues {
+			get { return new ushort [1] { 1 }; }
 		}
 
 		static private IRule DefaultRule {  // returns 2k110
@@ -66,17 +63,14 @@ namespace CellularAutomata.Commands  // console UI interface
 				rule.Parse ("(2,110)");
 				return rule;
 			}
-			set { ; }
 		}
 
 		private static OutputsFormat DefaultFormat {
 			get { return OutputsFormat.Bitmap; }
-			set { ; }
 		}
 
 		private static string Command {
 			get { return "Population"; }
-			set { ; }
 		}
 
 		private static int[] GetSizes (string code)
@@ -157,20 +151,20 @@ namespace CellularAutomata.Commands  // console UI interface
 			return cellsVariety;
 		}  // end GetVariety, private static CellsVariety method
 
-		private static int[] GetValues (string code)
+		private static ushort[] GetValues (string code)
 		{
-			int[] values;
+			ushort[] values;
 			char[] valuesStrings = code.ToCharArray ();
-			values = new int [valuesStrings.Length];
+			values = new ushort[valuesStrings.Length];
 			for (int i = 0; i < values.Length; i++) {
-				values [i] = Convert.ToInt32 (valuesStrings [i].ToString ());
+				values [i] = Convert.ToUInt16 (valuesStrings [i].ToString ());
 			}
 			return values;
 		}
 
-		private static int[] GetRandomValues (string color, int[] sizes)
+		private static ushort[] GetRandomValues (string color, int[] sizes)
 		{
-			int[] values;
+			ushort[] values;
 			int length = 1;
 			foreach (int n in sizes) {
 				length = length * n;
@@ -185,7 +179,7 @@ namespace CellularAutomata.Commands  // console UI interface
 			const string method = "new";
 
 			int[] sizes = DefaultSizes;
-			int[] values = DefaultValues;
+			ushort[] values = DefaultValues;
 			IRule rule = DefaultRule;
 			CellsVariety cellsVariety = DefaultCellsVariety;
 			bool init = false;
@@ -300,10 +294,9 @@ namespace CellularAutomata.Commands  // console UI interface
 
 		private static void NewTunnel (Option[] options, string[] arguments)
 		{
-			string method = "tunnel";
+			const string method = "tunnel";
 
 			int[] sizes = DefaultSizes;
-			int[] values = DefaultValues;
 			int updateToDraw = 1;
 			int scale = 1;
 
@@ -374,7 +367,7 @@ namespace CellularAutomata.Commands  // console UI interface
 		private static void Evolve (Option[] options, string[] arguments)
 		{
 
-			string method = "evolve";
+			const string method = "evolve";
 
 			string subDirName = String.Empty;
 			int generation = 1;
@@ -541,7 +534,7 @@ namespace CellularAutomata.Commands  // console UI interface
 		private static void Clone (Option[] options, string[] arguments)
 		{
 
-			string method = "clone";
+			const string method = "clone";
 
 			IPopulation tempClone;
 
@@ -574,7 +567,7 @@ namespace CellularAutomata.Commands  // console UI interface
 		private static void CopyStates (Option[] options, string[] arguments)
 		{
 
-			string method = "states";
+			const string method = "states";
 
 			States states;
 
