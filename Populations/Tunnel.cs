@@ -12,7 +12,7 @@ namespace CellularAutomata.Populations
 		{
 			Init ();
 			this.numberOfWaves = numberOfWaves;
-			this.wavelength = wavelength;
+			this.wavelength = Math.Abs (wavelength);
 			this.scale = scale;
 			this.updateToDraw = updateToDraw;
 			ushort[] values = new ushort[sizes [0] * sizes [1]];
@@ -21,8 +21,8 @@ namespace CellularAutomata.Populations
 			for (int i = 0; i < values.Length; i++) {
 				if (0 == random.Next (0, 16)) {
 					double distance = Math.Sqrt (Math.Pow ((double)(i % sizes [0]) - center [0], 2D) + Math.Pow ((double)(i / sizes [0]) - center [1], 2D));
-					if (wavelength * numberOfWaves > distance) {
-						if ((double)random.Next (Int32.MinValue, Int32.MaxValue) < ((double)Int32.MaxValue * Math.Sin ((distance / wavelength) * 2D * Math.PI))) {
+					if (this.wavelength * numberOfWaves > distance) {
+						if ((double)random.Next (Int32.MinValue, Int32.MaxValue) < ((double)Int32.MaxValue * Math.Sign (wavelength) *  Math.Cos ((distance / this.wavelength) * 2D * Math.PI))) {
 							values [i] = (ushort)(Math.Pow (2, random.Next (0, 6)) + Math.Pow (2, random.Next (0, 6)));
 						} else {
 							values [i] = 0;
@@ -83,7 +83,7 @@ namespace CellularAutomata.Populations
 				}
 				densities [i] = d;
 			});
-			return new States (this.states.Arangement, densities, new int [2]  {this.states.Sizes [0] / this.scale, this.states.Sizes [1] / this.scale});
+			return new States (CellsArangement.TwoDHexagonal, densities, new int [2]  {this.states.Sizes [0] / this.scale, this.states.Sizes [1] / this.scale});
 		}
 		public void SetRule (IRule rule) {
 			throw new ArgumentException ();

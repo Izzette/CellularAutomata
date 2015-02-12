@@ -358,10 +358,11 @@ namespace CellularAutomata.Commands  // console UI interface
 			} catch (ArgumentException) {
 				CommandsWarning.OptionArgumentNotValid (Command, method, "<SIZE MISSING OR WRONG>");
 				return;
-			}  catch (IndexOutOfRangeException) {
-				CommandsWarning.ArgumentNotValid (Command, method);
-				return;
-			}  // end try statment
+			}
+//			}  catch (IndexOutOfRangeException) {
+//				CommandsWarning.ArgumentNotValid (Command, method);
+//				return;
+//			}  // end try statment
 		}
 
 		private static void Evolve (Option[] options, string[] arguments)

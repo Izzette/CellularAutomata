@@ -12,16 +12,34 @@ namespace CellularAutomata.Populations
 
 		public static Hexagonal[] Build (int[] sizes, ushort[] values)
 		{
-			if (0 != (sizes [1]) % 2) {
+			if ((0 != (sizes [0]) % 2) || (0 != (sizes [1]) % 2)) {
 				throw new ArgumentException ();
 			}
-			Hexagonal[][] rows = new Hexagonal [sizes [1]][];
-			for (int i = 0; i < sizes [1]; i++) {
-				ushort[] rowValues = new ushort [sizes [0]];
-				Array.ConstrainedCopy (values, i * sizes [0], rowValues, 0, sizes [0]);
-				rows [i] = ConstructRow (sizes [0], rowValues);
+			Hexagonal[,] cells = new Hexagonal[sizes [0], sizes [1]];
+			Hexagonal[] items = new Hexagonal[cells.Length];
+			int numberOfJs = (sizes [1] / sizes [0]) + 1;
+			for (int i = 0; i < sizes [0]; i++) {
+				for (int j = 0; j < sizes [1]; j++) {
+					int number = ((i + (numberOfJs * sizes [0]) - j + (j / 2)) % sizes [0]) + (j * sizes [0]);
+					cells [i, j] = new Hexagonal (values [number]);
+					items [number] = cells [i, j];
+				}
 			}
-			return AssembleRows (rows);
+			for (int i = 0; i < sizes [0]; i++) {
+				for (int j = 0; j < sizes [1]; j++) {
+					int left = (i + sizes [0] - 1) % sizes [0];
+					int right = (i + 1) % sizes [0];
+					int up = (j + sizes [1] - 1) % sizes [1];
+					int down = (j + 1) % sizes [1];
+					cells [i, j].neighbours [0] = cells [left, j];
+					cells [i, j].neighbours [1] = cells [left, up];
+					cells [i, j].neighbours [2] = cells [i, up];
+					cells [i, j].neighbours [3] = cells [right, j];
+					cells [i, j].neighbours [4] = cells [right, down];
+					cells [i, j].neighbours [5] = cells [i, down];
+				}
+			}
+			return items;
 		}
 
 		public Hexagonal[] GetNeighbours ()
@@ -58,50 +76,6 @@ namespace CellularAutomata.Populations
 			return neighbourhood;
 		}
 
-		private static Hexagonal[] ConstructRow (int length, ushort[] values)
-		{
-			Hexagonal[] row = new Hexagonal [length];
-			row [0] = new Hexagonal (values [0]);
-			for (int i = 1; i < row.Length; i++) {
-				row [i] = row [i - 1].AddNeighbour (values [i]);
-			}
-			return row;
-		}
-
-		private static Hexagonal[] AssembleRows (Hexagonal[][] rows)
-		{
-			int rowLength = rows [0].Length;
-			int numberRows = rows [1].Length;
-			Hexagonal[] items = new Hexagonal [rowLength * numberRows];
-			for (int i = 0; i < items.Length; i++) {
-				int[] upperIndex = new int [2] {
-					(i / rowLength),
-					(i % rowLength)
-				};
-				int[,] lowerIndex = new int [2, 2] {
-					{
-						((upperIndex [0] + 1) % numberRows),
-						((upperIndex [1] + rowLength + 1 - ((upperIndex [0] + 1) % 2)) % rowLength)
-					},
-					{
-						((upperIndex [0] + 1) % numberRows),
-						((upperIndex [1] + rowLength - ((upperIndex [0] + 1) % 2)) % rowLength)
-					}
-				};
-				Hexagonal upperCell = rows [upperIndex [0]][upperIndex [1]];
-				items [i] = upperCell;
-				for (int ie = 0; ie < 2; ie++) {
-					Hexagonal addCell = rows [lowerIndex [ie, 0]][lowerIndex [ie, 1]];
-					upperCell.neighbours [ie + 4] = addCell;
-					addCell.neighbours [ie + 1] = upperCell;
-				}
-				if ((0 == (i + 1) % rowLength) && (items.Length != i + 1)) {
-					upperCell.next = rows [upperIndex [0] + 1] [0];
-				}
-			}
-			return items;
-		}
-
 		private ushort state;
 		private Hexagonal[] neighbours;
 		private Hexagonal next;
@@ -113,18 +87,6 @@ namespace CellularAutomata.Populations
 			for (int i = 0; i < 2; i++) {
 				this.neighbours [i * 3] = this;
 			}
-		}
-
-		private Hexagonal AddNeighbour (ushort state)
-		{
-			Hexagonal newCell = new Hexagonal (state);
-			Hexagonal tempN3 = this.neighbours [3];
-			newCell.neighbours [0] = this;
-			this.neighbours [3] = newCell;
-			newCell.neighbours [3] = tempN3;
-			tempN3.neighbours [0] = newCell;
-			this.next = newCell;
-			return newCell;
 		}
 
 	}
